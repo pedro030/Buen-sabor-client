@@ -15,8 +15,7 @@ Se quiere alcanzar un publico amplio en edad entre 18 y 50 años, que tengan alc
 
 ## Wireframes
 <a href="https://www.figma.com/file/ou5yb0Fs71zhdG2YBa2lLr/Buen-sabor">
-<img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" alt ="figma icon" width="16"/> Figma
-</a>
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" alt ="figma icon" width="16"/> Figma</a>
 <br>
 <br>
 
