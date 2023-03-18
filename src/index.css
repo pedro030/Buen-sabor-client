@@ -1,5 +1,18 @@
+
+:root {
+    --main-wall-bg-color: #F9F6F4;
+    --main-original-bg-color: #E73636;
+    --main-opacity-bg-color: #F1AAA8;
+  }
+  
+  @font-face {
+    font-family: "Poppins";
+    src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300&display=swap');
+  }
+
 body{
-    background-color: #F9F6F4;
+    background-color: var(--main-wall-bg-color);
+    font-family: "Poppins";
 }
 
 .nav{
@@ -15,11 +28,20 @@ body{
 
 .logo{
     padding-left: 2rem;
+    color: var(--main-original-bg-color);
 }
 
-/* .searchInput input{
-    width: 10rem;
-} */
+.searchInput{ 
+	width: 580px;
+    border-radius: 21.83px;
+    line-height: 2;
+    background-color: var(--main-opacity-bg-color);
+    padding-left: 2rem;
+    font-family: FontAwesome;
+    border: 0px;
+}
+
+
 
 .items{
     display: flex;
@@ -27,6 +49,22 @@ body{
     justify-content: space-around;
 }
 
-.items .setting, .bike,.cart, .signUp {
+.items > div{
 padding-right: 2rem;
+font-family: FontAwesome;
 }
+
+.items > div > i{
+    font-size: 20px;
+    }
+
+
+    .items > div > button{
+        border-radius: 20px;
+        background-color: var(--main-original-bg-color);
+        color: white;
+    padding: 5px 15px 5px 15px;
+    border: 0px;
+
+
+    }

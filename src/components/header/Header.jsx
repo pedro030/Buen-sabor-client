@@ -4,16 +4,17 @@ const  Header = () => {
             <nav className="nav">
                 <div className="logo">
                     <h1>Buen Sabor</h1>
+                    {/* <h4>by UTN</h4> */}
                 </div>
-                <div className="searchInput">
-                    <input type='search'></input>
-                    <button type="button">Search</button></div>
+                <div >
+                    <input className="searchInput" type='search'placeholder="&#xF002; Search Food"></input>
+                    </div>
                     
                     <div className="items">
-                    <div className="setting">Setting</div>
-                    <div className="bike">Bike</div>
-                    <div className="cart">Cart</div>
-                    <div className="signUp">Sign up</div>
+                    <div ><i class="fa-light fa-gear"></i></div>
+                    <div><i class="fa-light fa-bicycle"></i></div>
+                    <div >cart</div>
+                    <div><button>Sign in</button></div>
                     </div>
                     
                 
