@@ -2,7 +2,31 @@ body{
     background-color: #F9F6F4;
 }
 
+.nav{
+    /* height: 10rem; */
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+}
+
+
 .logo{
-    height: 10rem;
-    background-color: red;
+    padding-left: 2rem;
+}
+
+/* .searchInput input{
+    width: 10rem;
+} */
+
+.items{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.items .setting, .bike,.cart, .signUp {
+padding-right: 2rem;
 }
