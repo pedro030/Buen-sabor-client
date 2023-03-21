@@ -1,11 +1,15 @@
-.nav {
-    /* height: 10rem; */
+.nav{
+    position: sticky;
+    background-color: #fff;
+    width: 100%;
+    top: 0rem;
+}
 
+.top_nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
 }
 
 .logo {
@@ -21,14 +25,20 @@
     padding-left: 2rem;
     font-family: FontAwesome;
     border: 0px;
+    backdrop-filter: blur(10px);
+}
+
+.under_nave{
+    padding-bottom: .2rem;
 }
 
 .items {
+    list-style: none;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 
-    div {
+    li {
         padding-right: 2rem;
         font-family: FontAwesome;
 
@@ -44,3 +54,4 @@
     }
 
 }
+
