@@ -14,9 +14,9 @@ const  Header = () => {
                     </div>
                     
                     <div className="items">
-                    <div ><i class="fa-light fa-gear"></i></div>
-                    <div><i class="fa-light fa-bicycle"></i></div>
-                    <div >cart</div>
+                    <div ><i className="fa-light fa-gear"></i></div>
+                    <div><i className="fa-light fa-bicycle"></i></div>
+                    <div>cart</div>
                     <div><button>Sign in</button></div>
                     </div>
                     

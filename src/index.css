@@ -5,10 +5,10 @@
   }
   
   /* don't work */
-  @font-face { 
+  /* @font-face { 
     font-family: Poppins;
     src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300&display=swap');
-  }
+  } */
   
 
 body{
