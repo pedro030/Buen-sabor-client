@@ -1,4 +1,3 @@
-import React from 'react'
 import './productCard.scss'
 import productImage from '../../assets/salad.jpg'
 

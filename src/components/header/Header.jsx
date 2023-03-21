@@ -13,12 +13,12 @@ const  Header = () => {
                     <input className="searchInput" type='search'placeholder="&#xF002; Search Food"></input>
                     </div>
                     
-                    <ul className="items">
-                        <li><i class="fa-light fa-gear"></i></li>
-                        <li><i class="fa-light fa-bicycle"></i></li>
-                        <li>cart</li>
-                        <li><button>Sign in</button></li>
-                    </ul>
+                    <div className="items">
+                    <div ><i class="fa-light fa-gear"></i></div>
+                    <div><i class="fa-light fa-bicycle"></i></div>
+                    <div >cart</div>
+                    <div><button>Sign in</button></div>
+                    </div>
                     
                 
             </div>

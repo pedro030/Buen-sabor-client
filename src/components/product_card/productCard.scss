@@ -1,7 +1,7 @@
 @import 'styles.scss';
 
 .card {
-    background-color: $card-background;
+    background-color: $white;
     border: 1px solid $card-border;
     width: 295px;
     height: 394px;
@@ -22,6 +22,7 @@
         font-style: normal;
         line-height: 24px;
         letter-spacing: -0.006em;
+        font-family: 'Poppins', 'sans-serif';
     }
     & .card-description{
         font-weight: 400;
