@@ -19,6 +19,7 @@
 
 .searchInput {
     width: 580px;
+    font-size: 1rem;
     border-radius: 21.83px;
     line-height: 2;
     background-color: var(--main-opacity-bg-color);
@@ -40,7 +41,7 @@
 
     li {
         padding-right: 2rem;
-        font-family: FontAwesome;
+        font-family: Poppins,FontAwesome;
 
         button {
             border-radius: 20px;

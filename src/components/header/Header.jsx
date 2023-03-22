@@ -1,5 +1,10 @@
 import React from 'react'
 import './Header.scss'
+import setting from '../../assets/setting.svg'
+import bike from '../../assets/bike.svg'
+import cart from '../../assets/cart.svg'
+// import searcher from '../../assets/searcher.svg'
+
 
 const  Header = () => {
     return (
@@ -13,12 +18,12 @@ const  Header = () => {
                     <input className="searchInput" type='search'placeholder="&#xF002; Search Food"></input>
                     </div>
                     
-                    <div className="items">
-                    <div ><i class="fa-light fa-gear"></i></div>
-                    <div><i class="fa-light fa-bicycle"></i></div>
-                    <div >cart</div>
-                    <div><button>Sign in</button></div>
-                    </div>
+                    <ul className="items">
+                        <li><img src={setting} height="20"/></li>
+                        <li><img src={bike} height="20"/></li>
+                        <li><img src={cart} height="20"/></li>
+                        <li><button>Sign in</button></li>
+                    </ul>
                     
                 
             </div>
