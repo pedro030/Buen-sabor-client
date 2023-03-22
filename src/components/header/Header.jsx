@@ -39,7 +39,7 @@ const  Header = () => {
                 <ul className="items">
                     <li className='active'>Home</li>
                     <li>Order</li>
-                    <li>Take away</li>
+                    <li>Menu</li>
                     <li>About us</li>
                 </ul>
             </div>

@@ -1,11 +1,44 @@
 .carousel{
-    width: 1440px;
-    height: 10rem;
+    .text_carousel{
+        position: absolute;
+        z-index: 1;
+        text-align: center;
+        bottom: 9rem;
+        left: 27.5%;
 
-    
+        h1{
+            span{
+                color: var(--main-original-bg-color);
+            }
+        }
+
+        .msg{
+            font-size: 48px;
+            color: white;
+        }
+
+        button {
+            width: 250px;
+            height: 75px;
+            margin: 0px 10px 0px 10px;
+            border-radius: 10px;
+            background-color: var(--main-original-bg-color);
+            color: white;
+            padding: 5px 15px 5px 15px;
+            border: 0px;
+
+
+        }
+        .btn_back{
+            background-color: #343434;
+        }
+    }
+
     .img_carousel{
-        object-fit: cover;
-
+        width: 100%;
+        height: 30rem;
+        object-fit: fill;
+        filter: blur(0.19rem);
     }
 }
 
