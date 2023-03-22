@@ -1,0 +1,117 @@
+.menu {
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    .details_menu {
+        display: flex;
+        flex-direction: row;
+        height: 10rem;
+
+
+        .filter {
+            .header_filter {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+
+                div {
+                    img {
+                        align-self: center;
+                        padding-right: .5rem;
+                    }
+
+                    display: flex;
+                    flex-direction: row;
+                }
+            }
+
+            .category_filter {
+                display: flex;
+                flex-direction: column;
+
+                .list_checkout {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+
+                }
+            }
+
+            width: 100%;
+        }
+
+        .products {
+            .order_product {
+                width: 650px;
+                display: flex;
+                flex-direction: row;
+            }
+
+            span {
+                color: var(--main-original-bg-color);
+            }
+
+            .list_products {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
+
+        .order {
+            display: flex;
+            flex-direction: column;
+
+
+            .box_order {
+                background-color: white;
+                border-radius: 10px;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .order_detail {
+                height: 250px;
+                width: 298px;
+
+
+                .header_order {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    margin-bottom: -1rem;
+                }
+
+                .product_order {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+            }
+
+            .button_order {
+                .subtotal {
+                    text-align: right;
+                }
+
+                .btn_continue {
+                    display: flex;
+                    justify-content: center;
+
+                    button {
+                        margin-bottom: 1rem;
+                        border-radius: 20px;
+                        background-color: var(--main-original-bg-color);
+                        color: white;
+                        padding: 5px 15px 5px 15px;
+                        border: 0px;
+                        width: 252px;
+                        height: 46px;
+                    }
+                }
+
+
+            }
+        }
+    }
+}
