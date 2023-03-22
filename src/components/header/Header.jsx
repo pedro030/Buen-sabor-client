@@ -15,13 +15,21 @@ const  Header = () => {
                     {/* <h4>by UTN</h4> */}
                 </div>
                 <div >
-                    <input className="searchInput" type='search'placeholder="&#xF002; Search Food"></input>
+                    <input className="searchInput" type='search'placeholder="         Search Food"></input>
                     </div>
                     
                     <ul className="items">
-                        <li><img src={setting} height="20"/></li>
-                        <li><img src={bike} height="20"/></li>
-                        <li><img src={cart} height="20"/></li>
+                        <li><img src={setting} height="25"/></li>
+
+                        <li>
+                            <div className='circle'>
+                                <img src={bike} height="25"/>
+                                <div className='circle small_circle'>1</div>
+                            </div>
+                            
+                        </li>
+
+                        <li><img src={cart} height="25"/></li>
                         <li><button>Sign in</button></li>
                     </ul>
                     
