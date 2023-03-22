@@ -37,7 +37,7 @@ const  Header = () => {
             </div>
             <div className="under_nave">
                 <ul className="items">
-                    <li>Home</li>
+                    <li className='active'>Home</li>
                     <li>Order</li>
                     <li>Take away</li>
                     <li>About us</li>

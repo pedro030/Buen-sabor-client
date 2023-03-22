@@ -55,6 +55,11 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    color: #00000050;
+
+    .active{
+        color: #000;
+    }
 
     li {
         padding-right: 2rem;
