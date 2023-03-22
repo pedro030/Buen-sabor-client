@@ -40,6 +40,23 @@
         object-fit: fill;
         filter: blur(0.19rem);
     }
+
+    .info{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+
+        .detail_info{
+         color: #343434;
+         display: flex;
+         flex-direction: row;
+         align-items: center;
+         img{
+            padding-right: 1rem;
+         }
+        }
+    }
+
 }
 
 
