@@ -20,12 +20,18 @@ const Menu = () => {
                     <div className="category_filter">
                         <h4>Cusine/Food Type</h4>
                         <div className="list_checkout">
-                        <input type="checkbox"></input><span>American</span>
-                        <input type="checkbox"></input>
-                        <input type="checkbox"></input>
-                        <input type="checkbox"></input>
-                        <input type="checkbox"></input>
-                        <input type="checkbox"></input>
+
+                            <input type="checkbox" name="checkbox"></input>
+                            <label>American</label><br />
+                            <input type="checkbox" name="checkbox"></input>
+                            <label>American</label><br />
+                            <input type="checkbox" name="checkbox"></input>
+                            <label>American</label><br />
+                            <input type="checkbox" name="checkbox"></input>
+                            <label>American</label><br />
+                            <input type="checkbox" name="checkbox"></input>
+                            <label>American</label>
+
                         </div>
                     </div>
                 </div>

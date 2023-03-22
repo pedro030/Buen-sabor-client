@@ -1,6 +1,5 @@
 .menu {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding: 2rem 2rem 0 2rem;
 
     .details_menu {
         display: flex;
@@ -26,13 +25,16 @@
             }
 
             .category_filter {
-                display: flex;
-                flex-direction: column;
+                // display: flex;
+                // flex-direction: column;
 
                 .list_checkout {
-                    display: flex;
-                    flex-direction: column;
-                    width: 100%;
+                    input{
+                        
+                    }
+                    label {
+                        padding-left: 1rem;
+                    }
 
                 }
             }
