@@ -13,8 +13,9 @@ const  App = () => {
   return (
     <div>
         <Header />
-        <Carousel />
-        <Menu/>
+        {/* <Carousel />
+        <Menu/> */}
+        <ProductDetail/>
     </div>
   )
 }
