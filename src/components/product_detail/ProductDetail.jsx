@@ -11,11 +11,13 @@ const ProductDetail = () => {
     <div className="modal is-open">
       <div className='product-detail'>
         <div className="button-back">
-          <img src={arrowLeftSvg} alt=""/> <p>Volver al listado</p>
+          <img src={arrowLeftSvg} alt=""/> 
+          <p>back to menu</p>
         </div>
         <img src={productImage} alt="product image" className="product-image"/>
         <div className="description-section">
           <div className="product-description">
+              <button className='hotsale_btn'>HOTSALE</button>
               <h3><img src={pizzaSvg} alt="category-icon" height="28"/> Nombre Producto</h3>
               <div className="description-items">
                   <span>Category</span>
