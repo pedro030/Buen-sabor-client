@@ -4,8 +4,8 @@ import {
 } from "react-router-dom";
 import 'normalize.css'
 import './index.scss'
-import routes from './router/routes'
+import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <RouterProvider router={routes} />
+    <App/>
 )
