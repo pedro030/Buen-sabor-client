@@ -3,19 +3,17 @@ import {useSelector, useDispatch} from 'react-redux';
 import loginJpg from '../../assets/login.jpg'
 import './Login.scss';
 import { sign_in } from '../../state/actions/userSessionAction';
+import { Field, Form, Formik } from 'formik';
+
 const Login = () => {
 
     const state = useSelector((state) => state)
     const dispatch = useDispatch();
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    const loginHandler = () => {
-        console.log(email, password)
-        dispatch(sign_in(email, password))
-        setEmail('')
-        setPassword('')
+    const loginHandler = (values: {email:string, password:string, rememberMe:boolean}) => {
+        console.log(values.email)
+        console.log(values.password)
+        console.log(values.rememberMe)
     }
 
     return (
@@ -28,26 +26,26 @@ const Login = () => {
                 <div className="inputs-login">
                     <button className="button-google">Google</button>
                     <p className='or'>Or</p>
-                    <label htmlFor="email">Email</label>
-                    <input 
-                        type="email"
-                        name="email"
-                        id="email"
-                        className="input-text"
-                        value={email}
-                        onChange={({target}) => setEmail(target.value)}/>
-                    <label htmlFor="password">Password</label>
-                    <input 
-                        type="password"
-                        name="password"
-                        id="password"
-                        className="input-text"
-                        value={password}
-                        onChange={({ target }) => setPassword(target.value)} />
-                    <input type="checkbox" name="remember" id="remember"/><span className='remember-me'>Remember me</span>
-                    <span className='forgot-password'>Forgot password?</span>
-                    <button className="button-login" onClick={loginHandler}>Log in</button>
-                    <p>Don't have an account? <u>Sign up</u></p>
+                    <Formik
+                        initialValues={{
+                                email: '',
+                                password: '',
+                                rememberMe: false
+                        }}
+                        onSubmit={loginHandler}
+                    >
+                        <Form>
+                            <label htmlFor="email">Email</label>
+                            <Field name="email" type="email" className="input-text" />
+                            <label htmlFor="password">Password</label>
+                            <Field name="password" type="password" className="input-text" />
+                            <Field type="checkbox" name="rememberMe"/><span className='remember-me'>Remember me</span>
+                            <span className='forgot-password'>Forgot password?</span>
+                            <button type="submit" className="button-login">Log in</button>
+                            <p>Don't have an account? <u>Sign up</u></p>
+                        </Form>
+
+                    </Formik>
                 </div>
             </div>
         </div>
