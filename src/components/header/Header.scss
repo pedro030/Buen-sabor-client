@@ -35,12 +35,12 @@
     backdrop-filter: blur(10px);
 }
 
-.searchInput::placeholder{
-    background-image: url(../../assets//searcher.svg);
-    background-repeat: no-repeat;
-    background-position: 1.7rem;
-    color: #000;
-}
+// .searchInput::placeholder{
+//     background-image: url(../../assets//searcher.svg);
+//     background-repeat: no-repeat;
+//     background-position: 1.7rem;
+//     color: #000;
+// }
 
 .searchInput:focus{
     outline: 2px ridge var(--main-original-bg-color);
