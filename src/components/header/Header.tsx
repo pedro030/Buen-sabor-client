@@ -4,16 +4,18 @@ import setting from '../../assets/setting.svg'
 import bike from '../../assets/bike.svg'
 import cart from '../../assets/cart.svg'
 import DropdownSignin from '../dropdown_signin/DropdownSignin'
+import { useNavigate } from 'react-router-dom'
 // import searcher from '../../assets/searcher.svg'
 
 
 const  Header = () => {
+    const navigate = useNavigate()
 
     return (
         <nav className="nav">
             <div className='top_nav'>
                 <div className="logo">
-                    <h1>Buen Sabor</h1>
+                    <h1 onClick={() => navigate('/')}>Buen Sabor</h1>
                     {/* <h4>by UTN</h4> */}
                 </div>
                 <div>

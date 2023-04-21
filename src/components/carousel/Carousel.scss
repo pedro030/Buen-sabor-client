@@ -1,10 +1,12 @@
 .carousel{
+    display: flex;
+    flex-direction: column;
     .text_carousel{
         position: absolute;
         z-index: 1;
         text-align: center;
-        bottom: 9rem;
-        left: 27.5%;
+        align-self: center;
+        margin-top: 30px;
 
         h1{
             span{

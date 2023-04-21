@@ -6,11 +6,18 @@ import { useNavigate } from 'react-router-dom';
 const DropdownSignin = () => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
+    const { loginWithRedirect, logout, isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+    console.log(user)
+    const getToken = async () =>{
+        let token = await getAccessTokenSilently()
+        return token;
+    }
+    console.log(getToken())
     const navigate = useNavigate();
 
     const handleLogin = async () => {
         await loginWithRedirect();
+        console.log(user)
     };
 
     const handleSignUp = async () => {

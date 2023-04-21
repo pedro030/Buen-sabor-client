@@ -10,7 +10,7 @@ import Menu from '../../components/menu/Menu'
 const Home = () => {
     return (
         <div>
-            <Header />
+            {/* <Header /> */}
             <Carousel />
             <Menu />
         </div>
