@@ -6,6 +6,7 @@
       "node_modules/@types",
       "src/types"
     ],
+    "types": ["vite/client"],
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "skipLibCheck": true,
