@@ -27,11 +27,13 @@ function SearchBar() {
         <BiSearchAlt2 className="icon-search" />
         <input className="input" type="text" placeholder="Search Category" value={search} onChange={handleChange}/>
       </div>
-      <ul className="container-opcs">
-        {searchResults.map(item => (<li className="opc-items">{item}</li>))}
-      </ul>
+
     </div>
   );
 }
+
+/*      <ul className="container-opcs">
+        {searchResults.map(item => (<li className="opc-items">{item}</li>))}
+      </ul>*/
 
 export default SearchBar;
