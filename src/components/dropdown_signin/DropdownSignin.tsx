@@ -55,7 +55,7 @@ const DropdownSignin = () => {
                     )}
                     {isAuthenticated && (
                         <>
-                            <li className='dropdown-item' onClick={() => navigate('myprofile')}>My Profile</li>
+                            <li className='dropdown-item' onClick={() => navigate('categories-crud')}>Admin Panel</li>
                             <li className='dropdown-item' onClick={handleLogout}>Logout</li>
                         </>
                     )}

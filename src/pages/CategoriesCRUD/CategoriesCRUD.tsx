@@ -4,35 +4,22 @@ import './categoriescrud.scss'
 import CrudHead from "../../components/crud_header/CrudHead"
 import CrudCardCategory from "../../components/crud_card_category/CrudCardCategory"
 import { useState, useEffect } from "react"
-
-const categories = [
-  {
-      id: 1,
-      name: "Burgers",
-      status: true
-  },
-  {
-      id: 2,
-      name: "Pizzas",
-      status: false
-  },
-  {
-      id: 3,
-      name: "Hot Dogs",
-      status: true
-  },
-]
+import CategoryForm from "../../components/modals/category_form/CategoryForm"
+import { getCategories } from "../../services/Category"
+import { Category } from "../../models/Category"
 
 function CategoriesCRUD() {
 
-  const [category, setCategory] = useState(categories)
+  const [category, setCategory] = useState<Category[]>()
 
   useEffect(() => {
-    setCategory(categories);
+    getCategories().then(cat => {
+      setCategory(cat);
+    })
   }, [])
 
-  const deleteCategory = (categoryId: number) => {
-    const newCategories = category.filter(cat => cat.id !== categoryId)
+  const deleteCategory = (categoryId: string) => {
+    const newCategories = category?.filter(cat => cat.id !== categoryId)
     setCategory(newCategories);
   }
 
@@ -45,7 +32,7 @@ function CategoriesCRUD() {
             <span>Category Name</span>
             <span>Status</span>
           </div>
-          { category.map(cat => {
+          { category?.map(cat => {
             return <CrudCardCategory key={cat.id} category={cat} deleteCategory={deleteCategory}/>
           })}
         </div>

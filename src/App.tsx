@@ -31,7 +31,7 @@ const  App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/myprofile" element={<AuthenticationGuard component={UserProfile}/>} />
         <Route path="/detail" element={<ProductDetail />} />
-        <Route path="/categories-crud" element={ <CategoriesCRUD/> }/>
+        <Route path="/categories-crud" element={ <AuthenticationGuard component={CategoriesCRUD}/>}/>
         <Route path="*" element={<Home />} />
       </Routes>
     </>
