@@ -4,20 +4,14 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 
 const DropdownSignin = () => {
+    const redirectUri = import.meta.env.VITE_REACT_APP_AUTH0_CALLBACK_URL;
     const [isOpen, setIsOpen] = useState(false);
 
-    const { loginWithRedirect, logout, isAuthenticated, user, getAccessTokenSilently } = useAuth0();
-    console.log(user)
-    const getToken = async () =>{
-        let token = await getAccessTokenSilently()
-        return token;
-    }
-    console.log(getToken())
+    const { loginWithRedirect, logout, isAuthenticated} = useAuth0();
     const navigate = useNavigate();
 
     const handleLogin = async () => {
         await loginWithRedirect();
-        console.log(user)
     };
 
     const handleSignUp = async () => {
@@ -31,7 +25,7 @@ const DropdownSignin = () => {
     const handleLogout = () => {
         logout({
             logoutParams: {
-                returnTo: window.location.origin,
+                returnTo: redirectUri,
             },
         });
     };
