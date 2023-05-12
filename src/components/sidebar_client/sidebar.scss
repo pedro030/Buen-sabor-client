@@ -5,7 +5,7 @@
   
 .container {
     width: 15vw;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 2.5em;
@@ -30,14 +30,10 @@
     height: auto;
 }
 
-.container .container-left-img-user-role .left-role {
-    font-weight: bolder;
-}
-
 .container .nav-container {
     display: flex;
     justify-content: center;
-    height: 100vh;
+    height: 50vh;
 }
 
 .container .nav-container .nav-list {
