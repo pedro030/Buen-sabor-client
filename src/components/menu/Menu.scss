@@ -2,18 +2,22 @@
     padding: 2rem 2rem 0 2rem;
 
     .details_menu {
-        display: flex;
-        flex-direction: row;
-        height: 10rem;
+        display: grid;
+        grid-template-columns: 180px 2fr 1fr; // Las columnas laterales tienen el 1/3 del ancho y la central tiene el doble de ancho
+        grid-gap: 25px;
 
 
         .filter {
-            .header_filter {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
+            width: 400px;
 
-                div {
+            .header_filter {
+                display: grid;
+                grid-template-columns: 90px 150px; // Las columnas laterales tienen el 1/3 del ancho y la central tiene el doble de ancho
+
+                div{
+                    .pt-1{
+                        margin-top: 1.5rem;
+                    }
                     img {
                         align-self: center;
                         padding-right: .5rem;
@@ -29,9 +33,8 @@
                 // flex-direction: column;
 
                 .list_checkout {
-                    input{
-                        
-                    }
+                    input {}
+
                     label {
                         padding-left: 1rem;
                     }
@@ -45,8 +48,7 @@
         .products {
             .order_product {
                 width: 650px;
-                display: flex;
-                flex-direction: row;
+                
             }
 
             span {
@@ -54,13 +56,15 @@
             }
 
             .list_products {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-gap: 5px;
             }
         }
 
         .order {
+            
+            margin-top: 18px;
             display: flex;
             flex-direction: column;
 

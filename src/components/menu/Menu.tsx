@@ -7,14 +7,14 @@ import clean from '../../assets/clean.svg'
 const Menu = () => {
     return (
         <div className="menu">
-            <h3>Menu</h3>
+            <h1>Menu</h1>
             <div className='details_menu'>
-                <div className='filter'>
+                <div className='col filter'>
                     <div className="header_filter">
-                        <h2>filter</h2>
-                        <div>
-                            <img src={clean} height='20' />
-                            <h4>Clear filters</h4>
+                        <h2>Filter</h2>
+                        <div >
+                            <img src={clean} height='15' />
+                            <h5 className='pt-1'>Clear filters</h5>
                         </div>
                     </div>
                     <div className="category_filter">
@@ -24,31 +24,37 @@ const Menu = () => {
                             <input type="checkbox" name="checkbox"></input>
                             <label>American</label><br />
                             <input type="checkbox" name="checkbox"></input>
-                            <label>American</label><br />
+                            <label>Italy</label><br />
                             <input type="checkbox" name="checkbox"></input>
-                            <label>American</label><br />
+                            <label>India</label><br />
                             <input type="checkbox" name="checkbox"></input>
-                            <label>American</label><br />
+                            <label>French</label><br />
                             <input type="checkbox" name="checkbox"></input>
-                            <label>American</label>
+                            <label>Thailand</label>
 
                         </div>
                     </div>
                 </div>
-                <div className='products'>
+                <div className='col products'>
                     <div className='order_product'>
                         <div>Found <span>376</span> results in 54 seconds</div>
-                        <div><button>sort</button></div>
+                        {/* <div><button>sort</button></div>
                         <div><button>paginable</button></div>
-                        <div><button>boxs</button><button>rows</button></div>
+                        <div><button>boxs</button>
+                        <button>rows</button></div> */}
                     </div>
                     <div className="list_products">
                         <ProductCard />
                         <ProductCard />
                         <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
                     </div>
                 </div>
-                <div className='order'>
+                <div className='col order'>
                     <div className="box_order">
                         <div className='order_detail'>
                             <div className="header_order">
