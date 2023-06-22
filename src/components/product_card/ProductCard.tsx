@@ -5,7 +5,7 @@ const ProductCard = () => {
 
   return (
     <div className='card'>
-        <img src={productImage} alt="product-image" className='card-image' width = "295" height = "240"/>
+        <a onClick={event => window.location.href = 'http://localhost:5173/detail'}><img src={productImage} alt="product-image" className='card-image' width = "295" height = "240"/></a>
         <div className="card-text">
             <h3>Product Name</h3>
             <p className="card-description">Product short description</p>

@@ -12,7 +12,7 @@ const ProductDetail = () => {
       <div className='product-detail'>
         <div className="button-back">
           <img src={arrowLeftSvg} alt=""/> 
-          <p>back to menu</p>
+          <a onClick={event => window.location.href = 'http://localhost:5173/'}><p>back to menu</p></a>
         </div>
         <img src={productImage} alt="product image" className="product-image"/>
         <div className="description-section">

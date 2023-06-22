@@ -1,13 +1,13 @@
 import React from 'react'
 import './Menu.scss'
-import ProductCard from '../product_card/productCard'
+import ProductCard from '../product_card/ProductCard'
 import clean from '../../assets/clean.svg'
 
 
 const Menu = () => {
     return (
-        <div className="menu">
-            <h1>Menu</h1>
+        <div id='menuSeccion' className="menu">
+            <h1 >Menu</h1>
             <div className='details_menu'>
                 <div className='col filter'>
                     <div className="header_filter">

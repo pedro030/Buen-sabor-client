@@ -1,0 +1,22 @@
+.AboutComponent {
+    display: grid;
+    place-items: center;
+    background-color: #bbb;
+    height: 500px;
+    width: 100%;
+    
+    .container{
+        text-align: center;
+        font-size: 25px;
+        
+        th {
+            width: 300px;
+        }
+        
+        img {
+            width: 250px;
+            height: 250px;
+            border-radius: 10000px;
+        }
+    }
+}

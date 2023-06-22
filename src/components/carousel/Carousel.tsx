@@ -5,6 +5,14 @@ import img_location from '../../assets/location.svg'
 import img_clock from '../../assets/clock2.svg'
 
 const Carousel = () => {
+
+    function scrollToSection() {
+        const seccionDestino = document.getElementById('menuSeccion');
+        if (seccionDestino) {
+            seccionDestino.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
     return (
         <section>
             <div className="carousel">
@@ -12,8 +20,8 @@ const Carousel = () => {
                     <h1>Welcome to <span>Buen Sabor</span></h1>
                     <h1 className='msg'>Feel The Autenthic & </h1>
                     <h1 className='msg'>Orgin Of Food</h1>
-                    <button>Order Food</button>
-                    <button className='btn_back'>About us</button>
+                    <button onClick={scrollToSection}>Order Food</button>
+                    <button className='btn_back' onClick={event => window.location.href = 'http://localhost:5173/about'}>About us</button>
                 </div>
                 <img className='img_carousel' src={img_carousel} />
                 <div className='info'>

@@ -8,6 +8,9 @@ import PageLoader from './components/page_loader/PageLoader';
 import UserProfile from './pages/UserProfile/UserProfile';
 import { AuthenticationGuard } from './components/auth0/AuthenticationGuard';
 import Header from './components/header/Header';
+import MenuPage from './pages/Menu/Menu';
+import Footer from './components/footer/Footer';
+import About from './components/about/AboutComponent';
 
 
 
@@ -29,10 +32,13 @@ const  App = () => {
       <Header></Header>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/menu" element={<MenuPage />} />
         <Route path="/myprofile" element={<AuthenticationGuard component={UserProfile}/>} />
         <Route path="/detail" element={<ProductDetail />} />
         <Route path="*" element={<Home />} />
       </Routes>
+      <Footer/>
     </>
   )
 }
