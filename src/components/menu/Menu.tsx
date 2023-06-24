@@ -80,7 +80,6 @@ const Menu = () => {
                             <div className='btn_continue'><button>Continue</button></div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
