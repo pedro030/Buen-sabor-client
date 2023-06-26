@@ -33,7 +33,7 @@ const Header: React.FC = () => {
 
     return (
         <>
-            <nav className="sticky top-0 z-10 grid grid-rows-[48px_30px] bg-base-100 navbar">
+            <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] bg-base-100 navbar">
                 <div className='grid grid-cols-[250px_1fr_70px_70px_130px]'>
                     <a className="text-xl normal-case"><h1 className='ml-10 font-bold text-red-600' onClick={() => navigate('/')}>Buen Sabor</h1></a>
 
@@ -48,24 +48,12 @@ const Header: React.FC = () => {
 
 
                     <div className="w-full dropdown dropdown-end">
-                        {/* <DropdownSignin /> */}
-                        <button className='w-full btn btn-primary'>Sign in</button>
+                        <DropdownSignin />
                         {/* <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
             <img src="" />
         </div>
     </label> */}
-                        <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-
-                            <li>
-                                <a className="justify-between">
-                                    Profile
-                                    <span className="badge">New</span>
-                                </a>
-                            </li>
-                            <li><a>Settings</a></li>
-                            <li><a>Logout</a></li>
-                        </ul>
                     </div>
                 </div>
 
@@ -83,32 +71,6 @@ const Header: React.FC = () => {
                     ))}
                 </ul>
             </nav>
-
-            {/* <nav className="w-full grid-cols[1fr_1fr_1fr] navbar">
-                <div className="logo">
-                    <h1 onClick={() => navigate('/')}>Buen Sabor</h1>
-                    <h4>by UTN</h4>
-                </div>
-
-                <div>
-                    <input className="searchInput" type='search' placeholder="Search Food"></input>
-                </div>
-
-                <ul className="items">
-                    <li><img src={setting} height="25" /></li>
-                    <li>
-                        <div className='circle'>
-                            <img src={bike} height="25"/>
-                            <div className='circle small_circle'>1</div>
-                        </div>                            
-                    </li>
-
-                    <li><img src={cart} height="25" /></li>
-                    <DropdownSignin />
-                </ul>
-            </nav> */}
-
-
         </>
     )
 }

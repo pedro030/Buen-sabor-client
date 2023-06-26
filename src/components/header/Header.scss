@@ -2,50 +2,45 @@
     @return -1px 5px 4px 0px rgba(0, 0, 0, 0.25)
 }
 
-.searchInput:focus{
-    outline: 2px ridge var(--main-original-bg-color);
-
-}
-
 .active{
     color: #000;
 }
 
-    li {
-        padding-right: 2rem;
-        font-family: Poppins, FontAwesome;
+    // li {
+    //     padding-right: 2rem;
+    //     font-family: Poppins, FontAwesome;
 
-        a{
-            all: unset;
-            cursor:pointer;
-        }
-        .circle {
-            background: #CDFFCD;
-            border-radius: 50%;
-            width: 1.7rem;
-            height: 1.7rem;
-            padding: .2rem;
-            box-shadow: bottom_shadow();
+    //     a{
+    //         all: unset;
+    //         cursor:pointer;
+    //     }
+    //     .circle {
+    //         background: #CDFFCD;
+    //         border-radius: 50%;
+    //         width: 1.7rem;
+    //         height: 1.7rem;
+    //         padding: .2rem;
+    //         box-shadow: bottom_shadow();
 
-            .small_circle {
-                position: relative;
-                bottom: 2.6rem;
-                left: 1.2rem;
-                background: #007F00;
-                width: 13px;
-                height: 13px;
-                text-align: center;
-                color: white;
-            }
-        }
+    //         .small_circle {
+    //             position: relative;
+    //             bottom: 2.6rem;
+    //             left: 1.2rem;
+    //             background: #007F00;
+    //             width: 13px;
+    //             height: 13px;
+    //             text-align: center;
+    //             color: white;
+    //         }
+    //     }
 
-        button {
-            border-radius: 20px;
-            background-color: var(--main-original-bg-color);
-            color: white;
-            padding: 5px 15px 5px 15px;
-            border: 0px;
-        }
+    //     button {
+    //         border-radius: 20px;
+    //         background-color: var(--main-original-bg-color);
+    //         color: white;
+    //         padding: 5px 15px 5px 15px;
+    //         border: 0px;
+    //     }
 
         
-    }
+    // }
