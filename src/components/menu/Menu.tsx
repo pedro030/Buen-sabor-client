@@ -54,7 +54,7 @@ const Menu = () => {
                     </div>
                 </div>
                 <div className='order'>
-                    <div className='flex flex-col mt-4 items-end'>
+                    <div className='flex flex-col mt-6 items-end'>
                         <div className="px-4 bg-white rounded-xl w-80 ">
                             <div className='w-72 h-60'>
                                 <div className="flex flex-row justify-between mb-1">
