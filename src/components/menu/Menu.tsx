@@ -10,17 +10,14 @@ const Menu = () => {
             <h1 className='text-4xl mb-6'>Menu</h1>
             <div className='grid grid-cols-[180px_3fr_1fr] gap-2'>
                 <div className='filter'>
-                    <div className="grid grid-cols-[90px_150px]">
+                    <div className="flex justify-between">
                         <h2>Filter</h2>
-                        <div className='flex flex-row'>
-                            <img className='items-center pr-2' src={clean} height='15' />
-                            <h5 className='mt-1'>Clear filters</h5>
-                        </div>
+                        <img className='items-center h-4' src={clean} />
                     </div>
                     <div className="form-control pt-2">
                         <h4 className='pb-2'>Cusine/Food Type</h4>
                         <div>
-                            <hr className='mb-1'/>
+                            <hr className='mb-1' />
                             <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1 " />
                             <label className='label-text'>American</label><br />
                             <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
@@ -31,7 +28,7 @@ const Menu = () => {
                             <label className='label-text'>French</label><br />
                             <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
                             <label className='label-text'>Thailand</label>
-                            <hr className='mt-1'/>
+                            <hr className='mt-1' />
                         </div>
                     </div>
                 </div>
@@ -64,7 +61,7 @@ const Menu = () => {
                                     <h2>My order</h2>
                                     <h4>edit</h4>
                                 </div>
-                                <hr />
+                                <hr className='my-2' />
                                 <div className="product_order">
                                     <h4>1x Pizza mozarella</h4>
                                     <h4>$1700</h4>
@@ -80,7 +77,7 @@ const Menu = () => {
                             </div>
                             <div>
                                 <h4 className='text-right'>subtotal: xxx</h4>
-                                <div className='flex justify-center'><button className='btn btn-primary rounded-full w-full mb-2'>Continue</button></div>
+                                <div className='flex justify-center mt-2'><button className='btn btn-primary rounded-full w-full mb-2 btn-disabled'>Continue</button></div>
                             </div>
                         </div>
                     </div>
