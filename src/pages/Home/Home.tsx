@@ -11,7 +11,6 @@ import Footer from '../../components/footer/Footer'
 const Home = () => {
     return (
         <div>
-            {/* <Header /> */}
             <Carousel />
             <Menu />
         </div>

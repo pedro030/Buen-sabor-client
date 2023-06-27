@@ -6,78 +6,82 @@ import clean from '../../assets/clean.svg'
 
 const Menu = () => {
     return (
-        <div id='menuSeccion' className="menu">
-            <h1 >Menu</h1>
-            <div className='details_menu'>
-                <div className='col filter'>
-                    <div className="header_filter">
+        <div id='menuSeccion' className="p-8 ">
+            <h1 className='text-4xl mb-6'>Menu</h1>
+            <div className='grid grid-cols-[180px_3fr_1fr] gap-2'>
+                <div className='filter'>
+                    <div className="grid grid-cols-[90px_150px]">
                         <h2>Filter</h2>
-                        <div >
-                            <img src={clean} height='15' />
-                            <h5 className='pt-1'>Clear filters</h5>
+                        <div className='flex flex-row'>
+                            <img className='items-center pr-2' src={clean} height='15' />
+                            <h5 className='mt-1'>Clear filters</h5>
                         </div>
                     </div>
-                    <div className="category_filter">
-                        <h4>Cusine/Food Type</h4>
-                        <div className="list_checkout">
-
-                            <input type="checkbox" name="checkbox"></input>
-                            <label>American</label><br />
-                            <input type="checkbox" name="checkbox"></input>
-                            <label>Italy</label><br />
-                            <input type="checkbox" name="checkbox"></input>
-                            <label>India</label><br />
-                            <input type="checkbox" name="checkbox"></input>
-                            <label>French</label><br />
-                            <input type="checkbox" name="checkbox"></input>
-                            <label>Thailand</label>
-
+                    <div className="form-control pt-2">
+                        <h4 className='pb-2'>Cusine/Food Type</h4>
+                        <div>
+                            <hr className='mb-1'/>
+                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1 " />
+                            <label className='label-text'>American</label><br />
+                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
+                            <label className='label-text'>Italy</label><br />
+                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
+                            <label className='label-text'>India</label><br />
+                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
+                            <label className='label-text'>French</label><br />
+                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
+                            <label className='label-text'>Thailand</label>
+                            <hr className='mt-1'/>
                         </div>
                     </div>
                 </div>
-                <div className='col products'>
-                    <div className='order_product'>
-                        <div>Found <span>376</span> results in 54 seconds</div>
+                <div className='products'>
+                    <div className='w-[650px]'>
+                        <p className='pl-5'>Found <span className='text-primary'>376</span> results in 54 seconds</p>
                         {/* <div><button>sort</button></div>
                         <div><button>paginable</button></div>
                         <div><button>boxs</button>
                         <button>rows</button></div> */}
                     </div>
-                    <div className="list_products">
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
+                    <div className='flex items-center justify-center'>
+                        <div className="grid grid-cols-3 gap-2">
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                            <ProductCard />
+                        </div>
                     </div>
                 </div>
-                <div className='col order'>
-                    <div className="box_order">
-                        <div className='order_detail'>
-                            <div className="header_order">
-                                <h2>My order</h2>
-                                <h4>edit</h4>
+                <div className='order'>
+                    <div className='flex flex-col mt-4 items-end'>
+                        <div className="px-4 bg-white rounded-xl w-80 ">
+                            <div className='w-72 h-60'>
+                                <div className="flex flex-row justify-between mb-1">
+                                    <h2>My order</h2>
+                                    <h4>edit</h4>
+                                </div>
+                                <hr />
+                                <div className="product_order">
+                                    <h4>1x Pizza mozarella</h4>
+                                    <h4>$1700</h4>
+                                </div>
+                                <div className="product_order">
+                                    <h4>1x Pizza mozarella</h4>
+                                    <h4>$1700</h4>
+                                </div>
+                                <div className="product_order">
+                                    <h4>1x Pizza mozarella</h4>
+                                    <h4>$1700</h4>
+                                </div>
                             </div>
-                            <hr />
-                            <div className="product_order">
-                                <h4>1x Pizza mozarella</h4>
-                                <h4>$1700</h4>
+                            <div>
+                                <h4 className='text-right'>subtotal: xxx</h4>
+                                <div className='flex justify-center'><button className='btn btn-primary rounded-full w-full mb-2'>Continue</button></div>
                             </div>
-                            <div className="product_order">
-                                <h4>1x Pizza mozarella</h4>
-                                <h4>$1700</h4>
-                            </div>
-                            <div className="product_order">
-                                <h4>1x Pizza mozarella</h4>
-                                <h4>$1700</h4>
-                            </div>
-                        </div>
-                        <div className="button_order">
-                            <h4 className='subtotal'>subtotal: xxx</h4>
-                            <div className='btn_continue'><button>Continue</button></div>
                         </div>
                     </div>
                 </div>
