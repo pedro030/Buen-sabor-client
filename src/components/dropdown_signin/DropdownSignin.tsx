@@ -37,7 +37,7 @@ const DropdownSignin = () => {
     return (
         <>
             <div className="w-full dropdown dropdown-end">
-                <button className='w-full btn btn-primary'>{!isAuthenticated ? "Sign In" : "O"}</button>
+                <button className='w-full rounded-full btn btn-primary'>{!isAuthenticated ? "Sign In" : "O"}</button>
 
                 <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
 
