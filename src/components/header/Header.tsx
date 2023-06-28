@@ -33,7 +33,7 @@ const Header: React.FC = () => {
 
     return (
         <>
-            <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] bg-base-100 navbar">
+            <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] bg-base-100 navbar shadow">
                 <div className='grid grid-cols-[250px_1fr_70px_70px_130px]'>
                     <a className="text-xl normal-case"><h1 className='ml-10 font-bold text-red-600' onClick={() => navigate('/')}>Buen Sabor</h1></a>
 
