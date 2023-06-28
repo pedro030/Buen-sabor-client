@@ -7,26 +7,26 @@ import clean from '../../assets/clean.svg'
 const Menu = () => {
     return (
         <div id='menuSeccion' className="p-8 ">
-            <h1 className='text-4xl mb-6'>Menu</h1>
+            <h1 className='mb-6 text-4xl'>Menu</h1>
             <div className='grid grid-cols-[180px_3fr_1fr] gap-2'>
                 <div className='filter'>
                     <div className="flex justify-between">
                         <h2>Filter</h2>
                         <img className='items-center h-4' src={clean} />
                     </div>
-                    <div className="form-control pt-2">
+                    <div className="pt-2 form-control">
                         <h4 className='pb-2'>Cusine/Food Type</h4>
                         <div>
                             <hr className='mb-1' />
-                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1 " />
+                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary " />
                             <label className='label-text'>American</label><br />
-                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
+                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" />
                             <label className='label-text'>Italy</label><br />
-                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
+                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" />
                             <label className='label-text'>India</label><br />
-                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
+                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" />
                             <label className='label-text'>French</label><br />
-                            <input type="checkbox" className="checkbox checkbox-primary rounded w-4 h-4 mr-1" />
+                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" />
                             <label className='label-text'>Thailand</label>
                             <hr className='mt-1' />
                         </div>
@@ -54,10 +54,10 @@ const Menu = () => {
                     </div>
                 </div>
                 <div className='order'>
-                    <div className='flex flex-col mt-6 items-end'>
+                    <div className='flex flex-col items-end mt-6'>
                         <div className="px-4 bg-white rounded-xl w-80 ">
                             <div className='w-72 h-60'>
-                                <div className="flex flex-row justify-between mb-1">
+                                <div className="flex flex-row justify-between mt-2 mb-1">
                                     <h2>My order</h2>
                                     <h4>edit</h4>
                                 </div>
@@ -77,7 +77,7 @@ const Menu = () => {
                             </div>
                             <div>
                                 <h4 className='text-right'>subtotal: xxx</h4>
-                                <div className='flex justify-center mt-2'><button className='btn btn-primary rounded-full w-full mb-2 btn-disabled'>Continue</button></div>
+                                <div className='flex justify-center mt-2'><button className='w-full mb-2 rounded-full btn btn-primary btn-disabled'>Continue</button></div>
                             </div>
                         </div>
                     </div>
