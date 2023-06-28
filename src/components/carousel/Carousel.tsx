@@ -16,10 +16,10 @@ const Carousel = () => {
     return (
         <section>
             <div className="hero h-[85vh] bg-[url('src/assets/carousel_img_primary.png')]">
-                <div className="hero-overlay bg-opacity-50"></div>
-                <div className="hero-content text-center text-neutral-content">
+                <div className="bg-opacity-50 hero-overlay"></div>
+                <div className="text-center hero-content text-neutral-content">
                     <div className="max-w-md">
-                        <h1 className='text-xl mb-1'>Welcome to <span className='text-xl text-primary'>Buen Sabor</span></h1>
+                        <h1 className='mb-1 text-xl'>Welcome to <span className='text-xl text-primary'>Buen Sabor</span></h1>
                         <h1 className='text-5xl text-white'>Feel The Autenthic & </h1>
                         <h1 className='text-5xl text-white'>Orgin Of Food</h1>
                         <div>
