@@ -1,15 +1,43 @@
 @import 'styles.scss';
 
-.hotsale_btn {
-    border-radius: 20px;
-    background-color: var(--main-original-bg-color);
-    color: white;
-    padding: 5px 15px 5px 15px;
-    border: 0px;
-    font-size: .6rem;
-    margin-top: 1rem;
-    margin-bottom: -1rem;
+.description-items {
+    span {
+        margin-right: 6px;
+        background-color: $background-grey;
+        color: $border-grey;
+        border: 2px solid $border-grey;
+        border-radius: 25px;
+        font-size: .8rem;
+        padding: 5px 16px;
+        display: inline-flex;
+        align-items: center;
+
+        img {
+            padding-right: 0.6rem;
+        }
+    }
 }
+
+.description-text {
+    margin-top: 30px;
+
+    h4 {
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    p {
+        font-weight: 300px;
+        font-size: 12px;
+    }
+
+    li {
+        font-weight: 300px;
+        font-size: 12px;
+    }
+}
+
+
 .button-back {
     position: absolute;
     display: flex;
@@ -45,43 +73,9 @@
         font-size: 28px;
     }
 
-    .description-items {
-        span {
-            margin-right: 6px;
-            background-color: $background-grey;
-            color: $border-grey;
-            border: 2px solid $border-grey;
-            border-radius: 25px;
-            font-size: .8rem;
-            padding: 5px 16px;
-            display: inline-flex;
-            align-items: center;
+    
 
-            img {
-                padding-right: 0.6rem;
-            }
-        }
-    }
-
-    .description-text {
-        margin-top: 30px;
-
-        h4 {
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        p {
-            font-weight: 300px;
-            font-size: 12px;
-        }
-
-        li {
-            font-weight: 300px;
-            font-size: 12px;
-        }
-    }
-
+    
 }
 
 .button-section {
