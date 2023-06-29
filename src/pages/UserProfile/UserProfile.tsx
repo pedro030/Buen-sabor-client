@@ -28,9 +28,7 @@ const UserProfile = () => {
         <li>
           <h2 className="menu-title">Orders</h2>
           <ul>
-            <li><a>Order list</a></li>
-            <li><a>Item 2</a></li>
-            <li><a>Item 3</a></li>
+            <li><a>Order history</a></li>
           </ul>
         </li>
       </ul>
