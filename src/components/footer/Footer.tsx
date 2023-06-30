@@ -10,7 +10,7 @@ const Footer = () => {
 
     return (
         <>
-            <footer className="footer p-10 bg-base-200 text-base-content">
+            <footer className="p-10 mt-5 footer bg-base-200 text-base-content">
                 <div>
                     <h1 className='text-4xl font-bold text-red-600'>Buen Sabor</h1>
                     <p>Buen sabor Rte.<br />Providing delicious food since 2023</p>
@@ -36,7 +36,7 @@ const Footer = () => {
                     <a className="link link-hover">Cookie policy</a>
                 </div>
             </footer>
-            <footer className="footer px-10 py-4 border-t bg-base-200 text-base-content border-base-300">
+            <footer className="px-10 py-4 border-t footer bg-base-200 text-base-content border-base-300">
                 <p>Copyright © 2023 - All right reserved by Buen Sabor Rte</p>
             </footer>
         </>
