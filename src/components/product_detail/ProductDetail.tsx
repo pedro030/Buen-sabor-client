@@ -16,17 +16,17 @@ interface DeleteModalProps {
 const ProductDetail: React.FC<DeleteModalProps> = ({ isOpen, onClose, onConfirm }) => {
   return (
     <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">
-      <div className="rounded-lg modal modal-open">
-        <div className='w-[80vw] h-[85vh] flex relative rounded-lg bg-base-100 z-10 mt-[6rem]'>
+      <div className="rounded modal modal-open">
+        <div className='w-[80vw] h-[85vh] flex relative rounded-3xl bg-base-100 z-10 mt-[6rem]'>
           <div className="absolute flex items-center text-sm text-white top-5 left-5 hover:cursor-pointer">
             <img src={arrowLeftSvg} alt="" />
-            <a onClick={event => window.location.href = 'http://localhost:5173/'}><p>back to menu</p></a>
+            <a className='ml-1' onClick={event => window.location.href = 'http://localhost:5173/'}><p>back to menu</p></a>
           </div>
-          <img src={productImage} alt="product image" className="object-cover w-2/4 rounded-lg" />
-          <div className="flex flex-col items-center p-6">
+          <img src={productImage} alt="product image" className="object-cover w-2/4 rounded-s-3xl" />
+          <div className="flex flex-col items-center p-10">
             <div className="product-description">
-              <button className='rounded-full btn btn-primary btn-xs'>HOTSALE</button>
-              <h3 className='text-xl font-semibold'><img src={pizzaSvg} alt="category-icon" height="28" /> Nombre Producto</h3>
+              <button className='mb-1 rounded-full btn btn-primary btn-xs'>HOTSALE</button>
+              <h3 className='text-xl font-semibold'><img className='inline my-4 mr-4' src={pizzaSvg} alt="category-icon" height="28" /> Nombre Producto</h3>
               <div className="description-items">
                 <span>Category</span>
                 <span><img src={fireSvg} alt="category-icon" height="16" />Calorias</span>
@@ -44,23 +44,26 @@ const ProductDetail: React.FC<DeleteModalProps> = ({ isOpen, onClose, onConfirm 
               </div>
             </div>
           </div>
-          <div className="button-section">
+          <div className="grid grid-cols-3 gap-3 p-4 button-section">
+           
             <div className="info">
               <img src={pizzaSvg} alt="category icon" />
               <p>
                 Product Name<br />
-                <span>category</span>
+                <span className='tracking-widest uppercase '>category</span>
               </p>
             </div>
+
             <div className="add-to-cart">
-              <div className="qty-input">
+              <div className=" qty-input">
                 <label htmlFor="">Qty: </label>
-                <button>-</button>
-                <input type="text" maxLength={2} />
-                <button>+</button>
+                <button className='btn btn-primary btn-outline btn-xs'>-</button>
+                <input className='w-10 p-2 mx-2 input input-bordered input-neutral input-sm' type="text" maxLength={2} />
+                <button className='btn btn-primary btn-outline btn-xs'>+</button>
               </div>
-              <button className='btn btn-primary'>Add to Cart</button>
             </div>
+
+            <button className='mx-1 btn btn-primary '>Add to Cart</button>
           </div>
         </div>
       </div>
