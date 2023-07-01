@@ -31,9 +31,9 @@ const Carousel = () => {
             </div>
 
 
-            <div className='grid w-full grid-cols-2 mt-5'>
+            <div id='menuSeccion'  className='grid w-full grid-cols-2 mt-5 mb-3'>
 
-                <div className='flex flex-row items-center justify-center'>
+                <div  className='flex flex-row items-center justify-center'>
                     <img className='pr-4' src={img_location} height="50" />
                     <div>
                         <h2>Locate us</h2>
