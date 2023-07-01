@@ -22,21 +22,16 @@ const ProductCard = () => {
   return (
     <>
       <div className="shadow-xl card card-compact w-96 bg-base-100">
-        <div className="hero h-[14rem] rounded-md  bg-[url('src/assets/salad.jpg')]">
-          <div className="bg-opacity-80"></div>
-          <div className="hero-content ">
-            <div className="max-w-md">
-              
-            </div>
+        <div className="hero h-[14rem] rounded-md  bg-[url('src/assets/salad.jpg')] flex items-start justify-end">
+          <div className="bg-opacity-80 "></div>
+          <div className=" hero-content">
+              <button className='btn btn-primary btn-circle btn-xs'>+</button>
           </div>
         </div>
-        <div className="card-body">
+        <div onClick={() => handleOpenDeleteModal()} className="card-body">
           <h2 className="card-title">Product Name</h2>
           <p>Product short description</p>
           <p>$50</p>
-          <div className="justify-center card-actions">
-            <button className="btn btn-primary" onClick={() => handleOpenDeleteModal()}>Add order</button>
-          </div>
         </div>
       </div>
       <ProductDetail
