@@ -6,7 +6,7 @@ import clean from '../../assets/clean.svg'
 
 const Menu = () => {
     return (
-        <div id='menuSeccion' className="p-8 ">
+        <div className="p-8">
             <h1 className='mb-6 text-4xl'>Menu</h1>
             <div className='grid grid-cols-[180px_3fr_1fr] gap-2'>
                 <div className='filter'>
