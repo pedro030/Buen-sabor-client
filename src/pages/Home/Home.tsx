@@ -11,12 +11,12 @@ const Home = () => {
     const myModal = document.getElementById('my_modal_1') as HTMLElement
     return (
         <div>
-            {/* <Carousel />
-            <Menu /> */}
+            <Carousel />
+            <Menu />
 
             {/* <OrderDetail/> */}
 
-            <OrderTracking />
+            {/* <OrderTracking /> */}
         </div >
     )
 }
