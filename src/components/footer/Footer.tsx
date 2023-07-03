@@ -10,7 +10,7 @@ const Footer = () => {
 
     return (
         <>
-            <footer className="p-10 mt-5 footer bg-base-200 text-base-content">
+            <footer className="p-10 footer bg-base-200 text-base-content">
                 <div>
                     <h1 className='text-4xl font-bold text-red-600'>Buen Sabor</h1>
                     <p>Buen sabor Rte.<br />Providing delicious food since 2023</p>

@@ -6,6 +6,8 @@ import Menu from '../../components/menu/Menu'
 import Footer from '../../components/footer/Footer'
 import OrderDetail from '../OrderDetail/OrderDetail'
 import OrderTracking from '../OrderTracking/OrderTracking'
+import Register from '../Register/Register'
+import Login from '../Login/Login'
 
 const Home = () => {
     return (
@@ -16,6 +18,9 @@ const Home = () => {
             {/* <OrderDetail/> */}
 
             {/* <OrderTracking /> */}
+
+            {/* <Register/> */}
+            {/* <Login/> */}
         </div >
     )
 }

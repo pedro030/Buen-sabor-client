@@ -40,7 +40,7 @@ const UserProfile = () => {
           {/* <Route path="/" element={<UserDetails />} /> */}
           {/* <Route path="/" element={<Address />} /> */}
           {/* <Route path="/" element={<Change_password />} /> */}
-          <Route path="/" element={<History_Order />} />
+          {/* <Route path="/" element={<History_Order />} /> */}
         </Routes>
       </div>
     </div>
