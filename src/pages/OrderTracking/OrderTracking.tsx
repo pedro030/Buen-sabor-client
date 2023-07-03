@@ -9,7 +9,7 @@ const OrderTracking = () => {
     const { user } = useAuth0()
 
     return (
-        <div className="grid grid-rows-[192px_80px_1fr] gap-5 p-10">
+        <div className="grid grid-rows-[192px_80px_1fr] gap-5 p-10 h-[100%]">
             {/* Maps */}
             <div>
                 <iframe className="w-full h-48 rounded-3xl"

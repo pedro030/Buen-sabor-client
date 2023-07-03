@@ -77,7 +77,7 @@ const OrderDetail = () => {
                                     <h1>Available Methods: </h1>
                                     <div className='flex flex-col items-center justify-between'>
                                         <button className='w-full my-4 rounded-full btn btn-secondary'>Cash</button>
-                                        <button className='w-full rounded-full btn btn-primary'>Mercado Libre</button>
+                                        <button className='w-full rounded-full btn btn-primary'>Mercado Pago</button>
                                     </div>
                                 </div>
                             </div>

@@ -1,8 +1,9 @@
 import React from 'react'
 import './UserProfile.scss'
-import { Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
 import UserDetails from '../../components/user_details/UserDetails'
 import { useAuth0 } from '@auth0/auth0-react'
+import Address from '../../components/addresses/Address'
 
 const UserProfile = () => {
   const { user } = useAuth0()
@@ -32,9 +33,11 @@ const UserProfile = () => {
           </ul>
         </li>
       </ul>
-      <div className='mt-4'>
+      <div className='px-4 pt-1 mt-4'>
         <Routes>
-          <Route path="/" element={<UserDetails />} />
+          {/* <Route path="/info" element={<UserDetails />} /> */}
+          <Route path="/" element={<Address />} />
+          {/* <Route path="/" element={<UserDetails />} /> */}
         </Routes>
       </div>
     </div>
