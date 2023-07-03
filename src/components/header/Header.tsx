@@ -33,21 +33,21 @@ const Header: React.FC = () => {
 
     return (
         <>
-            <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] bg-base-100 navbar shadow">
-                <div className='grid grid-cols-[250px_1fr_70px_70px_130px]'>
-                    <a className="text-xl normal-case"><h1 className='ml-10 font-bold text-red-600' onClick={() => navigate('/')}>Buen Sabor</h1></a>
+            <nav className="sticky top-0 z-10 grid lg:grid-rows-[48px_32px] bg-base-100 navbar shadow grid-rows-1">
+                <div className='flex justify-between lg:grid lg:grid-cols-[250px_1fr_70px_70px_130px]'>
+                    <a className="text-xl normal-case"><h1 className='font-bold text-red-600 min-w-[28px] ml-10' onClick={() => navigate('/')}>Buen Sabor</h1></a>
 
-                    <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" />
+                    <input type="text" placeholder="Search Food" className="hidden w-full rounded-full h-11 input input-bordered lg:inline" />
 
-                    <div className='flex justify-center'>
+                    <div className='hidden lg:flex lg:justify-center'>
                         <img src={setting} height="25" />
                     </div>
-                    <div className='flex justify-center'>
+                    <div className='hidden lg:flex lg:justify-center'>
                         <img src={cart} height="25" />
                     </div>
 
 
-                    <div className="w-full dropdown dropdown-end">
+                    <div className="flex justify-end w-full dropdown dropdown-end">
                         <DropdownSignin />
                         {/* <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
@@ -57,7 +57,7 @@ const Header: React.FC = () => {
                     </div>
                 </div>
 
-                <ul className="flex flex-row justify-around pt-1 text-gray-400">
+                <ul className="flex-row justify-around hidden pt-1 text-gray-400 lg:flex">
                     {navbarLinks.map((link) => (
                         <li key={link.id}>
                             <a
