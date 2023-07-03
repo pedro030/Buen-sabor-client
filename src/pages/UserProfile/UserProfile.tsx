@@ -4,6 +4,8 @@ import { Link, Route, Routes } from 'react-router-dom'
 import UserDetails from '../../components/user_details/UserDetails'
 import { useAuth0 } from '@auth0/auth0-react'
 import Address from '../../components/addresses/Address'
+import Change_password from '../../components/change_password/Change_password'
+import History_Order from '../../components/history_order/History_Order'
 
 const UserProfile = () => {
   const { user } = useAuth0()
@@ -11,7 +13,7 @@ const UserProfile = () => {
   return (
 
     <div className='grid grid-cols-[260px_1fr]'>
-      <ul className="w-56 m-4 menu bg-secondary rounded-box">
+      <ul className="w-56 m-4 max-h-96 menu bg-secondary rounded-box">
         <div className="flex justify-center avatar">
           <div className="w-24 rounded-full">
             <img src={user?.picture} />
@@ -35,9 +37,10 @@ const UserProfile = () => {
       </ul>
       <div className='px-4 pt-1 mt-4'>
         <Routes>
-          {/* <Route path="/info" element={<UserDetails />} /> */}
-          <Route path="/" element={<Address />} />
           {/* <Route path="/" element={<UserDetails />} /> */}
+          {/* <Route path="/" element={<Address />} /> */}
+          {/* <Route path="/" element={<Change_password />} /> */}
+          <Route path="/" element={<History_Order />} />
         </Routes>
       </div>
     </div>
