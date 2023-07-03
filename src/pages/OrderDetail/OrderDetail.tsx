@@ -6,6 +6,14 @@ const OrderDetail = () => {
     return (
         <>
             <h1 className="flex justify-center my-6 text-3xl font-bold text-red-600">Buen Sabor</h1>
+            <div className='flex justify-center mb-5'>
+                <ul className="steps">
+                    <li className="step step-primary">Choice product</li>
+                    <li className="step step-primary">Create Order</li>
+                    <li className="step step-primary">Follow up</li>
+                    <li className="step">Delivered!</li>
+                </ul>
+            </div>
             <div className='flex justify-center'>
                 <div className="grid grid-cols-[1000px_400px] ">
                     <div className="grid grid-rows-3 gap-7 ">
