@@ -8,7 +8,6 @@ import OrderDetail from '../OrderDetail/OrderDetail'
 import OrderTracking from '../OrderTracking/OrderTracking'
 
 const Home = () => {
-    const myModal = document.getElementById('my_modal_1') as HTMLElement
     return (
         <div>
             <Carousel />
