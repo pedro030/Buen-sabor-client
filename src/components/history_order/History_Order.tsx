@@ -1,6 +1,10 @@
 import TrashSimple from '../../assets/TrashSimple.svg'
 
 const History_Order = () => {
+    const alertDelete = () => {
+        alert("Coming soon! | DELETE |");
+    }
+
     return (
         <div>
             <h2 className='mb-5 text-center stat-title'>Order history</h2>
@@ -40,7 +44,7 @@ const History_Order = () => {
                                 </div>
                             </td>
                             <td>
-                                <button className="btn btn-circle btn-secondary btn-sm">
+                                <button onClick={alertDelete} className="btn btn-circle btn-secondary btn-sm">
                                     <img className='p-1 h-7' src={TrashSimple} />
                                 </button>
                             </td>
@@ -66,7 +70,7 @@ const History_Order = () => {
                                 </div>
                             </td>
                             <td>
-                                <button className="btn btn-circle btn-secondary btn-sm">
+                                <button onClick={alertDelete} className="btn btn-circle btn-secondary btn-sm">
                                     <img className='p-1 h-7' src={TrashSimple} />
                                 </button>
                             </td>
@@ -92,12 +96,12 @@ const History_Order = () => {
                                 </div>
                             </td>
                             <td>
-                                <button className="btn btn-circle btn-secondary btn-sm">
+                                <button onClick={alertDelete} className="flex btn btn-circle btn-secondary btn-sm">
                                     <img className='p-1 h-7' src={TrashSimple} />
                                 </button>
                             </td>
                         </tr>
-                        
+
                     </tbody>
                     <tfoot>
                         <tr>
