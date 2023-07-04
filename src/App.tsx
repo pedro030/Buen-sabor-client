@@ -1,16 +1,16 @@
 import React from 'react'
 import './App.scss'
 import { Route, Routes } from "react-router-dom";
-import ProductDetail from './components/product_detail/ProductDetail'
+import ProductDetail from './components/menu/product_detail/ProductDetail'
 import Home from './pages/Home/Home';
 import { useAuth0 } from '@auth0/auth0-react';
-import PageLoader from './components/page_loader/PageLoader';
+import PageLoader from './pages/page_loader/PageLoader';
 import UserProfile from './pages/UserProfile/UserProfile';
 import { AuthenticationGuard } from './components/auth0/AuthenticationGuard';
 import Header from './components/header/Header';
 import MenuPage from './pages/Menu/Menu';
 import Footer from './components/footer/Footer';
-import About from './components/about/AboutComponent';
+import About from './pages/About/AboutComponent';
 
 
 

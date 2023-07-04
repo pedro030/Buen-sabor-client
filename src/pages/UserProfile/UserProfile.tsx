@@ -1,11 +1,11 @@
 import React from 'react'
 import './UserProfile.scss'
 import { NavLink, Route, Routes } from 'react-router-dom'
-import UserDetails from '../../components/user_details/UserDetails'
+import UserDetails from './Components/user_details/UserDetails'
 import { useAuth0 } from '@auth0/auth0-react'
-import Address from '../../components/addresses/Address'
-import Change_password from '../../components/change_password/Change_password'
-import History_Order from '../../components/history_order/History_Order'
+import Address from './Components/addresses/Address'
+import Change_password from './Components/change_password/Change_password'
+import History_Order from './Components/history_order/History_Order'
 
 const UserProfile = () => {
   const { user } = useAuth0()

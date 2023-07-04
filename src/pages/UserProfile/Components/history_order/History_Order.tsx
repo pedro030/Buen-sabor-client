@@ -1,4 +1,4 @@
-import TrashSimple from '../../assets/TrashSimple.svg'
+import TrashSimple from '../../../../assets/TrashSimple.svg'
 
 const History_Order = () => {
     const alertDelete = () => {
