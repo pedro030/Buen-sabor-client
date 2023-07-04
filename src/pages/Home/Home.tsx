@@ -8,19 +8,25 @@ import OrderDetail from '../OrderDetail/OrderDetail'
 import OrderTracking from '../OrderTracking/OrderTracking'
 import Register from '../Register/Register'
 import Login from '../Login/Login'
+import { FiltersProvider } from '../../context/filters'
+import { CartProvider } from '../../context/cart'
 
 const Home = () => {
     return (
         <div>
-            <Carousel />
-            <Menu />
+            <FiltersProvider>
+            <CartProvider>
+                <Carousel />
+                <Menu />
 
-            {/* <OrderDetail/> */}
+                {/* <OrderDetail/> */}
 
-            {/* <OrderTracking /> */}
+                {/* <OrderTracking /> */}
 
-            {/* <Register/> */}
-            {/* <Login/> */}
+                {/* <Register/> */}
+                {/* <Login/> */}
+            </CartProvider>
+            </FiltersProvider>
         </div >
     )
 }

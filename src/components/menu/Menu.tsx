@@ -1,10 +1,68 @@
-import React from 'react'
+import { useContext, useState, useEffect } from 'react'
 import './Menu.scss'
 import ProductCard from './product_card/ProductCard'
 import clean from '../../assets/clean.svg'
+import { FiltersContext } from '../../context/filters'
+import { products as initialProducts } from '../../mocks/products.json'
+import { CartContext } from '../../context/cart'
 
 
 const Menu = () => {
+    const { filters, setFilters } : any = useContext(FiltersContext);
+    const { cart, setCart } : any = useContext(CartContext);
+    
+    const filterProducts = (products : any) => {
+        return products.filter((p : any) => {
+            return(
+                (
+                    p.price >= filters.minPrice &&
+                    p.price <= filters.maxPrice
+                ) 
+                &&
+                (
+                    filters.category === 0 ||
+                    p.idCategory === filters.category
+                )
+            )
+        })
+    }
+
+    const products = filterProducts(initialProducts);
+
+    const handleChangeCategory = (e : any) => {
+        setFilters((prevState : any) => ({
+            ...prevState,
+            category: Number(e.target.value)
+        }))
+    }
+
+    const handleChangeMinPrice = (e : any) => {
+        setFilters((prevState : any) => ({
+            ...prevState,
+            minPrice: Number(e.target.value)
+        }))
+    }
+
+    const handleChangeMaxPrice = (e : any) => {
+        if(e.target.value != '') {
+            setFilters((prevState : any) => ({
+                ...prevState,
+                maxPrice: Number(e.target.value)
+            }))
+        } else {
+            setFilters((prevState : any) => ({
+                ...prevState,
+                maxPrice: 20000
+            }))
+        }
+        
+    }
+
+    const totalPrice = cart.reduce((total : any, item : any) => {
+        const itemPrice = item.price * item.quantity;
+        return total + itemPrice;
+      }, 0);
+
     return (
         <div className="p-8">
             <h1 className='mb-6 text-4xl'>Menu</h1>
@@ -15,19 +73,28 @@ const Menu = () => {
                         <img className='items-center h-4' src={clean} />
                     </div>
                     <div className="pt-2 form-control">
-                        <h4 className='pb-2'>Cusine/Food Type</h4>
+                        <h4 className='pb-2'>Category</h4>
                         <div>
                             <hr className='mb-1' />
-                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary " />
-                            <label className='label-text'>American</label><br />
-                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" />
-                            <label className='label-text'>Italy</label><br />
-                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" />
-                            <label className='label-text'>India</label><br />
-                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" />
-                            <label className='label-text'>French</label><br />
-                            <input type="checkbox" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" />
-                            <label className='label-text'>Thailand</label>
+                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory}/>
+                            <label className='label-text'>Todos</label><br />
+                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory}/>
+                            <label className='label-text'>Pizzas</label><br />
+                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="2" onChange={handleChangeCategory}/>
+                            <label className='label-text'>Hamburguesas</label><br />
+                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="3" onChange={handleChangeCategory}/>
+                            <label className='label-text'>Panchos</label><br />
+                            <hr className='mt-1' />
+                        </div>
+                        <h4 className='pb-2 mt-2'>Price</h4>
+                        <div>
+                            <hr className='mb-1' />
+                            <label className='label-text mr-2'>Min Price:</label>
+                            <input type="number" className="w-20 h-5 rounded bg-inherit pl-1" min={0} onChange={handleChangeMinPrice}/>
+                            <br />
+                            <label className='label-text mr-2'>Max Price:</label>
+                            <input type="number" className="w-20 h-5 rounded bg-inherit pl-1" onChange={handleChangeMaxPrice}/>
+                            <br />
                             <hr className='mt-1' />
                         </div>
                     </div>
@@ -42,14 +109,12 @@ const Menu = () => {
                     </div>
                     <div className='flex items-center justify-center'>
                         <div className="grid grid-cols-3 gap-2">
-                            <ProductCard />
-                            <ProductCard />
-                            <ProductCard />
-                            <ProductCard />
-                            <ProductCard />
-                            <ProductCard />
-                            <ProductCard />
-                            <ProductCard />
+                    {
+                        products.map((p : any) => {
+                            return (<ProductCard key={p.id} product={p}/>)
+                        })
+                    }
+
                         </div>
                     </div>
                 </div>
@@ -62,21 +127,18 @@ const Menu = () => {
                                     <h4>edit</h4>
                                 </div>
                                 <hr className='my-2' />
-                                <div className="product_order">
-                                    <h4>1x Pizza mozarella</h4>
-                                    <h4>$1700</h4>
-                                </div>
-                                <div className="product_order">
-                                    <h4>1x Pizza mozarella</h4>
-                                    <h4>$1700</h4>
-                                </div>
-                                <div className="product_order">
-                                    <h4>1x Pizza mozarella</h4>
-                                    <h4>$1700</h4>
-                                </div>
+                                {
+                                    cart[0].quantity != 0 ? (cart.map((item : any) => {
+                                        return <div key={item.id} className="product_order">
+                                                    <h4>{item.quantity}x {item.name}</h4>
+                                                    <h4>${item.price}</h4>
+                                                </div>
+                                    })) : ''
+                                
+                                }
                             </div>
                             <div>
-                                <h4 className='text-right'>subtotal: xxx</h4>
+                                <h4 className='text-right'>subtotal: ${(totalPrice ? totalPrice : 0)}</h4>
                                 <div className='flex justify-center mt-2'><button className='w-full mb-2 rounded-full btn btn-primary btn-disabled'>Continue</button></div>
                             </div>
                         </div>
