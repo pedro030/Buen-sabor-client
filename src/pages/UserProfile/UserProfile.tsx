@@ -1,6 +1,6 @@
 import React from 'react'
 import './UserProfile.scss'
-import { Link, Route, Routes } from 'react-router-dom'
+import { NavLink, Route, Routes } from 'react-router-dom'
 import UserDetails from '../../components/user_details/UserDetails'
 import { useAuth0 } from '@auth0/auth0-react'
 import Address from '../../components/addresses/Address'
@@ -23,24 +23,33 @@ const UserProfile = () => {
         <li>
           <h2 className="menu-title">Account</h2>
           <ul>
-            <li><a>Info</a></li>
-            <li><a>Addresses</a></li>
-            <li><a>Change password</a></li>
+            <li>
+              <NavLink to=""
+              end
+              className={({ isActive }) => isActive ? "active" : ""}>Info</NavLink>
+            </li>
+            <li>
+              <NavLink to="addresses" 
+              className={({ isActive}) => isActive ? "active" : ""}>Addresses</NavLink></li>
+            <li>
+              <NavLink to="password-form"
+              className={({ isActive }) => isActive ? "active" : ""}>Change password</NavLink></li>
           </ul>
         </li>
         <li>
           <h2 className="menu-title">Orders</h2>
           <ul>
-            <li><a>Order history</a></li>
+            <li><NavLink to="orders"
+              className={({ isActive }) => isActive ? "active" : ""}>Order history</NavLink></li>
           </ul>
         </li>
       </ul>
       <div className='px-4 pt-1 mt-4'>
         <Routes>
-          {/* <Route path="/" element={<UserDetails />} /> */}
-          {/* <Route path="/" element={<Address />} /> */}
-          {/* <Route path="/" element={<Change_password />} /> */}
-          {/* <Route path="/" element={<History_Order />} /> */}
+          <Route path="/" element={<UserDetails />} /> */
+          <Route path="/addresses" element={<Address />} />
+          <Route path="/password-form" element={<Change_password />} />
+          <Route path="/orders" element={<History_Order />} />
         </Routes>
       </div>
     </div>
