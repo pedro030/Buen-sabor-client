@@ -1,7 +1,7 @@
 import React from 'react'
 import './Home.scss'
 import Header from '../../components/header/Header'
-import Carousel from '../../components/carousel/Carousel'
+import Carousel from './carousel/Carousel'
 import Menu from '../../components/menu/Menu'
 import Footer from '../../components/footer/Footer'
 import OrderDetail from '../OrderDetail/OrderDetail'

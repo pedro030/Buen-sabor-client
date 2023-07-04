@@ -1,6 +1,6 @@
 import React from 'react'
 import './Menu.scss'
-import ProductCard from '../product_card/ProductCard'
+import ProductCard from './product_card/ProductCard'
 import clean from '../../assets/clean.svg'
 
 
