@@ -4,8 +4,7 @@ import setting from '../../assets/setting.svg'
 import bike from '../../assets/bike.svg'
 import cart from '../../assets/cart.svg'
 import DropdownSignin from '../dropdown_signin/DropdownSignin'
-import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom'
 // import searcher from '../../assets/searcher.svg'
 
 interface NavbarLink {
@@ -22,10 +21,12 @@ const Header: React.FC = () => {
         { id: 4, title: 'About', path: '/about' },
     ]);
 
+    //esto tal vez se pueda borrar
     const [activeLink, setActiveLink] = useState('');
 
     const navigate = useNavigate()
 
+    // esto tal vez se pueda borrar se
     useEffect(() => {
         const currentPath = window.location.pathname;
         setActiveLink(currentPath);
@@ -60,13 +61,13 @@ const Header: React.FC = () => {
                 <ul className="flex-row justify-around hidden pt-1 text-gray-400 lg:flex">
                     {navbarLinks.map((link) => (
                         <li key={link.id}>
-                            <a
-                                href={link.path}
-                                className={link.path === activeLink ? 'active' : ''}
-                                onClick={() => setActiveLink(link.path)}
+                            <NavLink
+                                to={link.path}
+                                className={({ isActive }) => isActive ? "active" : ""}
+                                // onClick={() => setActiveLink(link.path)}
                             >
                                 {link.title}
-                            </a>
+                            </NavLink>
                         </li>
                     ))}
                 </ul>
