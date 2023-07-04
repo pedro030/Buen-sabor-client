@@ -1,8 +1,8 @@
 import React from 'react'
 import './Carousel.scss'
-import img_carousel from '../../assets/carousel_img_primary.png'
-import img_location from '../../assets/location.svg'
-import img_clock from '../../assets/clock2.svg'
+import img_carousel from '../../../assets/carousel_img_primary.png'
+import img_location from '../../../assets/location.svg'
+import img_clock from '../../../assets/clock2.svg'
 
 const Carousel = () => {
 

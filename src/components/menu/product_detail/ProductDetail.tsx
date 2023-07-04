@@ -1,10 +1,10 @@
 import React from 'react'
 import './ProductDetail.scss'
-import productImage from '../../assets/salad.jpg'
-import pizzaSvg from '../../assets/pizza.svg'
-import fireSvg from '../../assets/fire.svg'
-import clockSvg from '../../assets/clock.svg'
-import arrowLeftSvg from "../../assets/arrow-left.svg";
+import productImage from '../../../assets/salad.jpg'
+import pizzaSvg from '../../../assets/pizza.svg'
+import fireSvg from '../../../assets/fire.svg'
+import clockSvg from '../../../assets/clock.svg'
+import arrowLeftSvg from "../../../assets/arrow-left.svg";
 import ReactModal from 'react-modal';
 
 interface DeleteModalProps {

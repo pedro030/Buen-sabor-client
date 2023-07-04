@@ -1,5 +1,5 @@
-import TrashSimple from '../../../../assets/TrashSimple.svg'
-import MapPin from '../../../../assets/MapPin.svg'
+import TrashSimple from '../../assets/TrashSimple.svg'
+import MapPin from '../../assets/MapPin.svg'
 
 
 const Address = () => {
