@@ -5,11 +5,15 @@ import clean from '../../assets/clean.svg'
 import { FiltersContext } from '../../context/filters'
 import { products as initialProducts } from '../../mocks/products.json'
 import { CartContext } from '../../context/cart'
+import CartModal from '../edit_cart_modal/CartModal'
 
 
 const Menu = () => {
+    const [editCartModal, setEditCartModal] = useState(false);
     const { filters, setFilters } : any = useContext(FiltersContext);
     const { cart, setCart } : any = useContext(CartContext);
+
+    console.log(cart);
     
     const filterProducts = (products : any) => {
         return products.filter((p : any) => {
@@ -64,6 +68,8 @@ const Menu = () => {
       }, 0);
 
     return (
+        <>
+        { editCartModal && <CartModal setEditCartModal={setEditCartModal}/>}
         <div className="p-8">
             <h1 className='mb-6 text-4xl'>Menu</h1>
             <div className='grid grid-cols-[180px_3fr_1fr] gap-2'>
@@ -124,7 +130,7 @@ const Menu = () => {
                             <div className='w-72 h-60'>
                                 <div className="flex flex-row justify-between mt-2 mb-1">
                                     <h2>My order</h2>
-                                    <h4>edit</h4>
+                                    <h4 onClick={() => setEditCartModal(true)}>edit</h4>
                                 </div>
                                 <hr className='my-2' />
                                 {
@@ -146,6 +152,7 @@ const Menu = () => {
                 </div>
             </div>
         </div>
+        </>
     )
 }
 
