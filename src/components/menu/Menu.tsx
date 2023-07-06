@@ -81,9 +81,22 @@ const Menu = () => {
 
     };
 
+    const functionRename = () => {
+        if (products.length > 0) {
+            return products.map((p: any) => {
+                return (<ProductCard key={p.id} product={p} />)
+            })
+        } else {
+            return (
+                <div className='flex items-center justify-center h-96 w-[40rem]'>
+                    <h1 className='font-bold text-primary'>There are no results matching your search</h1>
+                </div>
+            )
+        }
+    }
     return (
         <>
-            <div className="p-8">
+            <div className="p-8 min-h-[140vh]">
                 <h1 className='mb-6 text-4xl'>Menu</h1>
                 <div className='grid grid-cols-[180px_3fr_1fr] gap-2'>
                     <div className='filter'>
@@ -118,7 +131,7 @@ const Menu = () => {
                     </div>
                     <div className='products'>
                         <div className='w-[650px]'>
-                            <p className='pl-5'>Found <span className='text-primary'>376</span> results in 54 seconds</p>
+                            <p className='pl-5'>Found <span className='text-primary'>{products.length}</span> results in 54 seconds</p>
                             {/* <div><button>sort</button></div>
                         <div><button>paginable</button></div>
                         <div><button>boxs</button>
@@ -127,12 +140,32 @@ const Menu = () => {
                         <div className='flex items-center justify-center'>
                             <div className="grid grid-cols-3 gap-2">
                                 {
-                                    products.map((p: any) => {
-                                        return (<ProductCard key={p.id} product={p} />)
-                                    })
+                                    (products.length > 0) ?
+                                        products.map((p: any) => {
+                                            return (<ProductCard key={p.id} product={p} />)
+                                        })
+                                        
+                                        :
+                                        
+                                        <div className='flex items-center justify-center h-96 w-[40rem]'>
+                                            <h1 className='font-bold text-primary'>There are no results matching your search</h1>
+                                        </div>
                                 }
 
                             </div>
+                        </div>
+                        <div className='flex justify-end'>
+                            {
+                                (products.length > 0) && <div className="join mt-5">
+                                    <button className="join-item btn btn-sm">«</button>
+                                    <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="1" checked />
+                                    <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="2" />
+                                    <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="3" />
+                                    <button className="join-item btn btn-sm btn-disabled">...</button>
+                                    <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="8" />
+                                    <button className="join-item btn btn-sm">»</button>
+                                </div>
+                            }
                         </div>
                     </div>
                     <div className='order'>
@@ -167,7 +200,7 @@ const Menu = () => {
                 isOpen={isEditCartModalOpen}
                 onClose={handleCloseProductModal}
                 onConfirm={handleConfirmDelete}
-              />
+            />
         </>
     )
 }
