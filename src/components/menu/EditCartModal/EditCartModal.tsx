@@ -31,7 +31,7 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                             </thead>
                             <tbody>
                                 {cart[0].quantity === 0 ?
-                                    <tr><td colSpan={5}>Empty Cart</td></tr> :
+                                    <tr><td colSpan={5} className="text-secondary font-bold text-center py-20 text-xl">Empty Cart</td></tr> :
                                     cart.map((p: any) => {
                                         return (
                                             <tr key={p.id}>
