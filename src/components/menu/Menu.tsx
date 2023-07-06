@@ -88,13 +88,12 @@ const Menu = () => {
                 <div className='grid grid-cols-[180px_3fr_1fr] gap-2'>
                     <div className='filter'>
                         <div className="flex justify-between">
-                            <h2>Filter</h2>
+                            <h2 className='card-title stat-title'>Filter</h2>
                             <img className='items-center h-4' src={clean} />
                         </div>
-                        <div className="pt-2 form-control">
-                            <h4 className='pb-2'>Category</h4>
+                        <form className="pt-2 form-control">
+                            <h4 className='pb-2 font-bold text-sm'>Category</h4>
                             <div>
-                                <hr className='mb-1' />
                                 <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} />
                                 <label className='label-text'>Todos</label><br />
                                 <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
@@ -103,9 +102,8 @@ const Menu = () => {
                                 <label className='label-text'>Hamburguesas</label><br />
                                 <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="3" onChange={handleChangeCategory} />
                                 <label className='label-text'>Panchos</label><br />
-                                <hr className='mt-1' />
                             </div>
-                            <h4 className='pb-2 mt-2'>Price</h4>
+                            <h4 className='mb-2 mt-4 font-bold text-sm'>Price</h4>
                             <div className='flex flex-col gap-3'>
                                 <div className='flex flex-row items-center justify-between'>
                                     <label className='label-text mr-2'>Min Price:</label>
@@ -116,7 +114,7 @@ const Menu = () => {
                                     <input type="number" className="w-20 input input-bordered input-xs" max={3000} onChange={handleChangeMaxPrice} />
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                     <div className='products'>
                         <div className='w-[650px]'>
