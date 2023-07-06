@@ -7,14 +7,14 @@ import { CartContext } from '../../../context/cart';
 const ProductCard = ({ product } : any) => {
 
   const { addToCart } : any = useContext(CartContext);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
   const handleOpenProductModal = () => {
-    setIsDeleteModalOpen(true);
+    setIsProductModalOpen(true);
   };
 
   const handleCloseProductModal = () => {
-    setIsDeleteModalOpen(false);
+    setIsProductModalOpen(false);
   };
 
   const handleConfirmDelete = () => {
@@ -37,7 +37,7 @@ const ProductCard = ({ product } : any) => {
         </div>
       </div>
       <ProductDetail
-                isOpen={isDeleteModalOpen}
+                isOpen={isProductModalOpen}
                 onClose={handleCloseProductModal}
                 onConfirm={handleConfirmDelete}
               />
