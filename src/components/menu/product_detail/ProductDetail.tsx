@@ -7,13 +7,13 @@ import clockSvg from '../../../assets/clock.svg'
 import arrowLeftSvg from "../../../assets/arrow-left.svg";
 import ReactModal from 'react-modal';
 
-interface DeleteModalProps {
+interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
-const ProductDetail: React.FC<DeleteModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const ProductDetail: React.FC<ProductModalProps> = ({ isOpen, onClose, onConfirm }) => {
   return (
     <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">
       <div className="rounded modal modal-open">
@@ -45,7 +45,7 @@ const ProductDetail: React.FC<DeleteModalProps> = ({ isOpen, onClose, onConfirm 
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3 p-4 button-section">
-           
+
             <div className="info">
               <img src={pizzaSvg} alt="category icon" />
               <p>

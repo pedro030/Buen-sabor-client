@@ -9,11 +9,11 @@ const ProductCard = ({ product } : any) => {
   const { addToCart } : any = useContext(CartContext);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const handleOpenDeleteModal = () => {
+  const handleOpenProductModal = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleCloseDeleteModal = () => {
+  const handleCloseProductModal = () => {
     setIsDeleteModalOpen(false);
   };
 
@@ -30,7 +30,7 @@ const ProductCard = ({ product } : any) => {
               <button className='btn btn-primary btn-circle btn-xs' onClick={() => addToCart(product)}>+</button>
           </div>
         </div>
-        <div onClick={() => handleOpenDeleteModal()} className="card-body">
+        <div onClick={() => handleOpenProductModal()} className="card-body">
           <h2 className="card-title">{product.name}</h2>
           <p>Product short description</p>
           <p>${product.price}</p>
@@ -38,7 +38,7 @@ const ProductCard = ({ product } : any) => {
       </div>
       <ProductDetail
                 isOpen={isDeleteModalOpen}
-                onClose={handleCloseDeleteModal}
+                onClose={handleCloseProductModal}
                 onConfirm={handleConfirmDelete}
               />
     </>
