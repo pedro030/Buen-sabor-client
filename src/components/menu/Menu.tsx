@@ -2,10 +2,11 @@ import { useContext, useState, useEffect } from 'react'
 import './Menu.scss'
 import ProductCard from './product_card/ProductCard'
 import clean from '../../assets/clean.svg'
+import box from '../../assets/box.svg'
+import line from '../../assets/line.svg'
 import { FiltersContext } from '../../context/filters'
 import { products as initialProducts } from '../../mocks/products.json'
 import { CartContext } from '../../context/cart'
-import CartModal from './EditCartModal/EditCartModal'
 import EditCartModal from './EditCartModal/EditCartModal'
 
 
@@ -130,29 +131,37 @@ const Menu = () => {
                         </form>
                     </div>
                     <div className='products'>
-                        <div className='w-[650px]'>
-                            <p className='pl-5'>Found <span className='text-primary'>{products.length}</span> results in 54 seconds</p>
-                            {/* <div><button>sort</button></div>
-                        <div><button>paginable</button></div>
-                        <div><button>boxs</button>
-                        <button>rows</button></div> */}
+                        <div className='w-full flex flex-row justify-between'>
+                            <p className='pl-5'>Found <span className='text-primary'>{products.length}</span> results</p>
+                            <div className='flex flex-row gap-3 mb-5 mr-5'>
+                                <div className="dropdown">
+                                    <label tabIndex={0} className="btn btn-sm"><span className='text-gray-500'>Sort by</span> Rating: Low to High</label>
+                                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-b-lg w-full">
+                                        <li><a>Item 1</a></li>
+                                        <li><a>Item 2</a></li>
+                                    </ul>
+                                </div>
+                                {/* <button className='btn btn-sm btn-primary'>paginable</button> */}
+                                <div >
+                                    <button className=' btn btn-sm btn-primary rounded-none rounded-s-xl'><img src={box} /></button>
+                                    <button className=' btn btn-sm btn-secondary rounded-none rounded-e-xl'><img src={line} /></button>
+                                </div>
+                            </div>
                         </div>
                         <div className='flex items-center justify-center'>
                             <div className="grid grid-cols-3 gap-2">
                                 {
-                                    (products.length > 0) ?
-                                        products.map((p: any) => {
-                                            return (<ProductCard key={p.id} product={p} />)
-                                        })
-                                        
-                                        :
-                                        
-                                        <div className='flex items-center justify-center h-96 w-[40rem]'>
-                                            <h1 className='font-bold text-primary'>There are no results matching your search</h1>
-                                        </div>
+                                    (products.length > 0) &&
+                                    products.map((p: any) => {
+                                        return (<ProductCard key={p.id} product={p} />)
+                                    })
                                 }
 
                             </div>
+                            {(products.length === 0) &&
+                                <div className='flex items-center justify-center h-96'>
+                                    <h1 className='font-bold text-primary'>There are no results matching your search</h1>
+                                </div>}
                         </div>
                         <div className='flex justify-end'>
                             {
