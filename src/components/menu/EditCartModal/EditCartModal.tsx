@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { CartContext } from "../../../context/cart"
 import TrashSimple from '../../../assets/TrashSimple.svg'
 import ReactModal from 'react-modal';
@@ -11,11 +11,23 @@ interface EditCartModalProps {
 
 const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfirm }) => {
     const { cart, clearCart, addToCart, removeFromCart }: any = useContext(CartContext);
+    const modalRef = useRef(null);
+
+    const handleClickOutside = (e:any) => {
+      if(modalRef.current && !modalRef.current.contains(e.target)) onClose();
+    }
+  
+    useEffect(() => {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      }
+    }, []);
 
     return (
         <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">
             <div className="modal modal-open">
-                <div className="bg-white p-8 rounded-3xl modal-box min-w-[50rem] max-h-[30rem] mt-20">
+                <div ref={modalRef} className="bg-white p-8 rounded-3xl modal-box min-w-[50rem] max-h-[30rem] mt-20">
                     <button onClick={onClose} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 
                     <div className="grid grid-rows-[25px_1fr_50px] gap-8">

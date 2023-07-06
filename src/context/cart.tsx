@@ -8,19 +8,19 @@ export function CartProvider({ children } : any) {
         quantity: 0
     }]);
 
-    const addToCart = (p : any, addQty = true) => {  
+    const addToCart = (p : any, addQty = true, qty = 1) => {  
         if(cart[0].quantity === 0) setCart([]);
 
         const productInCartIndex = cart.findIndex((item : any) => item.id === p.id)
 
         if(productInCartIndex >= 0 && addQty) {
             const newCart = structuredClone(cart);
-            newCart[productInCartIndex].quantity += 1
+            newCart[productInCartIndex].quantity += qty
             return setCart(newCart)
         }
         else if(productInCartIndex >= 0 && !addQty) {
             const newCart = structuredClone(cart);
-            newCart[productInCartIndex].quantity -= 1
+            newCart[productInCartIndex].quantity -= qty
             if(newCart[productInCartIndex].quantity == 0) return removeFromCart(newCart[productInCartIndex]);
             else return setCart(newCart);
         }
@@ -29,7 +29,7 @@ export function CartProvider({ children } : any) {
             ...prevState,
             {
                 ...p,
-                quantity: 1
+                quantity: qty
             }
         ]))
     }

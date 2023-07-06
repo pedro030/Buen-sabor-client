@@ -37,6 +37,7 @@ const ProductCard = ({ product } : any) => {
         </div>
       </div>
       <ProductDetail
+                product={product}
                 isOpen={isProductModalOpen}
                 onClose={handleCloseProductModal}
                 onConfirm={handleConfirmDelete}
