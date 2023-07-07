@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect, ChangeEvent } from 'react'
 import './Menu.scss'
 import ProductCard from './product_card/ProductCard'
 import clean from '../../assets/clean.svg'
@@ -83,6 +83,54 @@ const Menu = () => {
 
     };
 
+    //Sorting
+    const [sortedProducts, setSortedProducts] = useState([]);
+    const [currentSorting, setCurrentSorting] = useState(1);
+
+    const sortProducts = (products : any, sortOp: number) => {
+        switch(sortOp) {
+            case 1: setSortedProducts(products);
+            break;
+
+            case 2: setSortedProducts(products.sort((a:any, b: any) => a.price > b.price ? 1 : -1))
+            break;
+
+            case 3: setSortedProducts(products.sort((a:any, b: any) => a.price < b.price ? 1 : -1))
+            break;
+
+            case 4: setSortedProducts(products.sort((a:any, b: any) => a.name > b.name ? 1 : -1))
+            break;
+
+            case 5: setSortedProducts(products.sort((a:any, b: any) => a.name < b.name ? 1 : -1))
+            break;
+        }
+    }
+
+
+    const handleChangeSorting = (e : any) => {
+        const sortOp = Number(e.target.value)
+        setCurrentSorting(sortOp);
+        sortProducts(products, sortOp);
+    }
+
+    //Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productsPerPage, setProductsPerPage] = useState(9);
+
+    useEffect(() => {
+        setCurrentPage(1);
+        sortProducts(products, currentSorting);
+    }, [filters])
+
+    const lastIndex = currentPage * productsPerPage;
+    const beginIndex = lastIndex - productsPerPage;
+    const currentProducts = sortedProducts.slice(beginIndex, lastIndex);
+    let pages = [];
+
+    for(let i = 1; i <= Math.ceil(products.length/productsPerPage); i++) {
+        pages.push(i);
+    }
+
     return (
         <>
             <div className="p-8 min-h-[140vh]">
@@ -165,13 +213,20 @@ const Menu = () => {
                         <div className='flex flex-row justify-between w-full'>
                             <p className=''>Found <span className='text-primary'>{products.length}</span> results</p>
                             <div className='flex flex-row gap-3 mb-5'>
-                                <div className="dropdown">
+                                <select className="select select-bordered w-full max-w-xs" onChange={handleChangeSorting}>
+                                    <option selected value={1}>SORT BY: FEATURED</option>
+                                    <option value={2}>SORT BY PRICE: LOW to HIGH</option>
+                                    <option value={3}>SORT BY PRICE: HIGH to LOW</option>
+                                    <option value={4}>SORT BY NAME: A - Z</option>
+                                    <option value={5}>SORT BY NAME: Z - A</option>
+                                </select>
+                                {/*<div className="dropdown">
                                     <label tabIndex={0} className="btn btn-sm"><span className='text-gray-500'>Sort by</span> Rating: Low to High</label>
                                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-b-lg w-full">
                                         <li><a>Item 1</a></li>
                                         <li><a>Item 2</a></li>
                                     </ul>
-                                </div>
+                </div> */}
                                 {/* <button className='btn btn-sm btn-primary'>paginable</button> */}
                                 {/* <div >
                                     <button className='rounded-none btn btn-sm btn-primary rounded-s-xl'><img src={box} /></button>
@@ -183,7 +238,7 @@ const Menu = () => {
                             <div className="grid grid-cols-3 gap-2">
                                 {
                                     (products.length > 0) &&
-                                    products.map((p: any) => {
+                                    currentProducts.map((p: any) => {
                                         return (<ProductCard key={p.id} product={p} />)
                                     })
                                 }
@@ -197,13 +252,17 @@ const Menu = () => {
                         <div className='flex justify-end'>
                             {
                                 (products.length > 0) && <div className="mt-5 join ">
-                                    <button className="join-item btn btn-sm max-lg:btn-xs">«</button>
-                                    <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="1" checked />
-                                    <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="2" />
+                                    <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage-1) : ''}>«</button>
+                                    {pages.map((page: any, index : any) => {
+                                        return <><input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index+1} onClick={() => setCurrentPage(page)} checked={currentPage == page ? true : false}/></>
+                                    })
+                                    }
+                                    
+                                    { /*<input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="2" />
                                     <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="3" />
                                     <button className="join-item btn btn-sm max-lg:btn-xs btn-disabled">...</button>
-                                    <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="8" />
-                                    <button className="join-item btn btn-sm max-lg:btn-xs">»</button>
+                                <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="8" />  */}
+                                    <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length/productsPerPage) ? setCurrentPage(currentPage+1) : ''}>»</button>
                                 </div>
                             }
                         </div>
