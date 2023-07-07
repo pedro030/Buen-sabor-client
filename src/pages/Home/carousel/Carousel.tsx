@@ -34,17 +34,17 @@ const Carousel = () => {
             <div id='menuSeccion' className='grid w-full grid-cols-2 mt-5 mb-3'>
 
                 <div className='flex flex-row items-center justify-center'>
-                    <img className='pr-4' src={img_location} height="50" />
+                    <img className='h-12 pr-4 max-md:h-10 max-sm:h-8' src={img_location} />
                     <div>
-                        <h2>Locate us</h2>
-                        <p>Coronel Rodríguez 273, Mendoza</p>
+                        <h2 className='max-md:text-sm max-sm:text-xs'>Locate us</h2>
+                        <p className='max-md:text-sm max-sm:text-xs'>Coronel Rodríguez 273, Mendoza</p>
                     </div>
                 </div>
                 <div className='flex flex-row items-center justify-center'>
-                    <img className='pr-4' src={img_clock} height="50" />
+                    <img className='h-12 pr-4 max-md:h-10 max-sm:h-8' src={img_clock}  />
                     <div>
-                        <h2>Open hours</h2>
-                        <p>Mon To Fri 9:00AM - 9:00PM</p>
+                        <h2 className='max-md:text-sm max-sm:text-xs'>Open hours</h2>
+                        <p className='max-md:text-sm max-sm:text-xs'>Mon To Fri 9:00AM - 9:00PM</p>
                     </div>
                 </div>
             </div>

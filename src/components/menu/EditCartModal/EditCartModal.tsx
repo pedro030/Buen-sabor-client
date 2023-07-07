@@ -38,7 +38,7 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                 <div ref={modalRef} className="bg-white p-8 rounded-3xl modal-box min-w-[50rem] max-h-[30rem] mt-20">
                     <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
 
-                    <div className="grid grid-rows-[25px_1fr_50px] gap-8">
+                    <div className="grid grid-rows-[25px_1fr_10px_50px] gap-8">
                         <h2 className="text-xl font-bold text-center text-primary">Edit Cart</h2>
 
                         <table className="table">

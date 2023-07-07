@@ -36,7 +36,7 @@ const DropdownSignin = () => {
 
     const swithButton = () => {
         if (!isAuthenticated) {
-            return <button className='w-full rounded-full btn btn-primary'>Sign In</button>
+            return <button className='w-full rounded-full btn btn-primary max-md:w-32'>Sign In</button>
         } else {
             return (
                 <div className='pt-2 hero'>
