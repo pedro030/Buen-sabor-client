@@ -82,19 +82,6 @@ const Menu = () => {
 
     };
 
-    const functionRename = () => {
-        if (products.length > 0) {
-            return products.map((p: any) => {
-                return (<ProductCard key={p.id} product={p} />)
-            })
-        } else {
-            return (
-                <div className='flex items-center justify-center h-96 w-[40rem]'>
-                    <h1 className='font-bold text-primary'>There are no results matching your search</h1>
-                </div>
-            )
-        }
-    }
     return (
         <>
             <div className="p-8 min-h-[140vh]">
@@ -120,11 +107,11 @@ const Menu = () => {
                             <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
                             <div className='flex flex-col gap-3'>
                                 <div className='flex flex-row items-center justify-between'>
-                                    <label className='mr-2 label-text'>Min Price:</label>
+                                    <label className='mr-2 label-text max-[1025px]:text-xs'>Min Price:</label>
                                     <input type="number" className="w-20 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} />
                                 </div>
                                 <div className='flex flex-row items-center justify-between'>
-                                    <label className='mr-2 label-text'>Max Price:</label>
+                                    <label className='mr-2 label-text max-[1025px]:text-xs'>Max Price:</label>
                                     <input type="number" className="w-20 input input-bordered input-xs" max={3000} onChange={handleChangeMaxPrice} />
                                 </div>
                             </div>
@@ -132,8 +119,8 @@ const Menu = () => {
                     </div>
                     <div className='products'>
                         <div className='flex flex-row justify-between w-full'>
-                            <p className='pl-5'>Found <span className='text-primary'>{products.length}</span> results</p>
-                            <div className='flex flex-row gap-3 mb-5 mr-5'>
+                            <p className='ml-5 max-[1025px]:ml-1'>Found <span className='text-primary'>{products.length}</span> results</p>
+                            <div className='flex flex-row gap-3 mb-5 mr-5 max-[1025px]:mr-1 max-[1025px]:mb-2'>
                                 <div className="dropdown">
                                     <label tabIndex={0} className="btn btn-sm"><span className='text-gray-500'>Sort by</span> Rating: Low to High</label>
                                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-b-lg w-full">
@@ -165,22 +152,22 @@ const Menu = () => {
                         </div>
                         <div className='flex justify-end'>
                             {
-                                (products.length > 0) && <div className="mt-5 join">
-                                    <button className="join-item btn btn-sm">«</button>
-                                    <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="1" checked />
-                                    <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="2" />
-                                    <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="3" />
-                                    <button className="join-item btn btn-sm btn-disabled">...</button>
-                                    <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="8" />
-                                    <button className="join-item btn btn-sm">»</button>
+                                (products.length > 0) && <div className="mt-5 join ">
+                                    <button className="join-item btn btn-sm max-[1025px]:btn-xs">«</button>
+                                    <input className="join-item btn btn-sm max-[1025px]:btn-xs btn-square" type="radio" name="options" aria-label="1" checked />
+                                    <input className="join-item btn btn-sm max-[1025px]:btn-xs btn-square" type="radio" name="options" aria-label="2" />
+                                    <input className="join-item btn btn-sm max-[1025px]:btn-xs btn-square" type="radio" name="options" aria-label="3" />
+                                    <button className="join-item btn btn-sm max-[1025px]:btn-xs btn-disabled">...</button>
+                                    <input className="join-item btn btn-sm max-[1025px]:btn-xs btn-square" type="radio" name="options" aria-label="8" />
+                                    <button className="join-item btn btn-sm max-[1025px]:btn-xs">»</button>
                                 </div>
                             }
                         </div>
                     </div>
-                    <div className='order'>
-                        <div className='flex flex-col items-end mt-6'>
-                            <div className="px-4 bg-white rounded-xl w-80 ">
-                                <div className='overflow-auto w-72 h-60'>
+                    <div className='order '>
+                        <div className='flex flex-col items-end mt-6 max-[1025px]:mt-10'>
+                            <div className="px-4 bg-white rounded-xl w-80 max-[1025px]:max-w-[12rem] max-[1025px]:max-h-[16rem]">
+                                <div className='overflow-auto w-72 h-60 max-[1025px]:max-w-[10rem] max-[1025px]:max-h-[10rem]'>
                                     <div className="flex flex-row justify-between mt-2 mb-1">
                                         <h2>My order</h2>
                                         <a className='cursor-pointer text-primary' onClick={() => handleOpenProductModal()}>edit</a>
@@ -197,7 +184,7 @@ const Menu = () => {
                                     }
                                 </div>
                                 <div>
-                                    <h4 className='text-right'>subtotal: ${(totalPrice ? totalPrice : 0)}</h4>
+                                    <h4 className='text-right max-[1025px]:text-sm'>subtotal: <span className='font-bold'>${(totalPrice ? totalPrice : 0)}</span></h4>
                                     <div className='flex justify-center mt-2'><button className='w-full mb-2 rounded-full btn btn-primary btn-disabled'>Continue</button></div>
                                 </div>
                             </div>

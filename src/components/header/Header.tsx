@@ -38,9 +38,9 @@ const Header: React.FC = () => {
                 <div className='flex justify-between lg:grid lg:grid-cols-[250px_1fr_70px_70px_130px]'>
                     <a className="text-xl normal-case"><h1 className='font-bold text-red-600 min-w-[28px] ml-10' onClick={() => navigate('/')}>Buen Sabor</h1></a>
 
-                    <input type="text" placeholder="Search Food" className="hidden w-full rounded-full h-11 input input-bordered lg:inline" />
+                    <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" />
 
-                    <div className='hidden lg:flex lg:justify-center'>
+                    <div className='flex justify-center'>
                         <img src={setting} height="25" />
                     </div>
 

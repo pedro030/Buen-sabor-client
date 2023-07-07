@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { CartContext } from "../../../context/cart"
 import TrashSimple from '../../../assets/TrashSimple.svg'
 import ReactModal from 'react-modal';
@@ -12,17 +12,25 @@ interface EditCartModalProps {
 const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfirm }) => {
     const { cart, clearCart, addToCart, removeFromCart }: any = useContext(CartContext);
     const modalRef = useRef(null);
+    let total = 0;
 
-    const handleClickOutside = (e:any) => {
-      if(modalRef.current && !modalRef.current.contains(e.target)) onClose();
+    const handleClickOutside = (e: any) => {
+        if (modalRef.current && !modalRef.current.contains(e.target)) onClose();
     }
-  
+
     useEffect(() => {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
     }, []);
+
+    const calcTotal = (num: number): number => {
+
+        total += num
+
+        return num
+    }
 
     return (
         <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">
@@ -60,7 +68,9 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                                                     <button className="btn btn-primary btn-xs btn-outline" onClick={() => addToCart(p)}>+</button>
                                                 </td>
                                                 <td>
-                                                    {p.quantity * p.price}
+                                                    {
+                                                        calcTotal(p.quantity * p.price)
+                                                    }
                                                 </td>
                                                 <td>
                                                     <button onClick={() => removeFromCart(p)}>
@@ -72,7 +82,7 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                                     })}
                             </tbody>
                         </table>
-
+                        <h1 className="text-right">Total <span className="font-bold">${total}</span></h1>
                         <div className="flex flex-row justify-between">
                             <button className="btn btn-primary btn-wide" onClick={clearCart}>Empty Cart</button>
                             {/* <button onClick={() => setEditCartModal(false)}>Back to Shop</button> */}
