@@ -12,8 +12,8 @@ const UserProfile = () => {
 
   return (
 
-    <div className='grid grid-cols-[260px_1fr]'>
-      <ul className="w-56 m-4 max-h-96 menu bg-secondary rounded-box">
+    <div className='grid grid-cols-[260px_1fr] min-h-[30rem]'>
+      <ul className="w-56 m-4 menu bg-secondary rounded-box">
         <div className="flex justify-center avatar">
           <div className="w-24 rounded-full">
             <img src={user?.picture} />

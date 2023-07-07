@@ -13,7 +13,7 @@ import EditCartModal from './EditCartModal/EditCartModal'
 const Menu = () => {
 
     const { filters, setFilters }: any = useContext(FiltersContext);
-    const { cart }: any = useContext(CartContext);
+    const { cart, setCart }: any = useContext(CartContext);
 
     const filterProducts = (products: any) => {
         return products.filter((p: any) => {
@@ -103,12 +103,12 @@ const Menu = () => {
                     <div className='filter'>
                         <div className="flex justify-between">
                             <h2 className='card-title stat-title'>Filter</h2>
-                            <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => {setFilters({ category: 0, minPrice: 0, maxPrice: 20000 })}} />
+                            <img className='items-center h-4' src={clean} />
                         </div>
                         <form className="pt-2 form-control">
-                            <h4 className='pb-2 font-bold text-sm'>Category</h4>
+                            <h4 className='pb-2 text-sm font-bold'>Category</h4>
                             <div>
-                                <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false}/>
+                                <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} />
                                 <label className='label-text'>Todos</label><br />
                                 <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
                                 <label className='label-text'>Pizzas</label><br />
@@ -117,21 +117,21 @@ const Menu = () => {
                                 <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="3" onChange={handleChangeCategory} />
                                 <label className='label-text'>Panchos</label><br />
                             </div>
-                            <h4 className='mb-2 mt-4 font-bold text-sm'>Price</h4>
+                            <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
                             <div className='flex flex-col gap-3'>
                                 <div className='flex flex-row items-center justify-between'>
-                                    <label className='label-text mr-2'>Min Price:</label>
-                                    <input type="number" className="w-20 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={ filters.minPrice == 0 ? '' : filters.minPrice}/>
+                                    <label className='mr-2 label-text'>Min Price:</label>
+                                    <input type="number" className="w-20 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} />
                                 </div>
                                 <div className='flex flex-row items-center justify-between'>
-                                    <label className='label-text mr-2'>Max Price:</label>
-                                    <input type="number" className="w-20 input input-bordered input-xs" min={0} onChange={handleChangeMaxPrice} value={ filters.maxPrice == 20000 ? '' : filters.maxPrice} />
+                                    <label className='mr-2 label-text'>Max Price:</label>
+                                    <input type="number" className="w-20 input input-bordered input-xs" max={3000} onChange={handleChangeMaxPrice} />
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div className='products'>
-                        <div className='w-full flex flex-row justify-between'>
+                        <div className='flex flex-row justify-between w-full'>
                             <p className='pl-5'>Found <span className='text-primary'>{products.length}</span> results</p>
                             <div className='flex flex-row gap-3 mb-5 mr-5'>
                                 <div className="dropdown">
@@ -143,8 +143,8 @@ const Menu = () => {
                                 </div>
                                 {/* <button className='btn btn-sm btn-primary'>paginable</button> */}
                                 <div >
-                                    <button className=' btn btn-sm btn-primary rounded-none rounded-s-xl'><img src={box} /></button>
-                                    <button className=' btn btn-sm btn-secondary rounded-none rounded-e-xl'><img src={line} /></button>
+                                    <button className='rounded-none btn btn-sm btn-primary rounded-s-xl'><img src={box} /></button>
+                                    <button className='rounded-none btn btn-sm btn-secondary rounded-e-xl'><img src={line} /></button>
                                 </div>
                             </div>
                         </div>
@@ -165,7 +165,7 @@ const Menu = () => {
                         </div>
                         <div className='flex justify-end'>
                             {
-                                (products.length > 0) && <div className="join mt-5">
+                                (products.length > 0) && <div className="mt-5 join">
                                     <button className="join-item btn btn-sm">«</button>
                                     <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="1" checked />
                                     <input className="join-item btn btn-sm btn-square" type="radio" name="options" aria-label="2" />
@@ -180,17 +180,17 @@ const Menu = () => {
                     <div className='order'>
                         <div className='flex flex-col items-end mt-6'>
                             <div className="px-4 bg-white rounded-xl w-80 ">
-                                <div className='w-72 h-60 overflow-auto'>
+                                <div className='overflow-auto w-72 h-60'>
                                     <div className="flex flex-row justify-between mt-2 mb-1">
                                         <h2>My order</h2>
-                                        <a className='text-primary cursor-pointer' onClick={() => handleOpenProductModal()}>edit</a>
+                                        <a className='cursor-pointer text-primary' onClick={() => handleOpenProductModal()}>edit</a>
                                     </div>
                                     <hr className='my-2' />
                                     {
                                         cart[0].quantity != 0 ? (cart.map((item: any) => {
-                                            return <div key={item.id} className="product_order text-xs">
+                                            return <div key={item.id} className="text-xs product_order">
                                                 <h4>{item.quantity}x {item.name}</h4>
-                                                <h4>${item.price * item.quantity}</h4>
+                                                <h4>${item.price}</h4>
                                             </div>
                                         })) : ''
 

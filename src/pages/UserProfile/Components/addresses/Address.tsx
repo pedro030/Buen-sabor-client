@@ -1,14 +1,31 @@
 import TrashSimple from '../../../../assets/TrashSimple.svg'
 import MapPin from '../../../../assets/MapPin.svg'
+import { useState } from 'react';
+import AddressModal from './AddressModal/AddressModal';
 
 
 const Address = () => {
+
+    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+
+    const handleOpenAddressModal = () => {
+        setIsAddressModalOpen(true);
+    };
+
+    const handleCloseAddressModal = () => {
+        setIsAddressModalOpen(false);
+    };
+
+    const handleConfirmDelete = () => {
+
+    };
+
     return (
         <div>
             <h2 className='mb-5 text-center stat-title'>Address</h2>
 
             <div className='flex my-3 place-content-center'>
-                <button className='rounded-full btn btn-primary'><img className='h-6' src={MapPin} />Add address</button>
+                <button onClick={() => handleOpenAddressModal()} className='rounded-full btn btn-primary'><img className='h-6' src={MapPin} />Add address</button>
             </div>
             <div className="overflow-x-auto">
                 <table className="table table-xs">
@@ -64,12 +81,11 @@ const Address = () => {
                     </tfoot>
                 </table>
             </div>
-            <div className='flex flex-col p-2 m-5 mt-10 border'>
-                <label className='mt-1 text-sm' htmlFor="">Address</label><input type="text" className='my-2 input input-bordered' />
-                <label className='mt-1 text-sm' htmlFor="">Number</label><input type="text" className='my-2 input input-bordered' />
-                <label className='mt-1 text-sm' htmlFor="">Location</label><input type="text" className='my-2 input input-bordered' />
-                <button className='my-2 rounded-full btn btn-primary'><img className='h-6' src={MapPin} />Save address</button>
-            </div>
+            <AddressModal
+                isOpen={isAddressModalOpen}
+                onClose={handleCloseAddressModal}
+                onConfirm={handleConfirmDelete}
+            />
         </div>
     )
 }
