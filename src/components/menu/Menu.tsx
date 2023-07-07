@@ -14,7 +14,7 @@ import { useMediaQuery } from 'react-responsive'
 const Menu = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
     const { filters, setFilters }: any = useContext(FiltersContext);
-    const { cart, setCart }: any = useContext(CartContext);
+    const { cart }: any = useContext(CartContext);
 
     const filterProducts = (products: any) => {
         return products.filter((p: any) => {
@@ -96,12 +96,12 @@ const Menu = () => {
                                 <div className='filter'>
                                     <div className="flex items-center justify-between ">
                                         <h2 className='card-title stat-title'>Filter</h2>
-                                        <img className='items-center h-4' src={clean} />
+                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => {setFilters({ category: 0, minPrice: 0, maxPrice: 20000 })}}/>
                                     </div>
                                     <form className="pt-2 form-control">
                                         <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                         <div>
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false}/>
                                             <label className='label-text'>Todos</label><br />
                                             <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
                                             <label className='label-text'>Pizzas</label><br />
@@ -114,11 +114,11 @@ const Menu = () => {
                                         <div className='flex flex-col gap-3'>
                                             <div className='flex flex-row items-center justify-between'>
                                                 <label className='mr-2 text-xs label-text'>Min Price:</label>
-                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} />
+                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={ filters.minPrice == 0 ? '' : filters.minPrice}/>
                                             </div>
                                             <div className='flex flex-row items-center justify-between'>
                                                 <label className='mr-2 text-xs label-text'>Max Price:</label>
-                                                <input type="number" className="w-14 input input-bordered input-xs" max={3000} onChange={handleChangeMaxPrice} />
+                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={ filters.maxPrice == 20000 ? '' : filters.maxPrice}/>
                                             </div>
                                         </div>
                                     </form>
@@ -133,12 +133,12 @@ const Menu = () => {
                         <div className='filter'>
                             <div className="flex items-center justify-between ">
                                 <h2 className='card-title stat-title'>Filter</h2>
-                                <img className='items-center h-4' src={clean} />
+                                <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => {setFilters({ category: 0, minPrice: 0, maxPrice: 20000 })}}/>
                             </div>
                             <form className="pt-2 form-control">
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false}/>
                                     <label className='label-text'>Todos</label><br />
                                     <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
                                     <label className='label-text'>Pizzas</label><br />
@@ -151,11 +151,11 @@ const Menu = () => {
                                 <div className='flex flex-col gap-3'>
                                     <div className='flex flex-row items-center justify-between'>
                                         <label className='mr-2 text-xs label-text'>Min Price:</label>
-                                        <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} />
+                                        <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={ filters.minPrice == 0 ? '' : filters.minPrice}/>
                                     </div>
                                     <div className='flex flex-row items-center justify-between'>
                                         <label className='mr-2 text-xs label-text'>Max Price:</label>
-                                        <input type="number" className="w-14 input input-bordered input-xs" max={3000} onChange={handleChangeMaxPrice} />
+                                        <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={ filters.maxPrice == 20000 ? '' : filters.maxPrice} />
                                     </div>
                                 </div>
                             </form>
@@ -223,7 +223,7 @@ const Menu = () => {
                                             cart[0].quantity != 0 ? (cart.map((item: any) => {
                                                 return <div key={item.id} className="text-xs product_order">
                                                     <h4>{item.quantity}x {item.name}</h4>
-                                                    <h4>${item.price}</h4>
+                                                    <h4>${item.price * item.quantity}</h4>
                                                 </div>
                                             })) : ''
 
