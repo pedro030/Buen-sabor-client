@@ -43,8 +43,33 @@ const Header: React.FC = () => {
                     <div className='hidden lg:flex lg:justify-center'>
                         <img src={setting} height="25" />
                     </div>
-                    <div className='hidden lg:flex lg:justify-center'>
-                        <img src={cart} height="25" />
+
+                    <div className="dropdown dropdown-end">
+                        <div tabIndex={0} className='hidden cursor-pointer lg:flex lg:justify-center'>
+                            <img src={cart} height="25" />
+                        </div>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+                        <div className="overflow-x-auto">
+  <table className="table">
+    <thead>
+      <tr>
+        <th>N Order</th>
+        <th>State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr className='cursor-pointer hover'>
+        <th>1</th>
+        <td><div className="badge badge-secondary">Preparing</div></td>
+      </tr>
+      <tr className='cursor-pointer hover'>
+        <th>2</th>
+        <td><div className="badge badge-warning">Delivery</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+                        </ul>
                     </div>
 
 
@@ -64,7 +89,7 @@ const Header: React.FC = () => {
                             <NavLink
                                 to={link.path}
                                 className={({ isActive }) => isActive ? "active" : ""}
-                                // onClick={() => setActiveLink(link.path)}
+                            // onClick={() => setActiveLink(link.path)}
                             >
                                 {link.title}
                             </NavLink>

@@ -142,10 +142,10 @@ const Menu = () => {
                                     </ul>
                                 </div>
                                 {/* <button className='btn btn-sm btn-primary'>paginable</button> */}
-                                <div >
+                                {/* <div >
                                     <button className='rounded-none btn btn-sm btn-primary rounded-s-xl'><img src={box} /></button>
                                     <button className='rounded-none btn btn-sm btn-secondary rounded-e-xl'><img src={line} /></button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <div className='flex items-center justify-center'>
