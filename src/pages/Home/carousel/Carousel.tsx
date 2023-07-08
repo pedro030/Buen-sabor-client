@@ -19,9 +19,9 @@ const Carousel = () => {
                 <div className="bg-opacity-70 hero-overlay"></div>
                 <div className="text-center hero-content text-neutral-content">
                     <div className="max-w-md">
-                        <h1 className='mb-1 text-xl'>Welcome to <span className='text-2xl font-bold text-primary'>Buen Sabor</span></h1>
-                        <h1 className='text-5xl text-white'>Feel The Autenthic & </h1>
-                        <h1 className='text-5xl text-white'>Orgin Of Food</h1>
+                        <h1 className='mb-1 text-xl max-md:text-lg'>Welcome to <span className='text-2xl font-bold text-primary'>Buen Sabor</span></h1>
+                        <h1 className='text-5xl text-white max-md:text-4xl'>Feel The Autenthic & </h1>
+                        <h1 className='text-5xl text-white max-md:text-4xl'>Orgin Of Food</h1>
                         <div>
                             <button className='mt-5 mr-5 btn btn-primary' onClick={scrollToSection}>Order Food</button>
                             <button className='btn btn-neutral' onClick={event => window.location.href = 'http://localhost:5173/about'}>About us</button>

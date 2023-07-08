@@ -1,13 +1,11 @@
-@import 'styles.scss';
-
 .description-items {
     display: flex;
     align-items: center;
     span {
         margin-right: 6px;
-        background-color: $background-grey;
+        background-color: #eaeaea;
         color: grey;
-        border: 2px solid $border-grey;
+        border: 2px solid #bababa;
         border-radius: 25px;
         font-size: .8rem;
         padding: 5px 16px;
@@ -43,35 +41,12 @@
 .button-section {
     height: 83px;
     position: absolute;
-    background-color: $white;
+    background-color: #fff;
     width: 90%;
     bottom: 1.5rem;
     left: 5%;
     border-radius: 14px;
     box-shadow: 0px 2px 28px 0px rgba(53, 56, 90, 0.12);
-
-    .info {
-        display: flex;
-
-        img {
-            display: block;
-            margin-right: 1rem;
-        }
-
-        span {
-            color: #E73636;
-            font-weight: 500;
-            font-size: 10px;
-        }
-    }
-
-    .add-to-cart {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
-
 }
 
 .disabled{

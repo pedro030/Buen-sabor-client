@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './Header.scss'
 import setting from '../../assets/setting.svg'
 import notepad from '../../assets/notepad.svg'
-import bike from '../../assets/bike.svg'
+import searcher from '../../assets/searcher.svg'
 import cart from '../../assets/cart.svg'
 import DropdownSignin from './dropdown_signin/DropdownSignin'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -39,19 +39,31 @@ const Header: React.FC = () => {
     return (
         <>
             <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] max-lg:grid-rows-1 bg-base-100 navbar shadow ">
-                <div className=' grid grid-cols-[250px_1fr_70px_70px_70px_130px] max-lg:gap-1 max-lg:grid-cols-[130px_1fr_70px_128px] '>
-                    <a className="text-xl normal-case"><h1 className='font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
+                <div className=' grid grid-cols-[250px_1fr_70px_70px_70px_130px] max-lg:gap-1 max-lg:grid-cols-[1fr_70px_70px_128px] '>
+                    <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
 
-                    <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" />
+                    {
+                        (isTable) &&
+                        // Search
+                        <div className='flex justify-center '>
+                            <img src={searcher} height="25" />
+                        </div>
+                    }
+
+                    {
+                        (!isTable) && <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" />
+                    }
 
                     {
                         (!isTable) &&
 
                         <>
+                            {/* Settings */}
                             <div className='flex justify-center max-md:hidden'>
                                 <img src={setting} height="25" />
                             </div>
 
+                            {/* Order List */}
                             <div className="dropdown dropdown-end">
                                 <div tabIndex={0} className='flex justify-center cursor-pointer max-md:hidden'>
                                     <img src={notepad} height="25" />

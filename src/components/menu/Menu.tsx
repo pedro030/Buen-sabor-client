@@ -136,6 +136,7 @@ const Menu = () => {
             <div className="p-8 min-h-[140vh]">
                 <h1 className='mb-6 text-4xl'>Menu</h1>
                 {
+                    // FILTER TABLE
                     (isTable) &&
                     <>
                         <div className="mb-3 dropdown">
@@ -211,9 +212,9 @@ const Menu = () => {
                     }
                     <div className='products'>
                         <div className='flex flex-row justify-between w-full'>
-                            <p className=''>Found <span className='text-primary'>{products.length}</span> results</p>
-                            <div className='flex flex-row gap-3 mb-5'>
-                                <select className="select select-bordered w-full max-w-xs" onChange={handleChangeSorting}>
+                            <p className=' xl:ml-10'>Found <span className='text-primary'>{products.length}</span> results</p>
+                            <div className='flex flex-row gap-3 mb-5 xl:mr-10'>
+                                <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
                                     <option selected value={1}>SORT BY: FEATURED</option>
                                     <option value={2}>SORT BY PRICE: LOW to HIGH</option>
                                     <option value={3}>SORT BY PRICE: HIGH to LOW</option>
