@@ -1,13 +1,12 @@
 import './AboutComponent.scss'
-import asiel from "../../assets/asiel.png"
 
 const About = () => {
   return (
     <div className=" bg-base-100 w-full h-[28rem]  max-lg:h-[23rem] text-center pt-5">
       <h1 className='mb-10 text-2xl stat-title'>Integrantes</h1>
 
-      <div className='flex place-content-center'>
-        <div className="grid grid-cols-4 text-lg text-center place-items-center max-lg:gap-3">
+      <div className='flex place-content-center'> 
+        <div className="grid grid-cols-4 gap-4 text-lg text-center place-items-center max-lg:gap-3">
 
           <div>
             <h1 className='mb-1 text-2xl font-bold text-primary max-lg:text-lg'>Araya Alejo</h1>
