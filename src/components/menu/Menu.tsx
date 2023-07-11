@@ -9,12 +9,14 @@ import { products as initialProducts } from '../../mocks/products.json'
 import { CartContext } from '../../context/cart'
 import EditCartModal from './EditCartModal/EditCartModal'
 import { useMediaQuery } from 'react-responsive'
+import { useNavigate } from 'react-router-dom'
 
 
 const Menu = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
     const { filters, setFilters }: any = useContext(FiltersContext);
     const { cart }: any = useContext(CartContext);
+    const navigate = useNavigate();
 
     const filterProducts = (products: any) => {
         return products.filter((p: any) => {
@@ -115,7 +117,7 @@ const Menu = () => {
 
     //Pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage, setProductsPerPage] = useState(9);
+    const [productsPerPage, setProductsPerPage] = useState(6);
 
     useEffect(() => {
         setCurrentPage(1);
@@ -291,7 +293,10 @@ const Menu = () => {
                                     </div>
                                     <div>
                                         <h4 className='text-right max-lg:text-sm'>subtotal: <span className='font-bold'>${(totalPrice ? totalPrice : 0)}</span></h4>
-                                        <div className='flex justify-center mt-2'><button className='w-full mb-2 rounded-full btn btn-primary btn-disabled'>Continue</button></div>
+                                        <div className='flex justify-center mt-2'>
+                                            { cart[0].quantity === 0 ? <button className='w-full mb-2 rounded-full btn btn-primary btn-disabled'>Continue</button> : <button className='w-full mb-2 rounded-full btn btn-primary' onClick={() => navigate('/order-detail')} >Continue</button>}
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>

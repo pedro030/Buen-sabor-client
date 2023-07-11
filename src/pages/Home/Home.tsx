@@ -15,7 +15,7 @@ const Home = () => {
     return (
         <div>
             <FiltersProvider>
-            <CartProvider>
+            
                 <Carousel />
                 <Menu />
 
@@ -25,7 +25,6 @@ const Home = () => {
 
                 {/* <Register/> */}
                 {/* <Login/> */}
-            </CartProvider>
             </FiltersProvider>
         </div >
     )

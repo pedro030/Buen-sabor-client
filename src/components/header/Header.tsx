@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './Header.scss'
 import setting from '../../assets/setting.svg'
 import notepad from '../../assets/notepad.svg'
@@ -7,6 +7,7 @@ import cart from '../../assets/cart.svg'
 import DropdownSignin from './dropdown_signin/DropdownSignin'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive';
+import { CartContext } from '../../context/cart'
 // import searcher from '../../assets/searcher.svg'
 
 interface NavbarLink {
@@ -17,6 +18,7 @@ interface NavbarLink {
 
 const Header: React.FC = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
+    const context : any = useContext(CartContext);
 
     const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
@@ -111,17 +113,23 @@ const Header: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr className='cursor-pointer hover'>
+                                        {context.cart[0].quantity === 0 ? <tr><td colSpan={5} className="py-5 text-xl font-bold text-center text-secondary">Empty Cart</td></tr> : (context.cart.map((item: any) => {
+                                                return <tr key={item.id}>
+                                                    <td className='text-xs'>{item.quantity}x {item.name}</td>
+                                                    <td className='text-xs'>${item.price * item.quantity}</td>
+                                                </tr>}))}
+                                        {/*<tr className='cursor-pointer hover'>
                                             <td className='text-xs'>Hamburguesa Completa</td>
                                             <td className='text-xs'>$1200</td>
                                         </tr>
                                         <tr className='cursor-pointer hover'>
                                             <td className='text-xs'>Hamburguesa Completa</td>
                                             <td className='text-xs'>$1200</td>
-                                        </tr>
+                                        </tr>*/}
                                     </tbody>
                                 </table>
-                                <button className='w-full mt-1 rounded-full btn btn-primary btn-sm '>Continue</button>
+                                { context.cart[0].quantity === 0 ? <button className='w-full mt-1 rounded-full btn btn-primary btn-sm btn-disabled '>Continue</button> : <button className='w-full mt-1 rounded-full btn btn-primary btn-sm ' onClick={() => navigate('/order-detail')}>Continue</button> }
+                                
                             </div>
                         </ul>
                     </div>
