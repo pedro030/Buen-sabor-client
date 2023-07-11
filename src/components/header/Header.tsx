@@ -9,6 +9,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive';
 import { CartContext } from '../../context/cart'
 import EditCartModal from '../menu/EditCartModal/EditCartModal'
+import { FiltersContext } from '../../context/filters'
 // import searcher from '../../assets/searcher.svg'
 
 interface NavbarLink {
@@ -20,6 +21,7 @@ interface NavbarLink {
 const Header: React.FC = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
     const context: any = useContext(CartContext);
+    const { filters, setFilters } : any = useContext(FiltersContext);
 
     const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
@@ -53,6 +55,22 @@ const Header: React.FC = () => {
         setActiveLink(currentPath);
     }, []);
 
+    const handleChangeSearch = (e : any) => {
+        setFilters((prevState: any) => ({
+            ...prevState,
+            search: e.target.value
+        }))
+    }
+
+    const scrollToSection = (e : any) => {
+        if(e.key === 'Enter') {
+            const seccionDestino = document.getElementById('menuSeccion');
+            if (seccionDestino) {
+                seccionDestino.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }
+
     return (
         <>
             <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] max-lg:grid-rows-1 bg-base-100 navbar shadow ">
@@ -68,7 +86,7 @@ const Header: React.FC = () => {
                     }
 
                     {
-                        (!isTable) && <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" />
+                        (!isTable) && <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" onChange={handleChangeSearch} value={filters.search} onKeyDown={scrollToSection}/>
                     }
 
                     {

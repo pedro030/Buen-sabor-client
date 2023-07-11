@@ -14,39 +14,23 @@ import { useNavigate } from 'react-router-dom'
 
 const Menu = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
-    const { filters, setFilters }: any = useContext(FiltersContext);
+    const { filters, setFilters, filterProducts }: any = useContext(FiltersContext);
     const { cart }: any = useContext(CartContext);
     const navigate = useNavigate();
-
-    const filterProducts = (products: any) => {
-        return products.filter((p: any) => {
-            return (
-                (
-                    p.price >= filters.minPrice &&
-                    p.price <= filters.maxPrice
-                )
-                &&
-                (
-                    filters.category === 0 ||
-                    p.idCategory === filters.category
-                )
-            )
-        })
-    }
 
     const products = filterProducts(initialProducts);
 
     const handleChangeCategory = (e: any) => {
         setFilters((prevState: any) => ({
             ...prevState,
-            category: Number(e.target.value)
+            category: +e.target.value
         }))
     }
 
     const handleChangeMinPrice = (e: any) => {
         setFilters((prevState: any) => ({
             ...prevState,
-            minPrice: Number(e.target.value)
+            minPrice: +e.target.value
         }))
     }
 
@@ -54,7 +38,7 @@ const Menu = () => {
         if (e.target.value != '') {
             setFilters((prevState: any) => ({
                 ...prevState,
-                maxPrice: Number(e.target.value)
+                maxPrice: +e.target.value
             }))
         } else {
             setFilters((prevState: any) => ({
@@ -147,7 +131,7 @@ const Menu = () => {
                                 <div className='filter'>
                                     <div className="flex items-center justify-between ">
                                         <h2 className='card-title stat-title'>Filter</h2>
-                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: 0, minPrice: 0, maxPrice: 20000 }) }} />
+                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: 0, minPrice: 0, maxPrice: 20000, search: '' }) }} />
                                     </div>
                                     <form className="pt-2 form-control">
                                         <h4 className='pb-2 text-sm font-bold'>Category</h4>
@@ -184,7 +168,7 @@ const Menu = () => {
                         <div className='filter'>
                             <div className="flex items-center justify-between ">
                                 <h2 className='card-title stat-title'>Filter</h2>
-                                <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: 0, minPrice: 0, maxPrice: 20000 }) }} />
+                                <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: 0, minPrice: 0, maxPrice: 20000, search: '' }) }} />
                             </div>
                             <form className="pt-2 form-control">
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>

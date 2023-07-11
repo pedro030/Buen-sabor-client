@@ -14,8 +14,6 @@ import { CartProvider } from '../../context/cart'
 const Home = () => {
     return (
         <div>
-            <FiltersProvider>
-            
                 <Carousel />
                 <Menu />
 
@@ -25,7 +23,6 @@ const Home = () => {
 
                 {/* <Register/> */}
                 {/* <Login/> */}
-            </FiltersProvider>
         </div >
     )
 }

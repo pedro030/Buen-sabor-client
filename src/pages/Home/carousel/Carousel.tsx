@@ -3,10 +3,12 @@ import './Carousel.scss'
 import img_carousel from '../../../assets/carousel_img_primary.png'
 import img_location from '../../../assets/location.svg'
 import img_clock from '../../../assets/clock2.svg'
+import { useNavigate } from 'react-router-dom'
 
 const Carousel = () => {
+    const navigate = useNavigate();
 
-    function scrollToSection() {
+    const scrollToSection = () => {
         const seccionDestino = document.getElementById('menuSeccion');
         if (seccionDestino) {
             seccionDestino.scrollIntoView({ behavior: 'smooth' });
@@ -24,7 +26,7 @@ const Carousel = () => {
                         <h1 className='text-5xl text-white max-md:text-4xl'>Orgin Of Food</h1>
                         <div>
                             <button className='mt-5 mr-5 btn btn-primary' onClick={scrollToSection}>Order Food</button>
-                            <button className='btn btn-neutral' onClick={event => window.location.href = 'http://localhost:5173/about'}>About us</button>
+                            <button className='btn btn-neutral' onClick={() => navigate('/about')}>About us</button>
                         </div>
                     </div>
                 </div>
