@@ -89,27 +89,27 @@ const Menu = () => {
     const [sortedProducts, setSortedProducts] = useState([]);
     const [currentSorting, setCurrentSorting] = useState(1);
 
-    const sortProducts = (products : any, sortOp: number) => {
-        switch(sortOp) {
+    const sortProducts = (products: any, sortOp: number) => {
+        switch (sortOp) {
             case 1: setSortedProducts(products);
-            break;
+                break;
 
-            case 2: setSortedProducts(products.sort((a:any, b: any) => a.price > b.price ? 1 : -1))
-            break;
+            case 2: setSortedProducts(products.sort((a: any, b: any) => a.price > b.price ? 1 : -1))
+                break;
 
-            case 3: setSortedProducts(products.sort((a:any, b: any) => a.price < b.price ? 1 : -1))
-            break;
+            case 3: setSortedProducts(products.sort((a: any, b: any) => a.price < b.price ? 1 : -1))
+                break;
 
-            case 4: setSortedProducts(products.sort((a:any, b: any) => a.name > b.name ? 1 : -1))
-            break;
+            case 4: setSortedProducts(products.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
+                break;
 
-            case 5: setSortedProducts(products.sort((a:any, b: any) => a.name < b.name ? 1 : -1))
-            break;
+            case 5: setSortedProducts(products.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
+                break;
         }
     }
 
 
-    const handleChangeSorting = (e : any) => {
+    const handleChangeSorting = (e: any) => {
         const sortOp = Number(e.target.value)
         setCurrentSorting(sortOp);
         sortProducts(products, sortOp);
@@ -129,7 +129,7 @@ const Menu = () => {
     const currentProducts = sortedProducts.slice(beginIndex, lastIndex);
     let pages = [];
 
-    for(let i = 1; i <= Math.ceil(products.length/productsPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(products.length / productsPerPage); i++) {
         pages.push(i);
     }
 
@@ -147,12 +147,12 @@ const Menu = () => {
                                 <div className='filter'>
                                     <div className="flex items-center justify-between ">
                                         <h2 className='card-title stat-title'>Filter</h2>
-                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => {setFilters({ category: 0, minPrice: 0, maxPrice: 20000 })}}/>
+                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: 0, minPrice: 0, maxPrice: 20000 }) }} />
                                     </div>
                                     <form className="pt-2 form-control">
                                         <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                         <div>
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false}/>
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false} />
                                             <label className='label-text'>Todos</label><br />
                                             <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
                                             <label className='label-text'>Pizzas</label><br />
@@ -165,11 +165,11 @@ const Menu = () => {
                                         <div className='flex flex-col gap-3'>
                                             <div className='flex flex-row items-center justify-between'>
                                                 <label className='mr-2 text-xs label-text'>Min Price:</label>
-                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={ filters.minPrice == 0 ? '' : filters.minPrice}/>
+                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={filters.minPrice == 0 ? '' : filters.minPrice} />
                                             </div>
                                             <div className='flex flex-row items-center justify-between'>
                                                 <label className='mr-2 text-xs label-text'>Max Price:</label>
-                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={ filters.maxPrice == 20000 ? '' : filters.maxPrice}/>
+                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={filters.maxPrice == 20000 ? '' : filters.maxPrice} />
                                             </div>
                                         </div>
                                     </form>
@@ -184,12 +184,12 @@ const Menu = () => {
                         <div className='filter'>
                             <div className="flex items-center justify-between ">
                                 <h2 className='card-title stat-title'>Filter</h2>
-                                <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => {setFilters({ category: 0, minPrice: 0, maxPrice: 20000 })}}/>
+                                <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: 0, minPrice: 0, maxPrice: 20000 }) }} />
                             </div>
                             <form className="pt-2 form-control">
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false}/>
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false} />
                                     <label className='label-text'>Todos</label><br />
                                     <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
                                     <label className='label-text'>Pizzas</label><br />
@@ -202,11 +202,11 @@ const Menu = () => {
                                 <div className='flex flex-col gap-3'>
                                     <div className='flex flex-row items-center justify-between'>
                                         <label className='mr-2 text-xs label-text'>Min Price:</label>
-                                        <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={ filters.minPrice == 0 ? '' : filters.minPrice}/>
+                                        <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={filters.minPrice == 0 ? '' : filters.minPrice} />
                                     </div>
                                     <div className='flex flex-row items-center justify-between'>
                                         <label className='mr-2 text-xs label-text'>Max Price:</label>
-                                        <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={ filters.maxPrice == 20000 ? '' : filters.maxPrice} />
+                                        <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={filters.maxPrice == 20000 ? '' : filters.maxPrice} />
                                     </div>
                                 </div>
                             </form>
@@ -255,17 +255,17 @@ const Menu = () => {
                         <div className='flex justify-end'>
                             {
                                 (products.length > 0) && <div className="mt-5 join ">
-                                    <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage-1) : ''}>«</button>
-                                    {pages.map((page: any, index : any) => {
-                                        return <><input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index+1} onClick={() => setCurrentPage(page)} checked={currentPage == page ? true : false}/></>
+                                    <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage - 1) : ''}>«</button>
+                                    {pages.map((page: any, index: any) => {
+                                        return <><input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} checked={currentPage == page ? true : false} /></>
                                     })
                                     }
-                                    
+
                                     { /*<input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="2" />
                                     <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="3" />
                                     <button className="join-item btn btn-sm max-lg:btn-xs btn-disabled">...</button>
                                 <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="8" />  */}
-                                    <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length/productsPerPage) ? setCurrentPage(currentPage+1) : ''}>»</button>
+                                    <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length / productsPerPage) ? setCurrentPage(currentPage + 1) : ''}>»</button>
                                 </div>
                             }
                         </div>
@@ -275,27 +275,30 @@ const Menu = () => {
                         <div className='order '>
                             <div className='flex flex-col items-end mt-12 max-lg:mt-10'>
                                 <div className="w-full px-4 bg-white rounded-xl">
-                                    <div className='max-w-full overflow-auto h-60'>
+                                    <div className='max-w-full h-60'>
                                         <div className="flex flex-row justify-between mt-2 mb-1">
                                             <h2>My order</h2>
                                             <a className='cursor-pointer text-primary' onClick={() => handleOpenProductModal()}>edit</a>
                                         </div>
                                         <hr className='my-2' />
-                                        {
-                                            cart[0].quantity != 0 ? (cart.map((item: any) => {
-                                                return <div key={item.id} className="text-xs product_order">
-                                                    <h4>{item.quantity}x {item.name}</h4>
-                                                    <h4>${item.price * item.quantity}</h4>
-                                                </div>
-                                            })) : ''
+                                        <div className='h-48 overflow-y-auto'>
+                                            {
+                                                cart[0].quantity != 0 ? (cart.map((item: any) => {
+                                                    return <div key={item.id} className="text-xs product_order">
+                                                        <h4>{item.quantity}x {item.name}</h4>
+                                                        <h4>${item.price * item.quantity}</h4>
+                                                    </div>
+                                                })) : ''
 
-                                        }
+                                            }
+                                        </div>
+
                                     </div>
                                     <div>
                                         <h4 className='text-right max-lg:text-sm'>subtotal: <span className='font-bold'>${(totalPrice ? totalPrice : 0)}</span></h4>
                                         <div className='flex justify-center mt-2'>
-                                            { cart[0].quantity === 0 ? <button className='w-full mb-2 rounded-full btn btn-primary btn-disabled'>Continue</button> : <button className='w-full mb-2 rounded-full btn btn-primary' onClick={() => navigate('/order-detail')} >Continue</button>}
-                                            
+                                            {cart[0].quantity === 0 ? <button className='w-full mb-2 rounded-full btn btn-primary btn-disabled'>Continue</button> : <button className='w-full mb-2 rounded-full btn btn-primary' onClick={() => navigate('/order-detail')} >Continue</button>}
+
                                         </div>
                                     </div>
                                 </div>

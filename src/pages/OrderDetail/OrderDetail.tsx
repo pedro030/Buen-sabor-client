@@ -4,7 +4,7 @@ import { useContext, useState } from 'react'
 import { CartContext } from '../../context/cart'
 
 const OrderDetail = () => {
-    const { cart } : any = useContext(CartContext);
+    const { cart }: any = useContext(CartContext);
     const [deliveryTakeAway, setDeliveryTakeAway] = useState(true);
 
     const totalPrice = cart.reduce((total: any, item: any) => {
@@ -29,28 +29,32 @@ const OrderDetail = () => {
 
                         {/* DELIVERY */}
                         <div className="flex justify-center">
-                            <div className="grid grid-rows-[50px_1fr] bg-white h-64 w-[80%] rounded-3xl">
-                                <div className="grid grid-cols-2">
-                                    <button className="rounded-s-full btn btn-primary" onClick={() => setDeliveryTakeAway(true)}>Delivery</button>
-                                    <button className="rounded-e-full btn btn-secondary" onClick={() => setDeliveryTakeAway(false)}>Take Away</button>
+                            <div className={deliveryTakeAway ? "grid grid-rows-[50px_1fr] bg-white h-64 w-[80%] rounded-3xl" : "grid grid-rows-[50px_1fr] bg-white h-32 w-[80%] rounded-3xl"}>
+                                <div className="grid grid-cols-2 join">
+                                    <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => setDeliveryTakeAway(true)} />
+                                    <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Take Away" onClick={() => setDeliveryTakeAway(false)} />
                                 </div>
-                                { deliveryTakeAway &&
-                                <div className="p-4">
-                                    <div className="flex justify-between py-2">
-                                        <h1>Delivery address</h1>
-                                        <p className="text-sm tracking-widest text-primary">Change</p>
-                                    </div>
-                                    <hr />
-                                    <div>
-                                        <p className="mt-2 font-bold ">Coronel Rodriguez 273, Mendoza</p>
-                                        <div className="w-full mt-5 form-control">
-                                            <label className="label">
-                                                <span className="label-text">Delivery instruction (optional)</span>
-                                            </label>
-                                            <input type="text" className="w-full rounded-full input" />
+                                {deliveryTakeAway ?
+                                    <div className="p-4">
+                                        <div className="flex justify-between py-2">
+                                            <h1>Delivery address</h1>
+                                            <p className="text-sm tracking-widest text-primary">Change</p>
+                                        </div>
+                                        <hr />
+                                        <div>
+                                            <p className="mt-2 font-bold ">Coronel Rodriguez 273, Mendoza</p>
+                                            <div className="w-full mt-5 form-control">
+                                                <label className="label">
+                                                    <span className="label-text">Delivery instruction (optional)</span>
+                                                </label>
+                                                <input type="text" className="w-full rounded-full input" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    :
+                                    <div className="flex items-center p-4">
+                                            <p className="">Take in 'Coronel Rodriguez 273, Mendoza'</p>
+                                    </div>
                                 }
 
                             </div>
@@ -62,14 +66,14 @@ const OrderDetail = () => {
                                 <div>
                                     <div className="flex justify-between my-3">
                                         <h1>Order</h1>
-                                        <p>{ cart.length } products</p>
+                                        <p>{cart.length} products</p>
                                     </div>
-                                    <div className="mt-6">
-                                        { cart.map((item: any) => {
+                                    <div className="h-32 mt-6 overflow-y-auto">
+                                        {cart.map((item: any) => {
                                             return <div className='flex items-center'>
-                                                    <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                                                    <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
-                                                </div>
+                                                <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
+                                                <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
+                                            </div>
                                         })}
                                         {/*<div className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
@@ -101,9 +105,9 @@ const OrderDetail = () => {
                                 </div>
                                 <div>
                                     <h1>Available Methods: </h1>
-                                    <div className='flex flex-col items-center justify-between'>
-                                        <button className={ deliveryTakeAway ? 'w-full my-4 rounded-full btn btn-secondary btn-disabled' : 'w-full my-4 rounded-full btn btn-secondary'}>Cash</button>
-                                        <button className='w-full rounded-full btn btn-primary'>Mercado Pago</button>
+                                    <div className='flex flex-col items-center justify-between join'>
+                                        <input className={deliveryTakeAway ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" />
+                                        <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Libre" />
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +133,7 @@ const OrderDetail = () => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="my-3 text-sm font-bold">Total</p>
-                                    <p className="my-3 text-sm font-bold">${(totalPrice+100+300)}</p>
+                                    <p className="my-3 text-sm font-bold">${(totalPrice + 100 + 300)}</p>
                                 </div>
                             </div>
                             <button className="rounded-full btn btn-primary">Make the order</button>

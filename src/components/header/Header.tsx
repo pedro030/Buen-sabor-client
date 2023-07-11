@@ -8,6 +8,7 @@ import DropdownSignin from './dropdown_signin/DropdownSignin'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive';
 import { CartContext } from '../../context/cart'
+import EditCartModal from '../menu/EditCartModal/EditCartModal'
 // import searcher from '../../assets/searcher.svg'
 
 interface NavbarLink {
@@ -18,7 +19,7 @@ interface NavbarLink {
 
 const Header: React.FC = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
-    const context : any = useContext(CartContext);
+    const context: any = useContext(CartContext);
 
     const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
@@ -31,6 +32,20 @@ const Header: React.FC = () => {
     const [activeLink, setActiveLink] = useState('');
 
     const navigate = useNavigate()
+
+    const [isEditCartModalOpen, setIsEditCartModalOpen] = useState(false);
+
+    const handleOpenProductModal = () => {
+        setIsEditCartModalOpen(true);
+    };
+
+    const handleCloseProductModal = () => {
+        setIsEditCartModalOpen(false);
+    };
+
+    const handleConfirmDelete = () => {
+
+    };
 
     // esto tal vez se pueda borrar se
     useEffect(() => {
@@ -70,9 +85,9 @@ const Header: React.FC = () => {
                                 <div tabIndex={0} className='flex justify-center cursor-pointer max-md:hidden'>
                                     <img src={notepad} height="25" />
                                 </div>
-                                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
-                                    <div className="overflow-x-auto">
-                                        <table className="table">
+                                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 ">
+                                    <div className="overflow-y-auto">
+                                        <table className="table ">
                                             <thead>
                                                 <tr>
                                                     <th>N Order</th>
@@ -103,9 +118,13 @@ const Header: React.FC = () => {
                         <div tabIndex={0} className='flex justify-center cursor-pointer'>
                             <img src={cart} height="25" />
                         </div>
+
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-64 mt-2">
-                            <div className="overflow-x-auto">
-                                <table className="table">
+                            <div className='flex justify-end pr-8'>
+                                <a className='cursor-pointer text-primary' onClick={() => handleOpenProductModal()}>edit</a>
+                            </div>
+                            <div className="h-48 overflow-y-auto">
+                                <table className="table ">
                                     <thead>
                                         <tr>
                                             <th>Product</th>
@@ -113,24 +132,17 @@ const Header: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {context.cart[0].quantity === 0 ? <tr><td colSpan={5} className="py-5 text-xl font-bold text-center text-secondary">Empty Cart</td></tr> : (context.cart.map((item: any) => {
-                                                return <tr key={item.id}>
-                                                    <td className='text-xs'>{item.quantity}x {item.name}</td>
-                                                    <td className='text-xs'>${item.price * item.quantity}</td>
-                                                </tr>}))}
-                                        {/*<tr className='cursor-pointer hover'>
-                                            <td className='text-xs'>Hamburguesa Completa</td>
-                                            <td className='text-xs'>$1200</td>
-                                        </tr>
-                                        <tr className='cursor-pointer hover'>
-                                            <td className='text-xs'>Hamburguesa Completa</td>
-                                            <td className='text-xs'>$1200</td>
-                                        </tr>*/}
+                                        {context.cart[0].quantity === 0 ? <tr><td colSpan={5} className="my-auto text-xl font-bold text-center h-36 text-secondary">Empty Cart</td></tr> : (context.cart.map((item: any) => {
+                                            return <tr key={item.id}>
+                                                <td className='text-xs'>{item.quantity}x {item.name}</td>
+                                                <td className='text-xs'>${item.price * item.quantity}</td>
+                                            </tr>
+                                        }))}
                                     </tbody>
                                 </table>
-                                { context.cart[0].quantity === 0 ? <button className='w-full mt-1 rounded-full btn btn-primary btn-sm btn-disabled '>Continue</button> : <button className='w-full mt-1 rounded-full btn btn-primary btn-sm ' onClick={() => navigate('/order-detail')}>Continue</button> }
-                                
                             </div>
+                            {context.cart[0].quantity === 0 ? <button className='w-full mt-1 rounded-full btn btn-primary btn-sm btn-disabled '>Continue</button> : <button className='w-full mt-1 rounded-full btn btn-primary btn-sm ' onClick={() => navigate('/order-detail')}>Continue</button>}
+
                         </ul>
                     </div>
 
@@ -159,6 +171,11 @@ const Header: React.FC = () => {
                     ))}
                 </ul>
             </nav>
+            <EditCartModal
+                isOpen={isEditCartModalOpen}
+                onClose={handleCloseProductModal}
+                onConfirm={handleConfirmDelete}
+            />
         </>
     )
 }
