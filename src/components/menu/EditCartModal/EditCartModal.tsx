@@ -86,7 +86,8 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                         <div className="flex flex-row justify-between">
                             <button className="btn btn-primary btn-wide" onClick={clearCart}>Empty Cart</button>
                             {/* <button onClick={() => setEditCartModal(false)}>Back to Shop</button> */}
-                            <button className="btn btn-primary btn-wide">Continue</button>
+                            { cart[0].quantity === 0 ? <button className="btn btn-primary btn-wide btn-disabled">Continue</button> : <button className="btn btn-primary btn-wide">Continue</button>}
+                            
                         </div>
                     </div>
                 </div>
