@@ -3,10 +3,20 @@ import questionSVG from '../../assets/question.svg'
 import pizzaSvg from '../../assets/pizza.svg'
 import iceCreamSVG from '../../assets/ice-cream.svg'
 import cashSVG from '../../assets/cash.svg'
+import { useContext } from 'react'
+import { CartContext } from '../../context/cart'
+import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
 
 
 const OrderTracking = () => {
-    const { user } = useAuth0()
+    const { user } = useAuth0();
+    const { cart } : any = useContext(CartContext);
+    const { deliveryTakeAway, mp } : any = useContext(PaymenthDeliveryContext);
+
+    const totalPrice = cart.reduce((total: any, item: any) => {
+        const itemPrice = item.price * item.quantity;
+        return total + itemPrice;
+    }, 0);
 
     return (
         <>
@@ -19,10 +29,10 @@ const OrderTracking = () => {
 
                 <div className='flex justify-center mb-5'>
                     <ul className="steps">
-                        <li className="step step-primary">Choice product</li>
+                        <li className="step step-primary">Choice Product</li>
                         <li className="step step-primary">Create Order</li>
-                        <li className="step step-primary">Follow up</li>
-                        <li className="step">Delivered!</li>
+                        <li className="step step-primary">Follow Up</li>
+                        { mp ? <><li className='step step-primary'>Paid</li><li className='step step-primary'>Ordered</li><li className='step'>Delivered!</li></> : <><li className='step step-primary'>Ordered</li><li className='step'>Delivered!</li></> }
                     </ul>
                 </div>
 
@@ -45,17 +55,23 @@ const OrderTracking = () => {
                             <div>
                                 <div className="flex justify-between my-3">
                                     <h1>Order</h1>
-                                    <p>2 products</p>
+                                    <p>{cart.length} products</p>
                                 </div>
                                 <div className="mt-6">
-                                    <div className='flex items-center'>
+                                    {cart.map((item: any) => {
+                                            return <div className='flex items-center'>
+                                                <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
+                                                <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
+                                            </div>
+                                    })}
+                                    {/*<div className='flex items-center'>
                                         <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                         <p className="my-1">1x pizza muzzarella $1.700,00</p>
                                     </div>
                                     <div className='flex items-center'>
                                         <img className='h-4 mr-5' src={iceCreamSVG} alt="category icon" />
                                         <p className="my-1">1x 1kg Ice cream $2.990,00</p>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             <div>
@@ -75,14 +91,14 @@ const OrderTracking = () => {
                                 <p className="text-md">Your payment methotd is: </p>
                             </div>
 
-                            <p>Cash</p>
+                            <p>{ mp ? 'Mercado Pago' : 'Cash'}</p>
                         </div>
 
                         {/* TOTAL */}
                         <div tabIndex={0} className="w-full bg-white shadow collapse rounded-3xl">
                             <div className="flex items-center justify-between p-4">
                                 <h1 className='font-bold'>Total to pay:</h1>
-                                <p className='font-bold'>$808,00</p>
+                                <p className='font-bold'>${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
                             </div>
                             <div className="collapse-content">
                                 <div className="flex ">
@@ -92,19 +108,20 @@ const OrderTracking = () => {
                                             <hr />
                                             <div className="flex justify-between w-full">
                                                 <p className="my-3 text-sm">Products cost</p>
-                                                <p className="my-3 text-sm">$1400</p>
+                                                <p className="my-3 text-sm">${totalPrice}</p>
                                             </div>
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Service fee</p>
-                                                <p className="my-3 text-sm">$1400</p>
+                                                <p className="my-3 text-sm">$100</p>
                                             </div>
-                                            <div className="flex justify-between">
-                                                <p className="my-3 text-sm">Shipping cost</p>
-                                                <p className="my-3 text-sm">$1400</p>
-                                            </div>
+                                            { deliveryTakeAway ? <div className="flex justify-between">
+                                                                    <p className="my-3 text-sm">Shipping cost</p>
+                                                                    <p className="my-3 text-sm">$300</p>
+                                                                </div> : ''
+                                            }
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm font-bold">Total</p>
-                                                <p className="my-3 text-sm font-bold">$1400</p>
+                                                <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
                                             </div>
                                         </div>
                                     </div>

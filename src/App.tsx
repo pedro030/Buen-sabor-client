@@ -15,6 +15,8 @@ import { CartProvider } from './context/cart';
 import OrderDetail from './pages/OrderDetail/OrderDetail';
 import { FiltersProvider } from './context/filters';
 import { UserProvider } from './context/user';
+import OrderTracking from './pages/OrderTracking/OrderTracking';
+import { PaymenthDeliveryProvider } from './context/paymenth-delivery';
 
 
 
@@ -36,6 +38,7 @@ const  App = () => {
     <UserProvider>
       <CartProvider>
       <FiltersProvider>
+      <PaymenthDeliveryProvider>
       <Header></Header>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -44,8 +47,10 @@ const  App = () => {
         <Route path="/myprofile/*" element={<AuthenticationGuard component={UserProfile}/>} />
         {/* <Route path="/detail" element={<ProductDetail />} /> */}
         <Route path='/order-detail' element={<OrderDetail/>} />
+        <Route path='/order-tracking' element={<OrderTracking/>} />
         <Route path="*" element={<Home />} />
       </Routes>
+      </PaymenthDeliveryProvider>
       </FiltersProvider>
       </CartProvider>
       </UserProvider>

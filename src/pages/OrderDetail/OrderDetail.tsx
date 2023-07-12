@@ -2,11 +2,13 @@ import pizzaSvg from '../../assets/pizza.svg'
 import iceCreamSVG from '../../assets/ice-cream.svg'
 import { useContext, useState } from 'react'
 import { CartContext } from '../../context/cart'
+import { useNavigate } from 'react-router-dom'
+import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
 
 const OrderDetail = () => {
     const { cart }: any = useContext(CartContext);
-    const [deliveryTakeAway, setDeliveryTakeAway] = useState(true);
-    const [mp, setMp] = useState(true);
+    const { deliveryTakeAway, setDeliveryTakeAway, mp, setMp} : any = useContext(PaymenthDeliveryContext);
+    const navigate = useNavigate();
 
     const totalPrice = cart.reduce((total: any, item: any) => {
         const itemPrice = item.price * item.quantity;
@@ -18,10 +20,10 @@ const OrderDetail = () => {
             <h1 className="flex justify-center my-6 text-3xl font-bold text-red-600">Buen Sabor</h1>
             <div className='flex justify-center mb-5'>
                 <ul className="steps">
-                    <li className="step step-primary">Choice product</li>
+                    <li className="step step-primary">Choice Product</li>
                     <li className="step step-primary">Create Order</li>
-                    <li className="step step-primary">Follow up</li>
-                    { mp ? <><li className='step'>Pay</li><li className='step'>Delivered!</li></> : <li className="step">Delivered!</li> }
+                    <li className="step step-primary">Follow Up</li>
+                    { mp ? <><li className='step'>Pay</li><li className='step'>Ordered</li><li className='step'>Delivered!</li></> : <><li className='step'>Ordered</li><li className='step'>Delivered!</li></> }
                 </ul>
             </div>
             <div className='flex justify-center'>
@@ -128,16 +130,16 @@ const OrderDetail = () => {
                                     <p className="my-3 text-sm">Service fee</p>
                                     <p className="my-3 text-sm">$100</p>
                                 </div>
-                                <div className="flex justify-between">
+                                { deliveryTakeAway ? <div className="flex justify-between">
                                     <p className="my-3 text-sm">Shipping cost</p>
                                     <p className="my-3 text-sm">$300</p>
-                                </div>
+                                </div> : '' }
                                 <div className="flex justify-between">
                                     <p className="my-3 text-sm font-bold">Total</p>
-                                    <p className="my-3 text-sm font-bold">${(totalPrice + 100 + 300)}</p>
+                                    <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
                                 </div>
                             </div>
-                            { mp ? <button className="rounded-full btn btn-primary">Go to Pay</button> : <button className="rounded-full btn btn-primary">Make the order</button>}
+                            { mp ? <button className="rounded-full btn btn-primary" onClick={() => { mp ? navigate('/order-tracking') : ''}}>Go to Pay</button> : <button className="rounded-full btn btn-primary" onClick={() => { !mp ? navigate('/order-tracking') : ''}}>Make the order</button>}
                             
                         </div>
                     </div>
