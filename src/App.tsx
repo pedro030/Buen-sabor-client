@@ -14,6 +14,7 @@ import About from './pages/About/AboutComponent';
 import { CartProvider } from './context/cart';
 import OrderDetail from './pages/OrderDetail/OrderDetail';
 import { FiltersProvider } from './context/filters';
+import { UserProvider } from './context/user';
 
 
 
@@ -32,6 +33,7 @@ const  App = () => {
 
   return (
     <>
+    <UserProvider>
       <CartProvider>
       <FiltersProvider>
       <Header></Header>
@@ -46,6 +48,7 @@ const  App = () => {
       </Routes>
       </FiltersProvider>
       </CartProvider>
+      </UserProvider>
       <Footer/>
     </>
   )
