@@ -59,6 +59,36 @@
             "name": "Hamburguesa con Cheddar",
             "price": 1450.0,
             "idCategory": 2
+        },
+        {
+            "id": 11,
+            "name": "A",
+            "price": 1200.0,
+            "idCategory": 3
+        },
+        {
+            "id": 12,
+            "name": "B",
+            "price": 1200.0,
+            "idCategory": 3
+        },
+        {
+            "id": 13,
+            "name": "C",
+            "price": 1200.0,
+            "idCategory": 3
+        },
+        {
+            "id": 14,
+            "name": "D",
+            "price": 1200.0,
+            "idCategory": 3
+        },
+        {
+            "id": 15,
+            "name": "E",
+            "price": 1200.0,
+            "idCategory": 3
         }
     ]
 }

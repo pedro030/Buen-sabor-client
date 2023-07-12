@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { CartContext } from "../../../context/cart"
 import TrashSimple from '../../../assets/TrashSimple.svg'
 import ReactModal from 'react-modal';
+import { useNavigate } from "react-router-dom";
 
 interface EditCartModalProps {
     isOpen: boolean;
@@ -12,6 +13,7 @@ interface EditCartModalProps {
 const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfirm }) => {
     const { cart, clearCart, addToCart, removeFromCart }: any = useContext(CartContext);
     const modalRef = useRef(null);
+    const navigate = useNavigate();
     let total = 0;
 
     const handleClickOutside = (e: any) => {
@@ -34,14 +36,14 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
 
     return (
         <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">
-            <div className="modal modal-open">
-                <div ref={modalRef} className="bg-white p-8 rounded-3xl modal-box min-w-[50rem] max-h-[30rem] mt-20">
+            <div className=" modal modal-open">
+                <div ref={modalRef} className="bg-white p-8 rounded-3xl modal-box min-w-[50rem] max-h-[30rem] mt-20 overflow-y-hidden">
                     <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
 
-                    <div className="grid grid-rows-[25px_1fr_10px_50px] gap-8">
-                        <h2 className="text-xl font-bold text-center text-primary">Edit Cart</h2>
+                    <h2 className="text-xl font-bold text-center text-primary">Edit Cart</h2>
+                    <div className="flex flex-wrap gap-8 overflow-y-auto h-80 ">
 
-                        <table className="table">
+                        <table className="table ">
                             <thead>
                                 <th>Product</th>
                                 <th>Price</th>
@@ -82,12 +84,13 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                                     })}
                             </tbody>
                         </table>
-                        <h1 className="text-right">Total <span className="font-bold">${total}</span></h1>
-                        <div className="flex flex-row justify-between">
-                            <button className="btn btn-primary btn-wide" onClick={clearCart}>Empty Cart</button>
-                            {/* <button onClick={() => setEditCartModal(false)}>Back to Shop</button> */}
-                            <button className="btn btn-primary btn-wide">Continue</button>
-                        </div>
+                    </div>
+                    <h1 className="my-1 text-right">Total <span className="font-bold">${total}</span></h1>
+                    <div className="flex flex-row justify-between">
+                        <button className="btn btn-primary btn-wide" onClick={clearCart}>Empty Cart</button>
+                        {/* <button onClick={() => setEditCartModal(false)}>Back to Shop</button> */}
+                        {cart[0].quantity === 0 ? <button className="btn btn-primary btn-wide btn-disabled" onClick={() => navigate('/order-detail')}>Continue</button> : <button className="btn btn-primary btn-wide" onClick={() => navigate('/order-detail')}>Continue</button>}
+
                     </div>
                 </div>
             </div>

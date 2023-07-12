@@ -15,9 +15,6 @@ import { UserProvider } from '../../context/user'
 const Home = () => {
     return (
         <div>
-            <UserProvider>
-            <FiltersProvider>
-            <CartProvider>
                 <Carousel />
                 <Menu />
 
@@ -27,9 +24,6 @@ const Home = () => {
 
                 {/* <Register/> */}
                 {/* <Login/> */}
-            </CartProvider>
-            </FiltersProvider>
-            </UserProvider>
         </div >
     )
 }

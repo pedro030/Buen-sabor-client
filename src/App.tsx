@@ -11,6 +11,9 @@ import Header from './components/header/Header';
 import MenuPage from './pages/Menu/Menu';
 import Footer from './components/footer/Footer';
 import About from './pages/About/AboutComponent';
+import { CartProvider } from './context/cart';
+import OrderDetail from './pages/OrderDetail/OrderDetail';
+import { FiltersProvider } from './context/filters';
 
 
 
@@ -29,6 +32,8 @@ const  App = () => {
 
   return (
     <>
+      <CartProvider>
+      <FiltersProvider>
       <Header></Header>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -36,8 +41,11 @@ const  App = () => {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/myprofile/*" element={<AuthenticationGuard component={UserProfile}/>} />
         {/* <Route path="/detail" element={<ProductDetail />} /> */}
+        <Route path='/order-detail' element={<OrderDetail/>} />
         <Route path="*" element={<Home />} />
       </Routes>
+      </FiltersProvider>
+      </CartProvider>
       <Footer/>
     </>
   )
