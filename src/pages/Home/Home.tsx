@@ -10,10 +10,12 @@ import Register from '../Register/Register'
 import Login from '../Login/Login'
 import { FiltersProvider } from '../../context/filters'
 import { CartProvider } from '../../context/cart'
+import { UserProvider } from '../../context/user'
 
 const Home = () => {
     return (
         <div>
+            <UserProvider>
             <FiltersProvider>
             <CartProvider>
                 <Carousel />
@@ -27,6 +29,7 @@ const Home = () => {
                 {/* <Login/> */}
             </CartProvider>
             </FiltersProvider>
+            </UserProvider>
         </div >
     )
 }

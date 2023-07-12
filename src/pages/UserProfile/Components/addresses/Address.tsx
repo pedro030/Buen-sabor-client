@@ -1,12 +1,16 @@
 import TrashSimple from '../../../../assets/TrashSimple.svg'
 import MapPin from '../../../../assets/MapPin.svg'
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AddressModal from './AddressModal/AddressModal';
+import { UserContext } from '../../../../context/user';
+import { MAddress } from '../../../../models/MAddress';
 
 
 const Address = () => {
 
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+    const {addresses}   = useContext(UserContext);
+    
 
     const handleOpenAddressModal = () => {
         setIsAddressModalOpen(true);
@@ -38,38 +42,18 @@ const Address = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Cy Ganderton</td>
-                            <td>Quality Control Specialist</td>
-                            <td>Littel, Schaden and Vandervort</td>
-                            <td>
-                                <button className="btn btn-circle btn-secondary btn-sm">
-                                    <img className='p-1 h-7' src={TrashSimple} />
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Cy Ganderton</td>
-                            <td>Quality Control Specialist</td>
-                            <td>Littel, Schaden and Vandervort</td>
-                            <td>
-                                <button className="btn btn-circle btn-secondary btn-sm">
-                                    <img className='p-1 h-7' src={TrashSimple} />
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Cy Ganderton</td>
-                            <td>Quality Control Specialist</td>
-                            <td>Littel, Schaden and Vandervort</td>
-                            <td>
-                                <button className="btn btn-circle btn-secondary btn-sm">
-                                    <img className='p-1 h-7' src={TrashSimple} />
-                                </button>
-                            </td>
-                        </tr>
-
-
+                        { addresses.map((a: MAddress, i: number) => (
+                            <tr key={i}>
+                                <td>{a.street}</td>
+                                <td>{a.number}</td>
+                                <td>{a.location.location}</td>
+                                <td>
+                                    <button className="btn btn-circle btn-secondary btn-sm">
+                                        <img className='p-1 h-7' src={TrashSimple} />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                     <tfoot>
                         <tr>
