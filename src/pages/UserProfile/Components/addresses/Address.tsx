@@ -9,7 +9,12 @@ import { MAddress } from '../../../../models/MAddress';
 const Address = () => {
 
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-    const {addresses}   = useContext(UserContext);
+    const {addresses, getAddresses}   = useContext(UserContext);
+
+    useEffect(() => {
+      getAddresses()
+    }, [])
+    
     
 
     const handleOpenAddressModal = () => {
@@ -42,7 +47,7 @@ const Address = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        { addresses.map((a: MAddress, i: number) => (
+                        { addresses?.map((a: MAddress, i: number) => (
                             <tr key={i}>
                                 <td>{a.street}</td>
                                 <td>{a.number}</td>
