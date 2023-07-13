@@ -41,9 +41,9 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                     <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
 
                     <h2 className="text-xl font-bold text-center text-primary">Edit Cart</h2>
-                    <div className="flex flex-wrap gap-8 overflow-y-auto h-80 ">
+                    <div className="flex flex-wrap gap-8 h-80 overflow-y-auto scrollbar">
 
-                        <table className="table ">
+                        <table className="table">
                             <thead>
                                 <th>Product</th>
                                 <th>Price</th>

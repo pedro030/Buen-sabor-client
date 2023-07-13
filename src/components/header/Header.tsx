@@ -141,7 +141,7 @@ const Header: React.FC = () => {
                             <div className='flex justify-end pr-8'>
                                 <a className='cursor-pointer text-primary' onClick={() => handleOpenProductModal()}>edit</a>
                             </div>
-                            <div className="h-48 overflow-y-auto">
+                            <div className="h-48 overflow-y-auto scrollbar">
                                 <table className="table ">
                                     <thead>
                                         <tr>

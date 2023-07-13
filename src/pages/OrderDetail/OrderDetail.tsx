@@ -71,7 +71,7 @@ const OrderDetail = () => {
                                         <h1>Order</h1>
                                         <p>{cart.length} products</p>
                                     </div>
-                                    <div className="h-32 mt-6 overflow-y-auto">
+                                    <div className="h-32 mt-6 overflow-y-auto scrollbar mb-1">
                                         {cart.map((item: any) => {
                                             return <div className='flex items-center'>
                                                 <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
