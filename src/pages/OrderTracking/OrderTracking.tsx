@@ -10,8 +10,8 @@ import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
 
 const OrderTracking = () => {
     const { user } = useAuth0();
-    const { cart } : any = useContext(CartContext);
-    const { deliveryTakeAway, mp } : any = useContext(PaymenthDeliveryContext);
+    const { cart }: any = useContext(CartContext);
+    const { deliveryTakeAway, mp }: any = useContext(PaymenthDeliveryContext);
 
     const totalPrice = cart.reduce((total: any, item: any) => {
         const itemPrice = item.price * item.quantity;
@@ -32,7 +32,7 @@ const OrderTracking = () => {
                         <li className="step step-primary">Choice Product</li>
                         <li className="step step-primary">Create Order</li>
                         <li className="step step-primary">Follow Up</li>
-                        { mp ? <><li className='step step-primary'>Paid</li><li className='step step-primary'>Ordered</li><li className='step'>Delivered!</li></> : <><li className='step step-primary'>Ordered</li><li className='step'>Delivered!</li></> }
+                        {mp ? <><li className='step step-primary'>Paid</li><li className='step step-primary'>Ordered</li><li className='step'>Delivered!</li></> : <><li className='step step-primary'>Ordered</li><li className='step'>Delivered!</li></>}
                     </ul>
                 </div>
 
@@ -43,7 +43,7 @@ const OrderTracking = () => {
                 </div>
 
                 <div className="grid grid-cols-[2fr_1fr] gap-5">
-                    <div className="grid grid-rows-[96px_256px_80px_80px] gap-5 place-items-center">
+                    <div className="flex flex-col gap-5 place-items-center">
                         {/* BUEN SABOR */}
                         <div className="flex flex-col justify-center w-full h-24 p-4 bg-white shadow rounded-3xl">
                             <h1 className='text-2xl font-bold text-red-600'>Buen Sabor</h1>
@@ -51,27 +51,20 @@ const OrderTracking = () => {
                         </div>
 
                         {/* ORDER */}
-                        <div className="bg-white h-64 w-full rounded-3xl p-4 grid grid-rows-[1fr_50px]">
+                        <div className="bg-white h-64 rounded-3xl w-full p-4 grid grid-rows-[1fr_50px]">
                             <div>
                                 <div className="flex justify-between my-3">
                                     <h1>Order</h1>
                                     <p>{cart.length} products</p>
                                 </div>
-                                <div className="mt-6">
+                                <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
                                     {cart.map((item: any) => {
-                                            return <div className='flex items-center'>
-                                                <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                                                <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
-                                            </div>
+                                        return <div className='flex items-center'>
+                                            <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
+                                            <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
+                                        </div>
                                     })}
-                                    {/*<div className='flex items-center'>
-                                        <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                                        <p className="my-1">1x pizza muzzarella $1.700,00</p>
-                                    </div>
-                                    <div className='flex items-center'>
-                                        <img className='h-4 mr-5' src={iceCreamSVG} alt="category icon" />
-                                        <p className="my-1">1x 1kg Ice cream $2.990,00</p>
-                                    </div> */}
+
                                 </div>
                             </div>
                             <div>
@@ -91,7 +84,7 @@ const OrderTracking = () => {
                                 <p className="text-md">Your payment methotd is: </p>
                             </div>
 
-                            <p>{ mp ? 'Mercado Pago' : 'Cash'}</p>
+                            <p>{mp ? 'Mercado Pago' : 'Cash'}</p>
                         </div>
 
                         {/* TOTAL */}
@@ -114,10 +107,10 @@ const OrderTracking = () => {
                                                 <p className="my-3 text-sm">Service fee</p>
                                                 <p className="my-3 text-sm">$100</p>
                                             </div>
-                                            { deliveryTakeAway ? <div className="flex justify-between">
-                                                                    <p className="my-3 text-sm">Shipping cost</p>
-                                                                    <p className="my-3 text-sm">$300</p>
-                                                                </div> : ''
+                                            {deliveryTakeAway ? <div className="flex justify-between">
+                                                <p className="my-3 text-sm">Shipping cost</p>
+                                                <p className="my-3 text-sm">$300</p>
+                                            </div> : ''
                                             }
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm font-bold">Total</p>

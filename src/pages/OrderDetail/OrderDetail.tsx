@@ -16,7 +16,7 @@ const OrderDetail = () => {
     }, 0);
 
     return (
-        <>
+        <div className='mb-5'>
             <h1 className="flex justify-center my-6 text-3xl font-bold text-red-600">Buen Sabor</h1>
             <div className='flex justify-center mb-5'>
                 <ul className="steps">
@@ -71,7 +71,7 @@ const OrderDetail = () => {
                                         <h1>Order</h1>
                                         <p>{cart.length} products</p>
                                     </div>
-                                    <div className="h-32 mt-6 overflow-y-auto scrollbar mb-1">
+                                    <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
                                         {cart.map((item: any) => {
                                             return <div className='flex items-center'>
                                                 <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
@@ -145,7 +145,7 @@ const OrderDetail = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
