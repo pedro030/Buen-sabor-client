@@ -17,6 +17,7 @@ import { FiltersProvider } from './context/filters';
 import { UserProvider } from './context/user';
 import OrderTracking from './pages/OrderTracking/OrderTracking';
 import { PaymenthDeliveryProvider } from './context/paymenth-delivery';
+import Login from './pages/Login/Login';
 
 
 
@@ -42,6 +43,7 @@ const  App = () => {
       <Header></Header>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/myprofile/*" element={<AuthenticationGuard component={UserProfile}/>} />
