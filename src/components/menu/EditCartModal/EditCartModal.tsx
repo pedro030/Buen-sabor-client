@@ -41,7 +41,7 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                     <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
 
                     <h2 className="text-xl font-bold text-center text-primary">Edit Cart</h2>
-                    <div className="flex flex-wrap gap-8 h-80 overflow-y-auto scrollbar">
+                    <div className="flex flex-wrap gap-8 overflow-y-auto h-80 scrollbar">
 
                         <table className="table">
                             <thead>
@@ -88,8 +88,7 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                     <h1 className="my-1 text-right">Total <span className="font-bold">${total}</span></h1>
                     <div className="flex flex-row justify-between">
                         <button className="btn btn-primary btn-wide" onClick={clearCart}>Empty Cart</button>
-                        {/* <button onClick={() => setEditCartModal(false)}>Back to Shop</button> */}
-                        {cart[0].quantity === 0 ? <button className="btn btn-primary btn-wide btn-disabled" onClick={() => navigate('/order-detail')}>Continue</button> : <button className="btn btn-primary btn-wide" onClick={() => navigate('/order-detail')}>Continue</button>}
+                         <button className={`btn btn-primary btn-wide ${cart[0].quantity === 0 && `btn-disabled`}`} onClick={() => navigate('/order-detail')}>Continue</button>
 
                     </div>
                 </div>
