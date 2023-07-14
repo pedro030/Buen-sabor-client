@@ -131,7 +131,7 @@ const Menu = () => {
     useEffect(() => {
         setCurrentPage(1);
         sortProducts(products, currentSorting);
-    }, [filters])
+    }, [filters, productsFetch])
 
     const lastIndex = currentPage * productsPerPage;
     const beginIndex = lastIndex - productsPerPage;
