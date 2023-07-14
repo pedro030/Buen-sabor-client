@@ -117,6 +117,11 @@ const Menu = () => {
         pages.push(i);
     }
 
+    const handleChecked = (currentPage: any, page: any) => (
+        (currentPage == page) ? true : false
+    )
+
+
     return (
         <>
             <div className="p-8 min-h-[140vh]">
@@ -173,7 +178,7 @@ const Menu = () => {
                             <form className="pt-2 form-control">
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0} />
                                     <label className='label-text'>Todos</label><br />
                                     <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
                                     <label className='label-text'>Pizzas</label><br />
@@ -207,22 +212,10 @@ const Menu = () => {
                                     <option value={4}>SORT BY NAME: A - Z</option>
                                     <option value={5}>SORT BY NAME: Z - A</option>
                                 </select>
-                                {/*<div className="dropdown">
-                                    <label tabIndex={0} className="btn btn-sm"><span className='text-gray-500'>Sort by</span> Rating: Low to High</label>
-                                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-b-lg w-full">
-                                        <li><a>Item 1</a></li>
-                                        <li><a>Item 2</a></li>
-                                    </ul>
-                </div> */}
-                                {/* <button className='btn btn-sm btn-primary'>paginable</button> */}
-                                {/* <div >
-                                    <button className='rounded-none btn btn-sm btn-primary rounded-s-xl'><img src={box} /></button>
-                                    <button className='rounded-none btn btn-sm btn-secondary rounded-e-xl'><img src={line} /></button>
-                                </div> */}
                             </div>
                         </div>
-                        <div className='flex items-center justify-center'>
-                            <div className="grid grid-cols-3 gap-2">
+                        <div className='flex items-center justify-center min-h-max'>
+                            <div className="grid grid-cols-3 gap-2 h-[55rem]">
                                 {
                                     (products.length > 0) &&
                                     currentProducts.map((p: any) => {
@@ -241,14 +234,9 @@ const Menu = () => {
                                 (products.length > 0) && <div className="mt-5 join ">
                                     <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage - 1) : ''}>«</button>
                                     {pages.map((page: any, index: any) => {
-                                        return <><input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} checked={currentPage == page ? true : false} /></>
+                                        return <input key={index} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} checked={currentPage === page} />
                                     })
                                     }
-
-                                    { /*<input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="2" />
-                                    <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="3" />
-                                    <button className="join-item btn btn-sm max-lg:btn-xs btn-disabled">...</button>
-                                <input className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label="8" />  */}
                                     <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length / productsPerPage) ? setCurrentPage(currentPage + 1) : ''}>»</button>
                                 </div>
                             }
@@ -267,7 +255,7 @@ const Menu = () => {
                                         <hr className='my-2' />
                                         <div className='h-48 overflow-y-auto scrollbar'>
                                             {
-                                                cart[0].quantity != 0 ? (cart.map((item: any) => {
+                                                (cart[0].quantity != 0) ? (cart.map((item: any) => {
                                                     return <div key={item.id} className="pr-2 text-xs product_order">
                                                         <h4>{item.quantity}x {item.name}</h4>
                                                         <h4>${item.price * item.quantity}</h4>
@@ -281,8 +269,7 @@ const Menu = () => {
                                     <div>
                                         <h4 className='text-right max-lg:text-sm'>subtotal: <span className='font-bold'>${(totalPrice ? totalPrice : 0)}</span></h4>
                                         <div className='flex justify-center mt-2'>
-                                            {cart[0].quantity === 0 ? <button className='w-full mb-2 rounded-full btn btn-primary btn-disabled'>Continue</button> : <button className='w-full mb-2 rounded-full btn btn-primary' onClick={() => navigate('/order-detail')} >Continue</button>}
-
+                                            <button className={`w-full mb-2 rounded-full btn btn-primary ${cart[0].quantity === 0 && `btn-disabled`}`} onClick={() => navigate('/order-detail')} >Continue</button>
                                         </div>
                                     </div>
                                 </div>
