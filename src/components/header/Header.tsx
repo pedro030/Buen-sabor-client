@@ -139,7 +139,7 @@ const Header: React.FC = () => {
 
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-64 mt-2">
                             <div className='flex justify-end pr-8'>
-                                <a className='cursor-pointer text-primary' onClick={() => handleOpenProductModal()}>edit</a>
+                                <a className='text-xs font-bold cursor-pointer btn-sm btn btn-primary' onClick={() => handleOpenProductModal()}>edit</a>
                             </div>
                             <div className="h-48 overflow-y-auto scrollbar">
                                 <table className="table ">

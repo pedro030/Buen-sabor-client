@@ -262,13 +262,13 @@ const Menu = () => {
                                     <div className='max-w-full h-60'>
                                         <div className="flex flex-row justify-between mt-2 mb-1">
                                             <h2>My order</h2>
-                                            <a className='cursor-pointer text-primary' onClick={() => handleOpenProductModal()}>edit</a>
+                                            <a className='text-xs font-bold cursor-pointer btn-sm btn btn-primary' onClick={() => handleOpenProductModal()}>edit</a>
                                         </div>
                                         <hr className='my-2' />
                                         <div className='h-48 overflow-y-auto scrollbar'>
                                             {
                                                 cart[0].quantity != 0 ? (cart.map((item: any) => {
-                                                    return <div key={item.id} className="text-xs product_order pr-2">
+                                                    return <div key={item.id} className="pr-2 text-xs product_order">
                                                         <h4>{item.quantity}x {item.name}</h4>
                                                         <h4>${item.price * item.quantity}</h4>
                                                     </div>
