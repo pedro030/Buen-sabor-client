@@ -4,10 +4,10 @@ export const FiltersContext = createContext([]);
 
 export function FiltersProvider({ children }: any) {
     const [filters, setFilters] = useState({
-        category: 0,
+        category: "all",
         minPrice: 0,
         maxPrice: 20000,
-        search: ''
+        search: ""
     })
 
     const filterProducts = (products: any) => {
@@ -19,8 +19,8 @@ export function FiltersProvider({ children }: any) {
                 )
                 &&
                 (
-                    filters.category === 0 ||
-                    p.idCategory === filters.category
+                    filters.category === "all" ||
+                    p.subcategory.parentCategory.name == filters.category
                 )
                 &&
                 (

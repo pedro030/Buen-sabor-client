@@ -13,17 +13,39 @@ import { useNavigate } from 'react-router-dom'
 
 
 const Menu = () => {
+    // Responsive
     const isTable = useMediaQuery({ maxWidth: 1024 });
+
+    // Filters
     const { filters, setFilters, filterProducts }: any = useContext(FiltersContext);
+
+    // Cart
     const { cart }: any = useContext(CartContext);
+
+    // Navigate
     const navigate = useNavigate();
 
-    const products = filterProducts(initialProducts);
+    // States: Categories & Products
+    const [productsFetch, setProductsFetch] = useState([]);
+
+    useEffect(() => {
+        const getAndSetData = async () => {
+            const responseProducts = await fetch("https://buen-sabor-niqf.onrender.com/api/products/getAll")
+            const dataProducts = await responseProducts.json();
+            setProductsFetch(dataProducts);
+        }
+        getAndSetData();
+    }, [])
+
+
+    const products = filterProducts(productsFetch);
+
 
     const handleChangeCategory = (e: any) => {
+        console.log(typeof e.target.value);
         setFilters((prevState: any) => ({
             ...prevState,
-            category: +e.target.value
+            category: e.target.value
         }))
     }
 
@@ -49,12 +71,13 @@ const Menu = () => {
 
     }
 
+    // Total Price
     const totalPrice = cart.reduce((total: any, item: any) => {
         const itemPrice = item.price * item.quantity;
         return total + itemPrice;
     }, 0);
 
-
+    // Edit Cart Modal
     const [isEditCartModalOpen, setIsEditCartModalOpen] = useState(false);
 
     const handleOpenProductModal = () => {
@@ -94,9 +117,11 @@ const Menu = () => {
 
 
     const handleChangeSorting = (e: any) => {
-        const sortOp = Number(e.target.value)
+        const sortOp = +e.target.value;
+        console.log(sortOp);
         setCurrentSorting(sortOp);
         sortProducts(products, sortOp);
+        console.log(products);
     }
 
     //Pagination
@@ -136,19 +161,21 @@ const Menu = () => {
                                 <div className='filter'>
                                     <div className="flex items-center justify-between ">
                                         <h2 className='card-title stat-title'>Filter</h2>
-                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: 0, minPrice: 0, maxPrice: 20000, search: '' }) }} />
+                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: "all", minPrice: 0, maxPrice: 20000, search: '' }) }} />
                                     </div>
                                     <form className="pt-2 form-control">
                                         <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                         <div>
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0 ? true : false} />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
                                             <label className='label-text'>Todos</label><br />
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Entradas" onChange={handleChangeCategory} />
+                                            <label className='label-text'>Entradas</label><br />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Pizzas" onChange={handleChangeCategory} />
                                             <label className='label-text'>Pizzas</label><br />
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="2" onChange={handleChangeCategory} />
-                                            <label className='label-text'>Hamburguesas</label><br />
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="3" onChange={handleChangeCategory} />
-                                            <label className='label-text'>Panchos</label><br />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Sandwich" onChange={handleChangeCategory} />
+                                            <label className='label-text'>Sandwich</label><br />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Bebidas" onChange={handleChangeCategory} />
+                                            <label className='label-text'>Bebidas</label><br />
                                         </div>
                                         <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
                                         <div className='flex flex-col gap-3'>
@@ -173,19 +200,21 @@ const Menu = () => {
                         <div className='filter'>
                             <div className="flex items-center justify-between ">
                                 <h2 className='card-title stat-title'>Filter</h2>
-                                <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: 0, minPrice: 0, maxPrice: 20000, search: '' }) }} />
+                                <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: "all", minPrice: 0, maxPrice: 20000, search: '' }) }} />
                             </div>
                             <form className="pt-2 form-control">
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="0" onChange={handleChangeCategory} checked={filters.category == 0} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
                                     <label className='label-text'>Todos</label><br />
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="1" onChange={handleChangeCategory} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Entradas" onChange={handleChangeCategory} />
+                                    <label className='label-text'>Entradas</label><br />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Pizzas" onChange={handleChangeCategory} />
                                     <label className='label-text'>Pizzas</label><br />
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="2" onChange={handleChangeCategory} />
-                                    <label className='label-text'>Hamburguesas</label><br />
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="3" onChange={handleChangeCategory} />
-                                    <label className='label-text'>Panchos</label><br />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Sandwich" onChange={handleChangeCategory} />
+                                    <label className='label-text'>Sandwich</label><br />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Bebidas" onChange={handleChangeCategory} />
+                                    <label className='label-text'>Bebidas</label><br />
                                 </div>
                                 <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
                                 <div className='flex flex-col gap-3'>

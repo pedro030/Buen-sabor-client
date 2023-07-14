@@ -14,15 +14,6 @@ import { UserProvider } from '../../context/user'
 
 const Home = () => {
 
-
-    useEffect(() => {
-        console.log('effect')
-        fetch('https://buen-sabor-niqf.onrender.com/api/products/get/1')
-        .then(res => res.json())
-        .then(data => console.log(data))
-    }, [])
-
-
     return (
         <div>
                 <Carousel />
