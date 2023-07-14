@@ -88,7 +88,7 @@ const OrderTracking = () => {
                         </div>
 
                         {/* TOTAL */}
-                        <div tabIndex={0} className="w-full bg-white shadow collapse rounded-3xl">
+                        <div tabIndex={0} className="w-full bg-white shadow cursor-pointer collapse rounded-3xl">
                             <div className="flex items-center justify-between p-4">
                                 <h1 className='font-bold'>Total to pay:</h1>
                                 <p className='font-bold'>${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>

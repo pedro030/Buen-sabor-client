@@ -25,7 +25,7 @@ const Header: React.FC = () => {
 
     const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
-        { id: 2, title: 'Coming soon', path: '/order' },
+        { id: 2, title: 'Help', path: '/help' },
         { id: 3, title: 'Menu', path: '/menu' },
         { id: 4, title: 'About', path: '/about' },
     ]);
