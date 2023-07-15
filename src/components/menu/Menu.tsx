@@ -38,7 +38,7 @@ const Menu = () => {
     }, [])
 
 
-    const products = filterProducts(productsFetch);
+    const products = filterProducts(initialProducts);
 
 
     const handleChangeCategory = (e: any) => {

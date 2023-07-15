@@ -10,6 +10,7 @@ import { useMediaQuery } from 'react-responsive';
 import { CartContext } from '../../context/cart'
 import EditCartModal from '../menu/EditCartModal/EditCartModal'
 import { FiltersContext } from '../../context/filters'
+import { OrdersContext } from '../../context/orders'
 // import searcher from '../../assets/searcher.svg'
 
 interface NavbarLink {
@@ -22,6 +23,7 @@ const Header: React.FC = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
     const context: any = useContext(CartContext);
     const { filters, setFilters } : any = useContext(FiltersContext);
+    const { orders }: any = useContext(OrdersContext);
 
     const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
@@ -113,14 +115,20 @@ const Header: React.FC = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr className='cursor-pointer hover'>
+                                                {orders.map((o: any) => {
+                                                    return <tr className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.idOrder}`)}>
+                                                        <th>{o.idOrder}</th>
+                                                        <td><div className="badge badge-secondary">{o.status}</div></td>
+                                                    </tr>
+                                                })}
+                                                {/*<tr className='cursor-pointer hover'>
                                                     <th>1</th>
                                                     <td><div className="badge badge-secondary">Preparing</div></td>
                                                 </tr>
                                                 <tr className='cursor-pointer hover'>
                                                     <th>2</th>
                                                     <td><div className="badge badge-warning">Delivery</div></td>
-                                                </tr>
+                                            </tr>*/}
                                             </tbody>
                                         </table>
                                     </div>

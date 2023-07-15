@@ -3,20 +3,74 @@ import questionSVG from '../../assets/question.svg'
 import pizzaSvg from '../../assets/pizza.svg'
 import iceCreamSVG from '../../assets/ice-cream.svg'
 import cashSVG from '../../assets/cash.svg'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { CartContext } from '../../context/cart'
 import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
+import { OrdersContext } from '../../context/orders'
+import { useParams } from 'react-router-dom'
 
 
 const OrderTracking = () => {
     const { user } = useAuth0();
-    const { cart }: any = useContext(CartContext);
+    const { cart, clearCart }: any = useContext(CartContext);
     const { deliveryTakeAway, mp }: any = useContext(PaymenthDeliveryContext);
+    const { orders, setOrders }: any = useContext(OrdersContext);
+    const { id } : any = useParams();
+    const [order, setOrder] = useState([{ total: 0, withdrawal: '', paymenthMethod: '', products: [{}], }]);
 
-    const totalPrice = cart.reduce((total: any, item: any) => {
-        const itemPrice = item.price * item.quantity;
-        return total + itemPrice;
-    }, 0);
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    const yyyy = today.getFullYear();
+    const day = dd + '/' + mm + '/' + yyyy;
+
+    useEffect(() => {
+        if(id == '0') {
+            let totalPay : number = 0;
+
+            totalPay = cart.reduce((total: any, item: any) => {
+                const itemPrice = item.price * item.quantity;
+                return total + itemPrice;
+            }, 0);
+
+            if(deliveryTakeAway) totalPay += (100 + 300)
+            else totalPay += 100
+
+            const newOrder = {
+                idOrder: orders.length+1,
+                date: day,
+                withdrawal: deliveryTakeAway ? 'Delivery' : 'Take Away',
+                total: totalPay,
+                address: 'San Martin 317',
+                paymenthMethod: mp ? "Mercado Pago" : "Cash",
+                status: 'Delivered',
+                products: cart.map((item: any) => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    idCategory: item.idCategory,
+                    quantity: item.quantity
+                }))
+            };
+
+            setOrders((prevState: any) => [...prevState, newOrder])
+            clearCart()
+        } else {
+            const order = orders.filter((o: any) => o.idOrder == +id);
+            setOrder(order);
+        }
+
+        
+    }, []);
+
+    const totalProductsPrice = () => {
+        if(id != "0") {
+            return order.length > 0 ? (order[0].products.reduce((total: any, item: any) => {
+                const itemPrice = item.price * item.quantity;
+                return total + itemPrice;
+            }, 0)) : '';
+        }
+    }
 
     return (
         <>
@@ -55,16 +109,20 @@ const OrderTracking = () => {
                             <div>
                                 <div className="flex justify-between my-3">
                                     <h1>Order</h1>
-                                    <p>{cart.length} products</p>
+                                    <p>{ id == '0' ? (orders[orders.length-1].products.length) : (order.length > 0 && order[0].products.length) } products</p>
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
-                                    {cart.map((item: any) => {
+                                    { id == '0' ? (orders[orders.length-1].products.map((item: any) => {
                                         return <div className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                             <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
                                         </div>
-                                    })}
-
+                                    })) : (order.length > 0 && order[0].products.map((item: any) => {
+                                        return <div className='flex items-center'>
+                                            <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
+                                            <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
+                                        </div>
+                                    }))}
                                 </div>
                             </div>
                             <div>
@@ -84,14 +142,14 @@ const OrderTracking = () => {
                                 <p className="text-md">Your payment methotd is: </p>
                             </div>
 
-                            <p>{mp ? 'Mercado Pago' : 'Cash'}</p>
+                            <p>{id == '0' ? orders[orders.length-1].paymenthMethod : (order.length > 0 && order[0].paymenthMethod)}</p>
                         </div>
 
                         {/* TOTAL */}
                         <div tabIndex={0} className="w-full bg-white shadow cursor-pointer collapse rounded-3xl">
                             <div className="flex items-center justify-between p-4">
                                 <h1 className='font-bold'>Total to pay:</h1>
-                                <p className='font-bold'>${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
+                                <p className='font-bold'>${id == '0' ? orders[orders.length-1].total : (order.length > 0 && order[0].total)}</p>
                             </div>
                             <div className="collapse-content">
                                 <div className="flex ">
@@ -101,20 +159,23 @@ const OrderTracking = () => {
                                             <hr />
                                             <div className="flex justify-between w-full">
                                                 <p className="my-3 text-sm">Products cost</p>
-                                                <p className="my-3 text-sm">${totalPrice}</p>
+                                                <p className="my-3 text-sm">${id == '0' ? (orders[orders.length-1].withdrawal == 'Delivery' ? orders[orders.length-1].total - 400 : orders[orders.length-1].total - 100) : (order.length > 0 && (order[0].withdrawal == 'Delivery' ? order[0].total - 400 : order[0].total - 100))}</p>
                                             </div>
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Service fee</p>
                                                 <p className="my-3 text-sm">$100</p>
                                             </div>
-                                            {deliveryTakeAway ? <div className="flex justify-between">
+                                            {id == '0' ? (orders[orders.length-1].withdrawal == 'Delivery' ? <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Shipping cost</p>
                                                 <p className="my-3 text-sm">$300</p>
-                                            </div> : ''
+                                            </div> : '') : ((order.length > 0 && order[0].withdrawal == 'Delivery') ? <div className="flex justify-between">
+                                                <p className="my-3 text-sm">Shipping cost</p>
+                                                <p className="my-3 text-sm">$300</p>
+                                            </div> : '')
                                             }
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm font-bold">Total</p>
-                                                <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
+                                                <p className="my-3 text-sm font-bold">${id == '0' ? orders[orders.length-1].total : (order.length > 0 && order[0].total)}</p>
                                             </div>
                                         </div>
                                     </div>

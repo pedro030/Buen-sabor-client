@@ -159,7 +159,7 @@ const OrderDetail = () => {
                                         <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
                                     </div>
                                 </div>
-                                {mp ? <button className="rounded-full btn btn-primary" onClick={() => { mp ? navigate('/order-tracking') : '' }}>Go to Pay</button> : <button className="rounded-full btn btn-primary" onClick={() => { !mp ? navigate('/order-tracking') : '' }}>Make the order</button>}
+                                {mp ? <button className="rounded-full btn btn-primary" onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className="rounded-full btn btn-primary" onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
 
                             </div>
                         </div>
