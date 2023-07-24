@@ -5,10 +5,12 @@ import { CartContext } from '../../context/cart'
 import { useNavigate } from 'react-router-dom'
 import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
 import EditCartModal from '../../components/menu/EditCartModal/EditCartModal'
+import SelectAddressModal from './Components/SelectAddressModal'
+import { MAddress } from '../../models/MAddress'
 
 const OrderDetail = () => {
     const { cart }: any = useContext(CartContext);
-    const { deliveryTakeAway, setDeliveryTakeAway, mp, setMp }: any = useContext(PaymenthDeliveryContext);
+    const { deliveryTakeAway, setDeliveryTakeAway, mp, setMp, deliveryAddress, setDeliveryAddress }: any = useContext(PaymenthDeliveryContext);
     const navigate = useNavigate();
 
     const totalPrice = cart.reduce((total: any, item: any) => {
@@ -16,6 +18,7 @@ const OrderDetail = () => {
         return total + itemPrice;
     }, 0);
 
+    const [isSelectAddressOpen, setSelectAddressOpen] = useState(false);
 
     const [isEditCartModalOpen, setIsEditCartModalOpen] = useState(false);
 
@@ -58,11 +61,13 @@ const OrderDetail = () => {
                                         <div className="p-4">
                                             <div className="flex justify-between py-2">
                                                 <h1>Delivery address</h1>
-                                                <p className="text-sm tracking-widest text-primary">Change</p>
+                                                <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Change</button>
                                             </div>
                                             <hr />
                                             <div>
-                                                <p className="mt-2 font-bold ">Coronel Rodriguez 273, Mendoza</p>
+                                                <p className="mt-2 font-bold ">
+                                                {deliveryAddress ? `${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}` :
+                                                <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Select a delivery address</button>}</p>
                                                 <div className="w-full mt-5 form-control">
                                                     <label className="label">
                                                         <span className="label-text">Delivery instruction (optional)</span>
@@ -170,6 +175,12 @@ const OrderDetail = () => {
                 isOpen={isEditCartModalOpen}
                 onClose={handleCloseProductModal}
                 onConfirm={handleConfirmDelete}
+            />
+            <SelectAddressModal
+                isOpen={isSelectAddressOpen}
+                onClose={() => setSelectAddressOpen(false)}
+                onConfirm={setDeliveryAddress}
+                addressSelected={deliveryAddress}
             />
         </>
 

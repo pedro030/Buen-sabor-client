@@ -9,7 +9,7 @@ import { MAddress } from '../../../../models/MAddress';
 const Address = () => {
 
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-    const {addresses, getAddresses}   = useContext(UserContext);
+    const {addresses, getAddresses, newAddress}   = useContext(UserContext);
 
     useEffect(() => {
       getAddresses()
@@ -25,8 +25,16 @@ const Address = () => {
         setIsAddressModalOpen(false);
     };
 
-    const handleConfirmDelete = () => {
-
+    const handleConfirmDelete = (ad: MAddress) => {
+        newAddress(ad)
+        .then(() => {
+            alert("Agregado")
+            handleCloseAddressModal();
+        })
+        .catch(()=>{
+            console.log("error")
+            alert("error al agregar")
+        })
     };
 
     return (
