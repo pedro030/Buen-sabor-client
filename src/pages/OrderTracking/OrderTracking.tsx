@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom'
 const OrderTracking = () => {
     const { user } = useAuth0();
     const { cart, clearCart }: any = useContext(CartContext);
-    const { deliveryTakeAway, mp }: any = useContext(PaymenthDeliveryContext);
+    const { deliveryTakeAway, mp, deliveryAddress }: any = useContext(PaymenthDeliveryContext);
     const { orders, setOrders }: any = useContext(OrdersContext);
     const { id } : any = useParams();
     const [order, setOrder] = useState([{ total: 0, withdrawal: '', paymenthMethod: '', products: [{}], }]);
@@ -101,7 +101,7 @@ const OrderTracking = () => {
                         {/* BUEN SABOR */}
                         <div className="flex flex-col justify-center w-full h-24 p-4 bg-white shadow rounded-3xl">
                             <h1 className='text-2xl font-bold text-red-600'>Buen Sabor</h1>
-                            <p className='text-sm tracking-widest'>CORONEL RODRIGUEZ 273, Mendoza</p>
+                            <p className='text-sm tracking-widest'>{`${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}`}</p>
                         </div>
 
                         {/* ORDER */}

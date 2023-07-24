@@ -3,7 +3,7 @@ import { IApiService } from "../models/IApiService";
 export class ApiService<T> implements IApiService<T>{
     endpoint: string = "";
     // TODO: Definir variables de entorno e implementar url de la api
-    apiURL: string = "https://buen-sabor-ba58.onrender.com/api"
+    apiURL: string = "https://buen-sabor-niqf.onrender.com/api"
     GetAll(): Promise<T[]> {
         return fetch(`${this.apiURL}/${this.endpoint}/getAll`)
             .then(res => {
@@ -38,7 +38,9 @@ export class ApiService<T> implements IApiService<T>{
             })
             .catch(err => {
                 console.log(err)
+                alert("Error al crear")
             })
+
     }
     Update(obj: T): Promise<boolean> {
         throw new Error("Method not implemented.");
