@@ -9,7 +9,8 @@ export default defineConfig({
     replace({
       'process.env.VITE_REACT_APP_AUTH0_DOMAIN': JSON.stringify(process.env.VITE_REACT_APP_AUTH0_DOMAIN),
       'process.env.VITE_REACT_APP_AUTH0_CLIENT_ID': JSON.stringify(process.env.VITE_REACT_APP_AUTH0_CLIENT_ID),
-      'process.env.VITE_REACT_APP_AUTH0_CALLBACK_URL': JSON.stringify(process.env.VITE_REACT_APP_AUTH0_CALLBACK_URL)
+      'process.env.VITE_REACT_APP_AUTH0_CALLBACK_URL': JSON.stringify(process.env.VITE_REACT_APP_AUTH0_CALLBACK_URL),
+      'process.env.VITE_REACT_APP_API_URL': JSON.stringify(process.env.VITE_REACT_APP_API_URL)
     })
   ],
 })

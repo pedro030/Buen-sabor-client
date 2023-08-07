@@ -4,12 +4,15 @@ import { useContext, useEffect, useState } from 'react';
 import AddressModal from './AddressModal/AddressModal';
 import { UserContext } from '../../../../context/user';
 import { MAddress } from '../../../../models/MAddress';
+import ConfirmationModal from '../../../../components/confirmation-modal/confirmation-modal';
 
 
 const Address = () => {
 
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-    const {addresses, getAddresses, newAddress}   = useContext(UserContext);
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+    const [addressToDelete, setAddressToDelete ] = useState<MAddress>();
+    const {addresses, getAddresses, newAddress, deleteAddress}   = useContext(UserContext);
 
     useEffect(() => {
       getAddresses()
@@ -25,7 +28,7 @@ const Address = () => {
         setIsAddressModalOpen(false);
     };
 
-    const handleConfirmDelete = (ad: MAddress) => {
+    const handleConfirmCreate = (ad: MAddress) => {
         newAddress(ad)
         .then(() => {
             alert("Agregado")
@@ -36,6 +39,26 @@ const Address = () => {
             alert("error al agregar")
         })
     };
+
+    const handleConfirmDelete = () => {
+        console.log("delete ", addressToDelete)
+        if(addressToDelete)
+            deleteAddress(addressToDelete)
+                .then((data) => {
+                    if(data){
+                        alert("Eliminado con exito")
+                        setIsConfirmationModalOpen(false);
+                    }else{
+                        alert("Error al eliminar")
+                        setIsConfirmationModalOpen(false);
+                    }
+                })
+    }
+
+    const handleOpenConfirmationModal = (ad: MAddress) => {
+        setIsConfirmationModalOpen(true);
+        setAddressToDelete(ad);
+    }
 
     return (
         <div>
@@ -61,7 +84,7 @@ const Address = () => {
                                 <td>{a.number}</td>
                                 <td>{a.location.location}</td>
                                 <td>
-                                    <button className="btn btn-circle btn-secondary btn-sm">
+                                    <button className="btn btn-circle btn-secondary btn-sm" onClick={() => handleOpenConfirmationModal(a)}>
                                         <img className='p-1 h-7' src={TrashSimple} />
                                     </button>
                                 </td>
@@ -81,7 +104,14 @@ const Address = () => {
             <AddressModal
                 isOpen={isAddressModalOpen}
                 onClose={handleCloseAddressModal}
+                onConfirm={handleConfirmCreate}
+            />
+            <ConfirmationModal
+                mainText='Are you sure you want to delete this address?'
+                buttonText='Delete address'
                 onConfirm={handleConfirmDelete}
+                onClose={() => setIsConfirmationModalOpen(false)}
+                isOpen={isConfirmationModalOpen}
             />
         </div>
     )

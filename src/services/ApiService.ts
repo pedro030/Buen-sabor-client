@@ -3,7 +3,7 @@ import { IApiService } from "../models/IApiService";
 export class ApiService<T> implements IApiService<T>{
     endpoint: string = "";
     // TODO: Definir variables de entorno e implementar url de la api
-    apiURL: string = "https://buen-sabor-niqf.onrender.com/api"
+    apiURL: string = import.meta.env.VITE_REACT_APP_API_URL;
     GetAll(): Promise<T[]> {
         return fetch(`${this.apiURL}/${this.endpoint}/getAll`)
             .then(res => {
@@ -32,7 +32,7 @@ export class ApiService<T> implements IApiService<T>{
             body: JSON.stringify(newObj)
         };
 
-        return fetch(`${this.apiURL}/${this.endpoint}`, requestOptions)
+        return fetch(`${this.apiURL}/${this.endpoint}/save`, requestOptions)
             .then(res => {
                 return res.json()
             })
@@ -46,7 +46,17 @@ export class ApiService<T> implements IApiService<T>{
         throw new Error("Method not implemented.");
     }
     Delete(id: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return fetch(`${this.apiURL}/${this.endpoint}/delete/${id}`, {
+            method: "DELETE"
+        })
+        .then(res => {
+            if(res.ok) return true
+            else return false;
+        })
+        .catch(err => {
+            console.log('Error al eliminar: ', err)
+            return false
+        })
     }
 
 }
