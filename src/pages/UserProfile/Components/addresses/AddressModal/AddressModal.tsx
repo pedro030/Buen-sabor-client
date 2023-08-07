@@ -3,8 +3,8 @@ import MapPin from '../../../../../assets/MapPin.svg'
 import * as Yup from 'yup'
 import { ErrorMessage, Field, Form, Formik, useFormik } from 'formik'
 import { useContext } from "react";
-import { UserContext } from "../../../../../context/user";
 import { MAddress } from "../../../../../models/MAddress";
+import { LocationsContext } from "../../../../../context/locations";
 
 
 interface AddressModalProps {
@@ -14,7 +14,7 @@ interface AddressModalProps {
 }
 
 const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose, onConfirm }) => {
-    const { locations } = useContext(UserContext);
+    const { locations } = useContext(LocationsContext);
     // validation form schema
     const validationSchema = Yup.object({
         street: Yup.string()
@@ -27,7 +27,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose, onConfirm 
     })
 
     const handleSubmit = (state: any) =>{
-        const selectLoc = locations.find(loc => loc.id = state.location)
+        const selectLoc = locations.find(loc => loc.id === parseInt(state.location))
         const newLoc:MAddress = {
             ...state,
             location: selectLoc,

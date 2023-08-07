@@ -19,6 +19,7 @@ import OrderTracking from './pages/OrderTracking/OrderTracking';
 import { PaymenthDeliveryProvider } from './context/paymenth-delivery';
 import Login from './pages/Login/Login';
 import { OrdersProvider } from './context/orders';
+import { LocationsProvider } from './context/locations';
 
 
 
@@ -40,6 +41,7 @@ const  App = () => {
     <UserProvider>
       <CartProvider>
       <FiltersProvider>
+      <LocationsProvider>
       <PaymenthDeliveryProvider>
       <OrdersProvider>
       <Header></Header>
@@ -56,6 +58,7 @@ const  App = () => {
       </Routes>
       </OrdersProvider>
       </PaymenthDeliveryProvider>
+      </LocationsProvider>
       </FiltersProvider>
       </CartProvider>
       </UserProvider>
