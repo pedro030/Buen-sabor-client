@@ -3,14 +3,7 @@ import TrashSimple from '../../../../assets/TrashSimple.svg'
 import { OrdersContext } from '../../../../context/orders';
 
 const History_Order = () => {
-    const { orders, setOrders, deleteOrder }: any = useContext(OrdersContext);
-
-    console.log(orders);
-
-    const alertDelete = (id: number) => {
-        alert('Eliminando');
-        deleteOrder(id);
-    }
+    const { orders, setOrders }: any = useContext(OrdersContext);
 
     return (
         <div>
@@ -34,10 +27,10 @@ const History_Order = () => {
                             orders.map((o: any) => {
                                 return <tr key={o.id}>
                                     <td>{o.date}</td>
-                                    <td>{o.withdrawal}</td>
-                                    <td>${o.total}</td>
-                                    <td>{o.address}</td>
-                                    <td>{o.status}</td>
+                                    <td>{o.withdrawalMode}</td>
+                                    <td>${o.totalPrice}</td>
+                                    <td>{o.address.street} {o.address.number}</td>
+                                    <td>{o.statusOrder.statusType}</td>
                                     <td>
                                         <div tabIndex={0} className='collapse'>
                                             <div className='flex items-center p-0 collapse-title'>
@@ -45,15 +38,15 @@ const History_Order = () => {
                                             </div>
                                             <div className='p-0 collapse-content'>
                                                 {o.products.map((p:any) => {
-                                                    return <p>{p.quantity}x {p.name}</p>
+                                                    return <p>{p.cant}x {p.product.name}</p>
                                                 })}
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <button onClick={() => alertDelete(o.idOrder)} className="btn btn-circle btn-secondary btn-sm">
+                                        {/*<button onClick={() => alertDelete(o.idOrder)} className="btn btn-circle btn-secondary btn-sm">
                                             <img className='p-1 h-7' src={TrashSimple} />
-                                        </button>
+                                            </button> */}
                                     </td>
                                 </tr>
                             })

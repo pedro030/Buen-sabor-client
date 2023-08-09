@@ -116,9 +116,9 @@ const Header: React.FC = () => {
                                             </thead>
                                             <tbody>
                                                 {orders.map((o: any) => {
-                                                    return <tr className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.idOrder}`)}>
-                                                        <th>{o.idOrder}</th>
-                                                        <td><div className="badge badge-secondary">{o.status}</div></td>
+                                                    return <tr className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
+                                                        <th>{o.id}</th>
+                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
                                                     </tr>
                                                 })}
                                                 {/*<tr className='cursor-pointer hover'>

@@ -16,7 +16,7 @@ const OrderTracking = () => {
     const { deliveryTakeAway, mp, deliveryAddress }: any = useContext(PaymenthDeliveryContext);
     const { orders, setOrders }: any = useContext(OrdersContext);
     const { id } : any = useParams();
-    const [order, setOrder] = useState([{ total: 0, withdrawal: '', paymenthMethod: '', products: [{}], }]);
+    const [order, setOrder] = useState([{ totalPrice: 0, withdrawalMode: '', paymode: { paymode: '' }, products: [{ product: { name: '', price: 0}}], }]);
 
     let today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
@@ -37,7 +37,7 @@ const OrderTracking = () => {
             else totalPay += 100
 
             const newOrder = {
-                idOrder: orders.length+1,
+                id: orders.length+1,
                 date: day,
                 withdrawal: deliveryTakeAway ? 'Delivery' : 'Take Away',
                 total: totalPay,
@@ -56,7 +56,8 @@ const OrderTracking = () => {
             setOrders((prevState: any) => [...prevState, newOrder])
             clearCart()
         } else {
-            const order = orders.filter((o: any) => o.idOrder == +id);
+            const order = orders.filter((o: any) => o.id === +id);
+            console.log(order);
             setOrder(order);
         }
 
@@ -115,12 +116,12 @@ const OrderTracking = () => {
                                     { id == '0' ? (orders[orders.length-1].products.map((item: any) => {
                                         return <div className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                                            <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
+                                            <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
                                         </div>
                                     })) : (order.length > 0 && order[0].products.map((item: any) => {
                                         return <div className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                                            <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
+                                            <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
                                         </div>
                                     }))}
                                 </div>
@@ -142,14 +143,14 @@ const OrderTracking = () => {
                                 <p className="text-md">Your payment methotd is: </p>
                             </div>
 
-                            <p>{id == '0' ? orders[orders.length-1].paymenthMethod : (order.length > 0 && order[0].paymenthMethod)}</p>
+                            <p>{id == '0' ? orders[orders.length-1].paymode.paymode : (order.length > 0 && order[0].paymode.paymode)}</p>
                         </div>
 
                         {/* TOTAL */}
                         <div tabIndex={0} className="w-full bg-white shadow cursor-pointer collapse rounded-3xl">
                             <div className="flex items-center justify-between p-4">
                                 <h1 className='font-bold'>Total to pay:</h1>
-                                <p className='font-bold'>${id == '0' ? orders[orders.length-1].total : (order.length > 0 && order[0].total)}</p>
+                                <p className='font-bold'>${id == '0' ? orders[orders.length-1].totalPrice : (order.length > 0 && order[0].totalPrice)}</p>
                             </div>
                             <div className="collapse-content">
                                 <div className="flex ">
@@ -159,23 +160,23 @@ const OrderTracking = () => {
                                             <hr />
                                             <div className="flex justify-between w-full">
                                                 <p className="my-3 text-sm">Products cost</p>
-                                                <p className="my-3 text-sm">${id == '0' ? (orders[orders.length-1].withdrawal == 'Delivery' ? orders[orders.length-1].total - 400 : orders[orders.length-1].total - 100) : (order.length > 0 && (order[0].withdrawal == 'Delivery' ? order[0].total - 400 : order[0].total - 100))}</p>
+                                                <p className="my-3 text-sm">${id == '0' ? (orders[orders.length-1].withdrawalMode == 'Delivery' ? orders[orders.length-1].total - 400 : orders[orders.length-1].total - 100) : (order.length > 0 && (order[0].withdrawalMode == 'Delivery' ? order[0].totalPrice - 400 : order[0].totalPrice - 100))}</p>
                                             </div>
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Service fee</p>
                                                 <p className="my-3 text-sm">$100</p>
                                             </div>
-                                            {id == '0' ? (orders[orders.length-1].withdrawal == 'Delivery' ? <div className="flex justify-between">
+                                            {id == '0' ? (orders[orders.length-1].withdrawalMode == 'Delivery' ? <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Shipping cost</p>
                                                 <p className="my-3 text-sm">$300</p>
-                                            </div> : '') : ((order.length > 0 && order[0].withdrawal == 'Delivery') ? <div className="flex justify-between">
+                                            </div> : '') : ((order.length > 0 && order[0].withdrawalMode == 'Delivery') ? <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Shipping cost</p>
                                                 <p className="my-3 text-sm">$300</p>
                                             </div> : '')
                                             }
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm font-bold">Total</p>
-                                                <p className="my-3 text-sm font-bold">${id == '0' ? orders[orders.length-1].total : (order.length > 0 && order[0].total)}</p>
+                                                <p className="my-3 text-sm font-bold">${id == '0' ? orders[orders.length-1].totalPrice : (order.length > 0 && order[0].totalPrice)}</p>
                                             </div>
                                         </div>
                                     </div>
