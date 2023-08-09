@@ -60,18 +60,18 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
               <button className='mb-1 rounded-full btn btn-primary btn-xs'>HOTSALE</button>
               <h3 className='text-xl font-semibold'><img className='inline my-4 mr-4' src={pizzaSvg} alt="category-icon" height="28" />{product.name}</h3>
               <div className="description-items">
-                <span>Category</span>
+                <span> { product.subcategory.name } </span>
                 <span className='max-sm:text-sm'><img src={fireSvg} alt="category-icon" className='h-4 max-sm:h-3' />Calorias</span>
-                <span className='max-sm:text-sm'><img src={clockSvg} alt="category-icon" className='h-4 max-sm:h-3' />Tiempo</span>
+                <span className='max-sm:text-sm'><img src={clockSvg} alt="category-icon" className='h-4 max-sm:h-3' />{ product.cookingTime }m</span>
               </div>
               <div className="description-text">
                 <h4>Description:</h4>
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio aliquam quo quos officia voluptatem. Nobis enim, est recusandae ipsa deleniti corrupti veritatis, illo ipsam ad sint tenetur dolore, deserunt in?</p>
                 <h4>Ingredients:</h4>
                 <ul>
-                  <li>Lorem ipsum</li>
-                  <li>Lorem ipsum</li>
-                  <li>Lorem ipsum</li>
+                  { product.ingredients.map( (i : any) => {
+                    return <li>{ i.ingredient.name }</li>
+                  }) }
                 </ul>
               </div>
             </div>

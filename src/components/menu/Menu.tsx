@@ -30,7 +30,7 @@ const Menu = () => {
 
     useEffect(() => {
         const getAndSetData = async () => {
-            const responseProducts = await fetch("https://buen-sabor-niqf.onrender.com/api/products/getAll")
+            const responseProducts = await fetch("https://buen-sabor-backend-production.up.railway.app/api/products/getActives")
             const dataProducts = await responseProducts.json();
             setProductsFetch(dataProducts);
         }
@@ -38,7 +38,7 @@ const Menu = () => {
     }, [])
 
 
-    const products = filterProducts(initialProducts);
+    const products = filterProducts(productsFetch);
 
 
     const handleChangeCategory = (e: any) => {
