@@ -1,11 +1,30 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { Field, Form, Formik } from 'formik'
 import './UserDetails.scss'
-import React from 'react'
+import React, { useState } from 'react'
+import * as Yup from 'yup'
 
 const UserDetails = () => {
 
   const { user } = useAuth0()
+
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
+  const validationSchema = Yup.object({
+    firstName: Yup.string()
+      .required("Name is required")
+      .max(55),
+    email: Yup.string().email(),
+    lastName: Yup.string()
+      .required("Lastname is required")
+      .max(55),
+    birthdate: Yup.date(),
+    phone_number: Yup.string().matches(phoneRegExp, 'Phone number is not valid')
+  })
+
+  const onSubmitChanges = (state: any) =>{
+    console.log(state)
+  }
   return (
     <div className="">
       <h2 className='mb-5 text-center stat-title'>Account Info</h2>
@@ -17,9 +36,9 @@ const UserDetails = () => {
           birthdate: user?.birthdate,
           phone_number: user?.phone_number,
           gender: user?.gender,
-          rememberMe: false
         }}
-        onSubmit={(state) => { console.log(state.email) }}
+        onSubmit={onSubmitChanges}
+        validationSchema={validationSchema}
       >
         <Form className='grid grid-cols-2 gap-4 place-content-center'>
           <div className='flex flex-col items-center justify-center'>
@@ -50,6 +69,7 @@ const UserDetails = () => {
               <Field name="gender" type="text" className="w-96 max-lg:w-72 input input-bordered input-primary" />
             </div>
           </div>
+          <button type="submit" className='my-2 rounded-full btn btn-primary'>Save changes</button>
         </Form>
       </Formik>
     </div>
