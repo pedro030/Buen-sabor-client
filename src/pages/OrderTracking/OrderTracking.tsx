@@ -16,13 +16,21 @@ const OrderTracking = () => {
     const { deliveryTakeAway, mp, deliveryAddress }: any = useContext(PaymenthDeliveryContext);
     const { orders, setOrders }: any = useContext(OrdersContext);
     const { id } : any = useParams();
-    const [order, setOrder] = useState([{ totalPrice: 0, withdrawalMode: '', paymode: { paymode: '' }, products: [{ product: { name: '', price: 0}}], }]);
+    const [order, setOrder] = useState([{
+        date: '', 
+        withdrawalMode: '', 
+        totalPrice: 0,
+        address: '',
+        paymode: { id: 0, paymode: '' },
+        products: [{ product: { name: '', price: 0}}],
+
+    }]);
 
     let today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     const yyyy = today.getFullYear();
-    const day = dd + '/' + mm + '/' + yyyy;
+    const day = yyyy + '-' + mm + '-' + dd;
 
     useEffect(() => {
         if(id == '0') {
@@ -36,42 +44,57 @@ const OrderTracking = () => {
             if(deliveryTakeAway) totalPay += (100 + 300)
             else totalPay += 100
 
+            const addrs = deliveryAddress.street + " " + deliveryAddress.number + ", " + deliveryAddress.location.location;
+
             const newOrder = {
-                id: orders.length+1,
                 date: day,
-                withdrawal: deliveryTakeAway ? 'Delivery' : 'Take Away',
-                total: totalPay,
-                address: 'San Martin 317',
-                paymenthMethod: mp ? "Mercado Pago" : "Cash",
-                status: 'Delivered',
+                withdrawalMode: deliveryTakeAway ? 'Delivery' : 'Take Away',
+                totalPrice: totalPay,
+                paymode: {
+                    id: mp ? 2 : 1,
+                    paymode: mp ? "MercadoPago" : "Cash"
+                },
+                address: addrs,
+                user: deliveryAddress.user,
+                statusOrder: {
+                    id: 1,
+                    statusType: 'In_Queue'
+                },
                 products: cart.map((item: any) => ({
-                    id: item.id,
-                    name: item.name,
-                    price: item.price,
-                    idCategory: item.idCategory,
-                    quantity: item.quantity
+                    product: item,
+                    cant: item.quantity
                 }))
             };
 
-            setOrders((prevState: any) => [...prevState, newOrder])
-            clearCart()
+            newOrder.products.map((p: any) => {
+                delete p.product.quantity
+            })
+
+            fetch("https://buen-sabor-backend-production.up.railway.app/api/orders/save", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newOrder)
+            })
+            .then( response => {
+                if( !response.ok ) throw new Error("POST ERROR");
+                return response.json();
+            })
+            .then( data => {
+                setOrders((prevState: any) => [...prevState, data]);
+                setOrder([data]);
+            })
+            .catch( e => console.log("Error:", e))
+
+            clearCart();
         } else {
-            const order = orders.filter((o: any) => o.id === +id);
-            console.log(order);
-            setOrder(order);
+            const ord = orders.filter((o: any) => o.id === +id);
+            setOrder(ord);
         }
 
         
     }, []);
-
-    const totalProductsPrice = () => {
-        if(id != "0") {
-            return order.length > 0 ? (order[0].products.reduce((total: any, item: any) => {
-                const itemPrice = item.price * item.quantity;
-                return total + itemPrice;
-            }, 0)) : '';
-        }
-    }
 
     return (
         <>
@@ -102,7 +125,7 @@ const OrderTracking = () => {
                         {/* BUEN SABOR */}
                         <div className="flex flex-col justify-center w-full h-24 p-4 bg-white shadow rounded-3xl">
                             <h1 className='text-2xl font-bold text-red-600'>Buen Sabor</h1>
-                            <p className='text-sm tracking-widest'>{`${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}`}</p>
+                            <p className='text-sm tracking-widest'>{order[0].address}</p>
                         </div>
 
                         {/* ORDER */}
@@ -110,20 +133,15 @@ const OrderTracking = () => {
                             <div>
                                 <div className="flex justify-between my-3">
                                     <h1>Order</h1>
-                                    <p>{ id == '0' ? (orders[orders.length-1].products.length) : (order.length > 0 && order[0].products.length) } products</p>
+                                    <p>{/*order.products.length*/} products</p>
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
-                                    { id == '0' ? (orders[orders.length-1].products.map((item: any) => {
+                                    {order[0].products.map((item: any) => {
                                         return <div className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                             <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
                                         </div>
-                                    })) : (order.length > 0 && order[0].products.map((item: any) => {
-                                        return <div className='flex items-center'>
-                                            <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                                            <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
-                                        </div>
-                                    }))}
+                                    })}
                                 </div>
                             </div>
                             <div>
@@ -143,14 +161,14 @@ const OrderTracking = () => {
                                 <p className="text-md">Your payment methotd is: </p>
                             </div>
 
-                            <p>{id == '0' ? orders[orders.length-1].paymode.paymode : (order.length > 0 && order[0].paymode.paymode)}</p>
+                            <p>{order[0].paymode.paymode}</p>
                         </div>
 
                         {/* TOTAL */}
                         <div tabIndex={0} className="w-full bg-white shadow cursor-pointer collapse rounded-3xl">
                             <div className="flex items-center justify-between p-4">
                                 <h1 className='font-bold'>Total to pay:</h1>
-                                <p className='font-bold'>${id == '0' ? orders[orders.length-1].totalPrice : (order.length > 0 && order[0].totalPrice)}</p>
+                                <p className='font-bold'>${order[0].totalPrice}</p>
                             </div>
                             <div className="collapse-content">
                                 <div className="flex ">
@@ -160,23 +178,20 @@ const OrderTracking = () => {
                                             <hr />
                                             <div className="flex justify-between w-full">
                                                 <p className="my-3 text-sm">Products cost</p>
-                                                <p className="my-3 text-sm">${id == '0' ? (orders[orders.length-1].withdrawalMode == 'Delivery' ? orders[orders.length-1].total - 400 : orders[orders.length-1].total - 100) : (order.length > 0 && (order[0].withdrawalMode == 'Delivery' ? order[0].totalPrice - 400 : order[0].totalPrice - 100))}</p>
+                                                <p className="my-3 text-sm">${order[0].withdrawalMode == 'Delivery' ? order[0].totalPrice - 400 : order[0].totalPrice - 100}</p>
                                             </div>
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Service fee</p>
                                                 <p className="my-3 text-sm">$100</p>
                                             </div>
-                                            {id == '0' ? (orders[orders.length-1].withdrawalMode == 'Delivery' ? <div className="flex justify-between">
+                                            {order[0].withdrawalMode == 'Delivery' ? <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Shipping cost</p>
                                                 <p className="my-3 text-sm">$300</p>
-                                            </div> : '') : ((order.length > 0 && order[0].withdrawalMode == 'Delivery') ? <div className="flex justify-between">
-                                                <p className="my-3 text-sm">Shipping cost</p>
-                                                <p className="my-3 text-sm">$300</p>
-                                            </div> : '')
+                                            </div> : ''
                                             }
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm font-bold">Total</p>
-                                                <p className="my-3 text-sm font-bold">${id == '0' ? orders[orders.length-1].totalPrice : (order.length > 0 && order[0].totalPrice)}</p>
+                                                <p className="my-3 text-sm font-bold">${order[0].totalPrice}</p>
                                             </div>
                                         </div>
                                     </div>
