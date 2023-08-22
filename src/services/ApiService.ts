@@ -1,6 +1,6 @@
 import { IApiService } from "../models/IApiService";
 
-export class ApiService<T> implements IApiService<T>{
+export class ApiService<T extends {id:number}> implements IApiService<T>{
     endpoint: string = "";
     // TODO: Definir variables de entorno e implementar url de la api
     apiURL: string = import.meta.env.VITE_REACT_APP_API_URL;
@@ -43,7 +43,22 @@ export class ApiService<T> implements IApiService<T>{
 
     }
     Update(obj: T): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        const updatedObj = obj;
+        return fetch(`${this.apiURL}/${this.endpoint}/update/${obj.id}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedObj)
+        })
+            .then(res => {
+                if (res.ok) return true
+                else return false;
+            })
+            .catch(err => {
+                console.log('Edit error: ', err)
+                return false
+            })
     }
     Delete(id: number): Promise<boolean> {
         return fetch(`${this.apiURL}/${this.endpoint}/delete/${id}`, {

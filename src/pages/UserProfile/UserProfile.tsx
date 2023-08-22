@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext} from 'react'
 import './UserProfile.scss'
 import { NavLink, Route, Routes } from 'react-router-dom'
 import UserDetails from './Components/user_details/UserDetails'
@@ -6,9 +6,12 @@ import { useAuth0 } from '@auth0/auth0-react'
 import Address from './Components/addresses/Address'
 import Change_password from './Components/change_password/Change_password'
 import History_Order from './Components/history_order/History_Order'
+import { UserContext } from '../../context/user'
 
 const UserProfile = () => {
   const { user } = useAuth0()
+
+  const {userInfo} = useContext(UserContext);
 
   return (
 
@@ -19,7 +22,7 @@ const UserProfile = () => {
             <img src={user?.picture} />
           </div>
         </div>
-        <h3 className='text-center text-gray-600 menu-title'>{user?.given_name + ' ' + user?.family_name || "User"}</h3>
+        <h3 className='text-center text-gray-600 menu-title'>{userInfo?.firstName + ' ' + userInfo?.lastName || "User"}</h3>
         <li>
           <h2 className="menu-title">Account</h2>
           <ul>

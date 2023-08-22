@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import './App.scss'
 import { Route, Routes } from "react-router-dom";
 import ProductDetail from './components/menu/product_detail/ProductDetail'
@@ -14,7 +14,7 @@ import About from './pages/About/AboutComponent';
 import { CartProvider } from './context/cart';
 import OrderDetail from './pages/OrderDetail/OrderDetail';
 import { FiltersProvider } from './context/filters';
-import { UserProvider } from './context/user';
+import { UserContext } from './context/user';
 import OrderTracking from './pages/OrderTracking/OrderTracking';
 import { PaymenthDeliveryProvider } from './context/paymenth-delivery';
 import Login from './pages/Login/Login';
@@ -26,7 +26,8 @@ import { LocationsProvider } from './context/locations';
 
 const  App = () => {
 
-  const { isLoading } = useAuth0();
+  const { isLoading, user } = useAuth0();
+  const { getUserInfo } = useContext(UserContext);
 
   if (isLoading) {
     return (
@@ -36,9 +37,16 @@ const  App = () => {
     );
   }
 
+  useEffect(() => {
+    if (user) {
+      if (user.email) getUserInfo(user.email);
+    }
+  }, [])
+  
+  
+
   return (
     <>
-    <UserProvider>
       <CartProvider>
       <FiltersProvider>
       <LocationsProvider>
@@ -61,7 +69,6 @@ const  App = () => {
       </LocationsProvider>
       </FiltersProvider>
       </CartProvider>
-      </UserProvider>
       <Footer/>
     </>
   )

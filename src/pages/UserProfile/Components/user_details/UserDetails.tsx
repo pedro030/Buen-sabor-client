@@ -1,12 +1,16 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { Field, Form, Formik } from 'formik'
 import './UserDetails.scss'
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import * as Yup from 'yup'
+import { UserContext } from '../../../../context/user'
+import { MUser } from '../../../../models/MUser'
 
 const UserDetails = () => {
 
   const { user } = useAuth0()
+
+  const { userInfo, editUserInfo } = useContext(UserContext);
 
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
@@ -23,18 +27,24 @@ const UserDetails = () => {
   })
 
   const onSubmitChanges = (state: any) =>{
-    console.log(state)
+    const updatedObj:MUser = {
+      ...userInfo,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      telephone: state.phone_number
+    }
+    editUserInfo(updatedObj)
   }
   return (
     <div className="">
       <h2 className='mb-5 text-center stat-title'>Account Info</h2>
       <Formik
         initialValues={{
-          firstName: user?.given_name,
-          email: user?.email,
-          lastName: user?.family_name,
+          firstName: userInfo?.firstName,
+          email: userInfo?.mail,
+          lastName: userInfo?.lastName,
           birthdate: user?.birthdate,
-          phone_number: user?.phone_number,
+          phone_number: userInfo?.telephone,
           gender: user?.gender,
         }}
         onSubmit={onSubmitChanges}
@@ -52,7 +62,7 @@ const UserDetails = () => {
             </div>
             <div>
               <label className='label' htmlFor="email"><span className="label-text">Email</span></label>
-              <Field name="email" type="email" className="w-96 max-lg:w-72 input input-bordered input-primary" />
+              <Field disabled name="email" type="email" className="w-96 max-lg:w-72 input input-bordered input-primary" />
             </div>
           </div>
           <div className='flex flex-col items-center justify-center'>
