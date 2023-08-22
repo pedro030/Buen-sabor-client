@@ -12,12 +12,7 @@ const Address = () => {
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
     const [addressToDelete, setAddressToDelete ] = useState<MAddress>();
-    const {addresses, getAddresses, newAddress, deleteAddress}   = useContext(UserContext);
-
-    useEffect(() => {
-      getAddresses()
-    }, [])
-    
+    const {addresses, newAddress, deleteAddress}   = useContext(UserContext);
     
 
     const handleOpenAddressModal = () => {

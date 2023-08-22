@@ -1,8 +1,11 @@
+import { MAddress } from "./MAddress";
+
 export interface MUser {
     id: number,
     firstName: string,
     lastName: string,
-    telephone: 2615711981,
+    telephone: number,
     mail: string,
-    blacklist: string, 
+    blacklist: string,
+    addresses?: MAddress[];
 }
