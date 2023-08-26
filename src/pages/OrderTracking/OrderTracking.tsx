@@ -32,6 +32,8 @@ const OrderTracking = () => {
     const yyyy = today.getFullYear();
     const day = yyyy + '-' + mm + '-' + dd;
 
+console.log(deliveryAddress)
+
     useEffect(() => {
         if(id == '0') {
             let totalPay : number = 0;

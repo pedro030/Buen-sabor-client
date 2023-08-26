@@ -52,35 +52,31 @@ const OrderDetail = () => {
 
                             {/* DELIVERY */}
                             <div className="flex justify-center">
-                                <div className={deliveryTakeAway ? "grid grid-rows-[50px_1fr] bg-white h-64 w-[80%] rounded-3xl" : "grid grid-rows-[50px_1fr] bg-white h-32 w-[80%] rounded-3xl"}>
+                                <div className={"grid grid-rows-[50px_1fr] bg-white h-64 w-[80%] rounded-3xl"}>
                                     <div className="grid grid-cols-2 join">
                                         <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => { setDeliveryTakeAway(true); setMp(true) }} checked={deliveryTakeAway ? true : false} />
                                         <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Take Away" onClick={() => setDeliveryTakeAway(false)} checked={!deliveryTakeAway ? true : false} />
                                     </div>
-                                    {deliveryTakeAway ?
-                                        <div className="p-4">
-                                            <div className="flex justify-between py-2">
-                                                <h1>Delivery address</h1>
-                                                <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Change</button>
-                                            </div>
-                                            <hr />
-                                            <div>
-                                                <p className="mt-2 font-bold ">
+
+                                    <div className="p-4">
+                                        <div className="flex justify-between py-2">
+                                            <h1>Delivery address</h1>
+                                            {deliveryTakeAway && <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Change</button>}
+                                        </div>
+                                        <hr />
+                                        <div>
+                                            <p className="mt-2 font-bold ">
                                                 {deliveryAddress ? `${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}` :
-                                                <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Select a delivery address</button>}</p>
-                                                <div className="w-full mt-5 form-control">
-                                                    <label className="label">
-                                                        <span className="label-text">Delivery instruction (optional)</span>
-                                                    </label>
-                                                    <input type="text" className="w-full rounded-full input" />
-                                                </div>
+                                                    <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>{deliveryTakeAway ? 'Select a delivery address' : "Take in 'Coronel Rodriguez 273, Mendoza'"}</button>}</p>
+                                            <div className="w-full mt-5 form-control">
+                                                <label className="label">
+                                                    <span className="label-text">Delivery instruction (optional)</span>
+                                                </label>
+                                                <input type="text" className="w-full rounded-full input" />
                                             </div>
                                         </div>
-                                        :
-                                        <div className="flex items-center p-4">
-                                            <p className="">Take in 'Coronel Rodriguez 273, Mendoza'</p>
-                                        </div>
-                                    }
+                                    </div>
+
 
                                 </div>
                             </div>
@@ -98,7 +94,7 @@ const OrderDetail = () => {
                                         </div>
                                         <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
                                             {cart.map((item: any) => {
-                                                return <div className='flex items-center'>
+                                                return <div key={item.id} className='flex items-center'>
                                                     <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                                     <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
                                                 </div>

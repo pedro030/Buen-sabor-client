@@ -4,9 +4,9 @@ import { useContext, useState } from 'react';
 import ProductDetail from '../product_detail/ProductDetail';
 import { CartContext } from '../../../context/cart';
 
-const ProductCard = ({ product } : any) => {
+const ProductCard = ({ product }: any) => {
 
-  const { addToCart } : any = useContext(CartContext);
+  const { addToCart }: any = useContext(CartContext);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
   const handleOpenProductModal = () => {
@@ -18,16 +18,16 @@ const ProductCard = ({ product } : any) => {
   };
 
   const handleConfirmDelete = () => {
-    
+
   };
 
   return (
     <>
       <div className="max-w-full shadow-xl max-h-[25rem] card-compact card bg-base-100 max-xl:max-h-[20rem] max-lg:max-h-[15rem]">
-        <div className="hero h-[50%] w-full rounded-md  bg-[url('src/assets/salad.jpg')] flex items-start justify-end">
+        <div style={{backgroundImage: `url(${product.image? product.image: 'src/assets/salad.jpg'})`}} className={`hero h-[50%] w-full rounded-md flex items-start justify-end`}>
           <div className="bg-opacity-80 "></div>
           <div className=" hero-content">
-              <button className='btn btn-primary btn-circle btn-xs' onClick={() => addToCart(product)}>+</button>
+            <button className='btn btn-primary btn-circle btn-xs' onClick={() => addToCart(product)}>+</button>
           </div>
         </div>
         <div onClick={() => handleOpenProductModal()} className="card-body">
@@ -37,11 +37,11 @@ const ProductCard = ({ product } : any) => {
         </div>
       </div>
       <ProductDetail
-                product={product}
-                isOpen={isProductModalOpen}
-                onClose={handleCloseProductModal}
-                onConfirm={handleConfirmDelete}
-              />
+        product={product}
+        isOpen={isProductModalOpen}
+        onClose={handleCloseProductModal}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   )
 }

@@ -52,7 +52,7 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
           </div>
 
           {/* Image */}
-          <img src={productImage} alt="product image" className="object-cover w-2/4 max-lg:w-full max-lg:h-80 rounded-s-3xl" />
+          <img src={product.image? product.image : productImage} alt="product image" className="object-cover w-2/4 max-lg:w-full max-lg:h-80 rounded-s-3xl" />
 
           {/* Description */}
           <div className="flex flex-col items-center p-10">
@@ -69,8 +69,8 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio aliquam quo quos officia voluptatem. Nobis enim, est recusandae ipsa deleniti corrupti veritatis, illo ipsam ad sint tenetur dolore, deserunt in?</p>
                 <h4>Ingredients:</h4>
                 <ul>
-                  { product.ingredients.map( (i : any) => {
-                    return <li>{ i.ingredient.name }</li>
+                  { product.ingredients.map( (ingredinet:any, index:number) => {
+                    return <li key={index}>{ ingredinet.ingredient.name }</li>
                   }) }
                 </ul>
               </div>

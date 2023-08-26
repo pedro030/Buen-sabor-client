@@ -205,7 +205,7 @@ const Menu = () => {
                             <form className="pt-2 form-control">
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} defaultChecked={filters.category == "all" ? true : false} />
                                     <label className='label-text'>Todos</label><br />
                                     <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Entradas" onChange={handleChangeCategory} />
                                     <label className='label-text'>Entradas</label><br />
@@ -235,7 +235,7 @@ const Menu = () => {
                             <p className=' xl:ml-10'>Found <span className='text-primary'>{products.length}</span> results</p>
                             <div className='flex flex-row gap-3 mb-5 xl:mr-10'>
                                 <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                                    <option selected value={1}>SORT BY: FEATURED</option>
+                                    <option  defaultValue={1}>SORT BY: FEATURED</option>
                                     <option value={2}>SORT BY PRICE: LOW to HIGH</option>
                                     <option value={3}>SORT BY PRICE: HIGH to LOW</option>
                                     <option value={4}>SORT BY NAME: A - Z</option>
@@ -263,7 +263,7 @@ const Menu = () => {
                                 (products.length > 0) && <div className="mt-5 join ">
                                     <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage - 1) : ''}>«</button>
                                     {pages.map((page: any, index: any) => {
-                                        return <input key={index} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} checked={currentPage === page} />
+                                        return <input key={index} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} defaultChecked={currentPage === page} />
                                     })
                                     }
                                     <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length / productsPerPage) ? setCurrentPage(currentPage + 1) : ''}>»</button>
