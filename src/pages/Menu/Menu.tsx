@@ -22,7 +22,7 @@ const MenuPage = () => {
 
     return (
         <div>
-            {/* <Header /> */}
+            <Header />
             <Carousel />
             <Menu />
         </div>

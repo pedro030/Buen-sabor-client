@@ -52,7 +52,6 @@ const  App = () => {
       <LocationsProvider>
       <PaymenthDeliveryProvider>
       <OrdersProvider>
-      <Header></Header>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

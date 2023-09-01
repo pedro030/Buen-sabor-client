@@ -1,7 +1,10 @@
+import Header from '../../components/header/Header'
 import './AboutComponent.scss'
 
 const About = () => {
   return (
+    <>
+    <Header/>
     <div className=" bg-base-100 w-full h-[28rem]  max-lg:h-[23rem] text-center pt-5">
       <h1 className='mb-10 text-2xl stat-title'>Integrantes</h1>
 
@@ -62,6 +65,7 @@ const About = () => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

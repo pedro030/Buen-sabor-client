@@ -7,14 +7,17 @@ import Address from './Components/addresses/Address'
 import Change_password from './Components/change_password/Change_password'
 import History_Order from './Components/history_order/History_Order'
 import { UserContext } from '../../context/user'
+import Header from '../../components/header/Header'
 
 const UserProfile = () => {
   const { user } = useAuth0()
 
   const {userInfo} = useContext(UserContext);
+  console.log(userInfo)
 
   return (
-
+    <>
+    <Header/>
     <div className='grid grid-cols-[260px_1fr] min-h-[30rem]'>
       <ul className="w-56 m-4 menu bg-secondary rounded-box">
         <div className="flex justify-center avatar">
@@ -56,6 +59,7 @@ const UserProfile = () => {
         </Routes>
       </div>
     </div>
+    </>
   )
 }
 
