@@ -73,6 +73,10 @@ const Header: React.FC = () => {
         }
     }
 
+    //WebSocket
+    const [pendingOrders, setPendingOrders] = useState([]);
+    
+
     return (
         <>
             <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] max-lg:grid-rows-1 bg-base-100 navbar shadow ">
