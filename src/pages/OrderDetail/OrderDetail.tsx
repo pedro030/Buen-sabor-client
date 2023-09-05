@@ -8,6 +8,68 @@ import EditCartModal from '../../components/menu/EditCartModal/EditCartModal'
 import SelectAddressModal from './Components/SelectAddressModal'
 import { MAddress } from '../../models/MAddress'
 
+// import { initMercadoPago } from '@mercadopago/sdk-react';
+// const MercadoPago = initMercadoPago('YOUR_PUBLIC_KEY', {
+//     locale: 'es-AR'
+// });
+
+// const bricksBuilder  = MercadoPago
+// console.log(bricksBuilder)
+
+// const renderCardPaymentBrick = async (bricksBuilder:any) => {
+//     const settings = {
+//         initialization: {
+//             amount: 1,
+//             payer: {
+//                 email: "",
+//             },
+//         },
+//         customization: {
+//             visual: {
+//                 style: {
+//                     theme: 'default',
+//                 }
+//             },
+//             paymentMethods: {
+//                 maxInstallments: 1,
+//             }
+//         },
+//         callbacks: {
+//             onReady: () => {
+//                 // callback llamado cuando Brick esté listo
+//             },
+//             onSubmit: (cardFormData: any) => {
+//                 //  callback llamado cuando el usuario haga clic en el botón enviar los datos
+//                 //  ejemplo de envío de los datos recolectados por el Brick a su servidor
+//                 return new Promise((resolve, reject) => {
+//                     fetch("/process_payment", {
+//                         method: "POST",
+//                         headers: {
+//                             "Content-Type": "application/json",
+//                         },
+//                         body: JSON.stringify(cardFormData)
+//                     })
+//                         .then((response) => {
+//                             // recibir el resultado del pago
+//                             resolve(response);
+//                         })
+//                         .catch((error) => {
+//                             // tratar respuesta de error al intentar crear el pago
+//                             reject();
+//                         })
+//                 });
+//             },
+//             onError: (err: Error) => {
+//                 console.error(err)
+//                 // callback llamado para todos los casos de error de Brick
+//             },
+//         },
+//     }
+// };
+
+// console.log(MercadoPago)
+
+
 const OrderDetail = () => {
     const { cart }: any = useContext(CartContext);
     const { deliveryTakeAway, setDeliveryTakeAway, mp, setMp, deliveryAddress, setDeliveryAddress }: any = useContext(PaymenthDeliveryContext);
@@ -34,6 +96,8 @@ const OrderDetail = () => {
 
     };
 
+
+
     return (
         <>
             <div className='mb-5'>
@@ -54,8 +118,8 @@ const OrderDetail = () => {
                             <div className="flex justify-center">
                                 <div className={"grid grid-rows-[50px_1fr] bg-white h-64 w-[80%] rounded-3xl"}>
                                     <div className="grid grid-cols-2 join">
-                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => { setDeliveryTakeAway(true); setMp(true) }} checked={deliveryTakeAway ? true : false} />
-                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Take Away" onClick={() => setDeliveryTakeAway(false)} checked={!deliveryTakeAway ? true : false} />
+                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => { setDeliveryTakeAway(true); setMp(true) }} defaultChecked={deliveryTakeAway ? true : false} />
+                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Take Away" onClick={() => setDeliveryTakeAway(false)} defaultChecked={!deliveryTakeAway ? true : false} />
                                     </div>
 
                                     <div className="p-4">
@@ -130,7 +194,7 @@ const OrderDetail = () => {
                                     <div>
                                         <h1>Available Methods: </h1>
                                         <div className='flex flex-col items-center justify-between join'>
-                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" checked={mp ? true : false} onClick={() => setMp(true)} />
+                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" defaultChecked={mp ? true : false} onClick={() => setMp(true)} />
                                             <input className={deliveryTakeAway ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" onClick={() => setMp(false)} />
                                         </div>
                                     </div>

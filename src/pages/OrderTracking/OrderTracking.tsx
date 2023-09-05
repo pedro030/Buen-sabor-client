@@ -26,13 +26,15 @@ const OrderTracking = () => {
 
     }]);
 
+    // console.log(cart)
+
     let today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     const yyyy = today.getFullYear();
     const day = yyyy + '-' + mm + '-' + dd;
 
-console.log(deliveryAddress)
+// console.log(deliveryAddress)
 
     useEffect(() => {
         if(id == '0') {
@@ -46,7 +48,7 @@ console.log(deliveryAddress)
             if(deliveryTakeAway) totalPay += (100 + 300)
             else totalPay += 100
 
-            const addrs = deliveryAddress.street + " " + deliveryAddress.number + ", " + deliveryAddress.location.location;
+            // const addrs = deliveryAddress.street + " " + deliveryAddress.number + ", " + deliveryAddress.location.location;
 
             const newOrder = {
                 date: day,
@@ -56,8 +58,8 @@ console.log(deliveryAddress)
                     id: mp ? 2 : 1,
                     paymode: mp ? "MercadoPago" : "Cash"
                 },
-                address: addrs,
-                user: deliveryAddress.user,
+                address: /*addrs*/ '',
+                user: /*deliveryAddress.user*/ '',
                 statusOrder: {
                     id: 1,
                     statusType: 'In_Queue'
@@ -138,8 +140,8 @@ console.log(deliveryAddress)
                                     <p>{/*order.products.length*/} products</p>
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
-                                    {order[0].products.map((item: any) => {
-                                        return <div className='flex items-center'>
+                                    {order[0].products.map((item: any, index:number) => {
+                                        return <div key={index} className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                             <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
                                         </div>
