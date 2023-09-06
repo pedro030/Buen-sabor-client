@@ -30,9 +30,17 @@ const Menu = () => {
 
     useEffect(() => {
         const getAndSetData = async () => {
-            const responseProducts = await fetch("https://buen-sabor-backend-production.up.railway.app/api/products/getActives")
-            const dataProducts = await responseProducts.json();
-            setProductsFetch(dataProducts);
+            await fetch("https://buen-sabor-backend-production.up.railway.app/api/products/getActives", {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                redirect: 'follow',
+            })
+                .then(res => res.json())
+                .then((data) => setProductsFetch(data))
+                .catch((error) => console.error(error))
+
+                ;
         }
         getAndSetData();
     }, [])
@@ -145,7 +153,7 @@ const Menu = () => {
         (currentPage == page) ? true : false
     )
 
-    console.log(products)
+    // console.log(products)
 
     return (
         <>
@@ -235,7 +243,7 @@ const Menu = () => {
                             <p className=' xl:ml-10'>Found <span className='text-primary'>{products.length}</span> results</p>
                             <div className='flex flex-row gap-3 mb-5 xl:mr-10'>
                                 <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                                    <option  defaultValue={1}>SORT BY: FEATURED</option>
+                                    <option defaultValue={1}>SORT BY: FEATURED</option>
                                     <option value={2}>SORT BY PRICE: LOW to HIGH</option>
                                     <option value={3}>SORT BY PRICE: HIGH to LOW</option>
                                     <option value={4}>SORT BY NAME: A - Z</option>
