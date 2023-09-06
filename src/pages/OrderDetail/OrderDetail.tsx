@@ -8,10 +8,42 @@ import EditCartModal from '../../components/menu/EditCartModal/EditCartModal'
 import SelectAddressModal from './Components/SelectAddressModal'
 import { MAddress } from '../../models/MAddress'
 
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+
 
 
 
 const OrderDetail = () => {
+    const [preferenceId, setPreferenceId] = useState(null)
+    initMercadoPago('YOUR_PUBLIC_KEY');
+
+
+    const createPreference = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/create_preference", {
+                method: 'POST',
+                body: JSON.stringify({
+                    description: "Bananita contenta",
+                    price: 100,
+                    quantity: 1,
+                })
+            }
+            );
+
+            const { id } = response.body;
+            return id;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleBuy = async () => {
+        const id = await createPreference();
+        if (id) {
+            setPreferenceId(id);
+        }
+    };
+
     const { cart }: any = useContext(CartContext);
     const { deliveryTakeAway, setDeliveryTakeAway, mp, setMp, deliveryAddress, setDeliveryAddress }: any = useContext(PaymenthDeliveryContext);
     const navigate = useNavigate();
@@ -38,7 +70,7 @@ const OrderDetail = () => {
     };
 
 
-    
+
 
     return (
         <>
@@ -166,8 +198,8 @@ const OrderDetail = () => {
                                         <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
                                     </div>
                                 </div>
-                                {mp ? <button className="rounded-full btn btn-primary" onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className="rounded-full btn btn-primary" onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
-
+                                {mp ? <button className="rounded-full btn btn-primary" /*onClick={() => handleBuy}*/ onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className="rounded-full btn btn-primary" onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
+                                {preferenceId && <Wallet initialization={{ preferenceId }} />}
                             </div>
                         </div>
                     </div>
