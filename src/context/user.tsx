@@ -50,21 +50,45 @@ export function UserProvider({children}: any){
     //user info
     const getUserInfo = (mail: string) => {
         // cambiar por llamada a getUserByEmail
+        // userService.getUserByMail(mail)
+        // .then(user => {
+        //     if(user) {
+        //         setUserInfo(user);
+        //         if(user.addresses)setAdresses(user.addresses);
+        //     }else{
+        //         signUpUser(mail)
+        //     }
+        // })
         userService.GetAll()
-        .then(data => {
-            const sessionUser = data.find(u => u.mail === mail)
-            if(sessionUser) {
-                console.log(sessionUser);
-                setUserInfo(sessionUser);
-                console.log(userInfo);
-                if(sessionUser.addresses)setAdresses(sessionUser.addresses);
-            };
+            .then(data => {
+                const sessionUser = data.find(u => u.mail === mail)
+                if (sessionUser) {
+                    setUserInfo(sessionUser);
+                    if (sessionUser.addresses) setAdresses(sessionUser.addresses);
+                } else {
+                    signUpUser(mail)
+                }
+            })
+    }
+
+    const signUpUser = (mail:string) => {
+        const newUser: MUser = {
+            id: 0,
+            mail: mail,
+            firstName: "",
+            lastName: "",
+            telephone: 0,
+            blacklist: "0",
+            rol: {id: 6, rol:"Client"}
+        }
+        userService.Create(newUser)
+        .then(() => {
+            // userService.getUserByMail(mail)
+            // .then(user => setUserInfo(user))
         })
     }
 
     const editUserInfo = (u: MUser) => {
-        console.log("Edit User Info");
-        console.log(u);
         userService.Update(u)
         .then(data => {
             if(data){getUserInfo(u.mail)}
