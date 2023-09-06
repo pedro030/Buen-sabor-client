@@ -42,7 +42,6 @@ const Menu = () => {
 
 
     const handleChangeCategory = (e: any) => {
-        console.log(typeof e.target.value);
         setFilters((prevState: any) => ({
             ...prevState,
             category: e.target.value
@@ -146,6 +145,7 @@ const Menu = () => {
         (currentPage == page) ? true : false
     )
 
+    console.log(products)
 
     return (
         <>
@@ -166,7 +166,7 @@ const Menu = () => {
                                     <form className="pt-2 form-control">
                                         <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                         <div>
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" defaultValue="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
                                             <label className='label-text'>Todos</label><br />
                                             <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Entradas" onChange={handleChangeCategory} />
                                             <label className='label-text'>Entradas</label><br />
@@ -181,11 +181,11 @@ const Menu = () => {
                                         <div className='flex flex-col gap-3'>
                                             <div className='flex flex-row items-center justify-between'>
                                                 <label className='mr-2 text-xs label-text'>Min Price:</label>
-                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} defaultValue={filters.minPrice == 0 ? '' : filters.minPrice} />
+                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={filters.minPrice == 0 ? '' : filters.minPrice} />
                                             </div>
                                             <div className='flex flex-row items-center justify-between'>
                                                 <label className='mr-2 text-xs label-text'>Max Price:</label>
-                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} defaultValue={filters.maxPrice == 20000 ? '' : filters.maxPrice} />
+                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={filters.maxPrice == 20000 ? '' : filters.maxPrice} />
                                             </div>
                                         </div>
                                     </form>
@@ -205,7 +205,7 @@ const Menu = () => {
                             <form className="pt-2 form-control">
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" defaultValue="all" onChange={handleChangeCategory} defaultChecked={filters.category == "all" ? true : false} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} defaultChecked={filters.category == "all" ? true : false} />
                                     <label className='label-text'>Todos</label><br />
                                     <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="Entradas" onChange={handleChangeCategory} />
                                     <label className='label-text'>Entradas</label><br />
@@ -235,7 +235,7 @@ const Menu = () => {
                             <p className=' xl:ml-10'>Found <span className='text-primary'>{products.length}</span> results</p>
                             <div className='flex flex-row gap-3 mb-5 xl:mr-10'>
                                 <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                                    <option defaultValue={1}>SORT BY: FEATURED</option>
+                                    <option  defaultValue={1}>SORT BY: FEATURED</option>
                                     <option value={2}>SORT BY PRICE: LOW to HIGH</option>
                                     <option value={3}>SORT BY PRICE: HIGH to LOW</option>
                                     <option value={4}>SORT BY NAME: A - Z</option>
