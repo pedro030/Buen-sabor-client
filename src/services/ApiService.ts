@@ -4,8 +4,11 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
     endpoint: string = "";
     // TODO: Definir variables de entorno e implementar url de la api
     apiURL: string = import.meta.env.VITE_REACT_APP_API_URL;
-    GetAll(): Promise<T[]> {
-        return fetch(`${this.apiURL}/${this.endpoint}/getAll`)
+    GetAll(token:string): Promise<T[]> {
+        return fetch(`${this.apiURL}/${this.endpoint}/getAll`, {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }})
             .then(res => {
                 return res.json()
             })
@@ -13,7 +16,7 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
                 console.log(err)
             })
     }
-    GetById(id: number): Promise<T> {
+    GetById(id: number, token: string): Promise<T> {
         return fetch(`${this.apiURL}/${this.endpoint}/get/${id}`)
             .then(res => {
                 return res.json()
@@ -22,12 +25,13 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
                 console.log(err)
             })
     }
-    Create(obj: T): Promise<boolean> {
+    Create(obj: T, token: string): Promise<boolean> {
         const newObj = obj;
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
             },
             body: JSON.stringify(newObj)
         };
@@ -42,12 +46,13 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
             })
 
     }
-    Update(obj: T): Promise<boolean> {
+    Update(obj: T, token: string): Promise<boolean> {
         const updatedObj = obj;
         return fetch(`${this.apiURL}/${this.endpoint}/update/${obj.id}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
             },
             body: JSON.stringify(updatedObj)
         })
@@ -60,9 +65,12 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
                 return false
             })
     }
-    Delete(id: number): Promise<boolean> {
+    Delete(id: number, token: string): Promise<boolean> {
         return fetch(`${this.apiURL}/${this.endpoint}/delete/${id}`, {
-            method: "DELETE"
+            method: "DELETE",
+            headers:{
+                'Authorization': 'Bearer ' + token
+            }
         })
         .then(res => {
             if(res.ok) return true

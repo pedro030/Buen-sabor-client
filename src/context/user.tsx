@@ -5,6 +5,7 @@ import { MLocation } from '../models/MLocation';
 import { LocationService } from '../services/LocationService';
 import { MUser } from '../models/MUser';
 import { UserService } from '../services/UserService';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface IUserContext {
     userInfo: MUser,
@@ -37,6 +38,8 @@ export function UserProvider({children}: any){
 
     const adrService = new AdressService();
     const userService = new UserService();
+    const {getAccessTokenSilently} = useAuth0();
+    const [tokenUser, setTokenUser] = useState("")
     const [addresses, setAdresses] = useState<MAddress[]>([])
     const [userInfo, setUserInfo] = useState<MUser>({
         id: 0,
@@ -50,25 +53,25 @@ export function UserProvider({children}: any){
     //user info
     const getUserInfo = (mail: string) => {
         // cambiar por llamada a getUserByEmail
-        // userService.getUserByMail(mail)
-        // .then(user => {
-        //     if(user) {
-        //         setUserInfo(user);
-        //         if(user.addresses)setAdresses(user.addresses);
-        //     }else{
-        //         signUpUser(mail)
-        //     }
-        // })
-        userService.GetAll()
-            .then(data => {
-                const sessionUser = data.find(u => u.mail === mail)
-                if (sessionUser) {
-                    setUserInfo(sessionUser);
-                    if (sessionUser.addresses) setAdresses(sessionUser.addresses);
-                } else {
-                    signUpUser(mail)
-                }
-            })
+        userService.getUserByMail(mail, tokenUser)
+        .then(user => {
+            if(user) {
+                setUserInfo(user);
+                if(user.addresses)setAdresses(user.addresses);
+            }else{
+                signUpUser(mail)
+            }
+        })
+        // userService.GetAll(tokenUser)
+        //     .then(data => {
+        //         const sessionUser = data.find(u => u.mail === mail)
+        //         if (sessionUser) {
+        //             setUserInfo(sessionUser);
+        //             if (sessionUser.addresses) setAdresses(sessionUser.addresses);
+        //         } else {
+        //             signUpUser(mail)
+        //         }
+        //     })
     }
 
     const signUpUser = (mail:string) => {
@@ -81,24 +84,34 @@ export function UserProvider({children}: any){
             blacklist: "0",
             rol: {id: 6, rol:"Client"}
         }
-        userService.Create(newUser)
+        userService.Create(newUser, tokenUser)
         .then(() => {
-            // userService.getUserByMail(mail)
-            // .then(user => setUserInfo(user))
+            userService.getUserByMail(mail,tokenUser)
+            .then(user => setUserInfo(user))
         })
     }
 
     const editUserInfo = (u: MUser) => {
-        userService.Update(u)
+        userService.Update(u, tokenUser)
         .then(data => {
             if(data){getUserInfo(u.mail)}
         })
     }
+    useEffect(()=>{
+        getAccessTokenSilently({
+            authorizationParams: {
+                audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+            },
+        }).then(token => {
+            console.log("token obtenido")
+            setTokenUser(token);
+        })
+    },[getAccessTokenSilently])
 
     // addresses
     const getAddresses = () => {
         // TODO cambiar llamada a getUserAddresses
-        adrService.GetAll()
+        adrService.GetAll(tokenUser)
         .then(data => {
             const userAddresses = data.filter(a => a.user?.id == userInfo?.id)
             setAdresses(userAddresses);
@@ -107,14 +120,14 @@ export function UserProvider({children}: any){
 
     const newAddress = (ad: MAddress) => {
         ad.user = userInfo
-        return adrService.Create(ad).then(data => {
+        return adrService.Create(ad, tokenUser).then(data => {
             getAddresses()
             return data
         })
     }
 
     const deleteAddress = (ad: MAddress) => {
-        return adrService.Delete(ad.id)
+        return adrService.Delete(ad.id, tokenUser)
             .then(data => {
                 getAddresses()
                 return data
