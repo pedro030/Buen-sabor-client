@@ -8,4 +8,5 @@ export interface MUser {
     mail: string,
     blacklist: string,
     addresses?: MAddress[];
+    orders: []
 }

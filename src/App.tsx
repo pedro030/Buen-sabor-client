@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './App.scss'
 import { Route, Routes } from "react-router-dom";
 import ProductDetail from './components/menu/product_detail/ProductDetail'
@@ -18,10 +18,7 @@ import { UserContext } from './context/user';
 import OrderTracking from './pages/OrderTracking/OrderTracking';
 import { PaymenthDeliveryProvider } from './context/paymenth-delivery';
 import Login from './pages/Login/Login';
-import { OrdersProvider } from './context/orders';
 import { LocationsProvider } from './context/locations';
-
-
 
 
 const  App = () => {
@@ -43,7 +40,6 @@ const  App = () => {
     }
   }, [])
   
-  
 
   return (
     <>
@@ -51,7 +47,6 @@ const  App = () => {
       <FiltersProvider>
       <LocationsProvider>
       <PaymenthDeliveryProvider>
-      <OrdersProvider>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -63,7 +58,6 @@ const  App = () => {
         <Route path='/order-tracking/:id' element={<OrderTracking/>} />
         <Route path="*" element={<Home />} />
       </Routes>
-      </OrdersProvider>
       </PaymenthDeliveryProvider>
       </LocationsProvider>
       </FiltersProvider>

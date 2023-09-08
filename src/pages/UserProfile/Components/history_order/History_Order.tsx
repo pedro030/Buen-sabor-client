@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react';
 import TrashSimple from '../../../../assets/TrashSimple.svg'
-import { OrdersContext } from '../../../../context/orders';
+import { UserContext } from '../../../../context/user';
 
 const History_Order = () => {
-    const { orders, setOrders }: any = useContext(OrdersContext);
+    const { orders } = useContext(UserContext)
 
     return (
         <div>
@@ -29,7 +29,7 @@ const History_Order = () => {
                                     <td>{o.date}</td>
                                     <td>{o.withdrawalMode}</td>
                                     <td>${o.totalPrice}</td>
-                                    <td>{o.address.street} {o.address.number}</td>
+                                    <td>{o.address}</td>
                                     <td>{o.statusOrder.statusType}</td>
                                     <td>
                                         <div tabIndex={0} className='collapse'>

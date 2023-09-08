@@ -1,10 +1,11 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, createContext, useEffect, useState} from 'react';
 import { MAddress } from '../models/MAddress';
 import { AdressService } from '../services/AdressService';
 import { MLocation } from '../models/MLocation';
 import { LocationService } from '../services/LocationService';
 import { MUser } from '../models/MUser';
 import { UserService } from '../services/UserService';
+import { MOrder } from '../models/MOrder';
 
 interface IUserContext {
     userInfo: MUser,
@@ -12,8 +13,10 @@ interface IUserContext {
     editUserInfo(us:MUser):void,
     addresses: MAddress[],
     getAddresses(): void,
-    newAddress(ad: MAddress): Promise<boolean>
-    deleteAddress(ad: MAddress): Promise<boolean>
+    newAddress(ad: MAddress): Promise<boolean>,
+    deleteAddress(ad: MAddress): Promise<boolean>,
+    orders: MOrder[],
+    setOrders: Dispatch<SetStateAction<MOrder[]>>
 }
 
 export const UserContext = createContext<IUserContext>({
@@ -24,20 +27,23 @@ export const UserContext = createContext<IUserContext>({
         lastName:"",
         blacklist:"",
         telephone:0,
+        orders: []
     },
     getUserInfo(mail) {},
     addresses:[],
     getAddresses:()=>{},
     newAddress: () => {return new Promise<boolean>(()=>true)}, 
     deleteAddress: () => { return new Promise<boolean>(() => true) },
-    editUserInfo(){}
+    editUserInfo(){},
+    orders: [],
+    setOrders: () => {}
 });
 
 export function UserProvider({children}: any){
-
     const adrService = new AdressService();
     const userService = new UserService();
     const [addresses, setAdresses] = useState<MAddress[]>([])
+    const [orders, setOrders] = useState<MOrder[]>([])
     const [userInfo, setUserInfo] = useState<MUser>({
         id: 0,
         mail: "",
@@ -45,6 +51,7 @@ export function UserProvider({children}: any){
         lastName: "",
         blacklist: "",
         telephone: 0,
+        orders: []
     })
 
     //user info
@@ -58,6 +65,7 @@ export function UserProvider({children}: any){
                 setUserInfo(sessionUser);
                 console.log(userInfo);
                 if(sessionUser.addresses)setAdresses(sessionUser.addresses);
+                if(sessionUser.orders) setOrders(sessionUser.orders)
             };
         })
     }
@@ -105,7 +113,9 @@ export function UserProvider({children}: any){
             addresses,
             getAddresses,
             newAddress,
-            deleteAddress
+            deleteAddress,
+            orders,
+            setOrders
         }}>
             {children}
         </UserContext.Provider>
