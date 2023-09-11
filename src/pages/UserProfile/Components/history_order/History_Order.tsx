@@ -1,11 +1,27 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import TrashSimple from '../../../../assets/TrashSimple.svg'
-import { OrdersContext } from '../../../../context/orders';
+import { UserContext } from '../../../../context/user';
+import PDFBillModal from './PDFBillModal/PDFBillModal';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PDFDocument from './PDFDocument/PDFDocument';
 
 const History_Order = () => {
-    const { orders, setOrders }: any = useContext(OrdersContext);
+    const { orders } = useContext(UserContext)
+    const [isOpen, setIsOpen] = useState(false);
+    const [bill, setBill] = useState();
+
+    const viewPDF = (b: any) => {
+        setBill(b);
+        setIsOpen(true);
+    }
 
     return (
+        <>
+        <PDFBillModal
+            obj={bill}
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+        />
         <div>
             <h2 className='mb-5 text-center stat-title'>Order history</h2>
 
@@ -29,7 +45,7 @@ const History_Order = () => {
                                     <td>{o.date}</td>
                                     <td>{o.withdrawalMode}</td>
                                     <td>${o.totalPrice}</td>
-                                    <td>{o.address.street} {o.address.number}</td>
+                                    <td>{o.address}</td>
                                     <td>{o.statusOrder.statusType}</td>
                                     <td>
                                         <div tabIndex={0} className='collapse'>
@@ -44,9 +60,15 @@ const History_Order = () => {
                                         </div>
                                     </td>
                                     <td>
-                                        {/*<button onClick={() => alertDelete(o.idOrder)} className="btn btn-circle btn-secondary btn-sm">
-                                            <img className='p-1 h-7' src={TrashSimple} />
-                                            </button> */}
+                                        {<><button onClick={() => viewPDF(o)} className="">View Bill</button>
+                                        <PDFDownloadLink
+                                            document={<PDFDocument obj={o}/>}
+                                            fileName={`Buen Sabor - Order Bill #${o.id}`}
+                                        >
+                                            {({ blob, url, loading, error }) =>
+                                            loading ? "Loading document..." : <button>Download</button>
+                                            }
+                                        </PDFDownloadLink> </>}
                                     </td>
                                 </tr>
                             })
@@ -55,6 +77,7 @@ const History_Order = () => {
                 </table>
             </div>
         </div>
+        </>
     )
 }
 

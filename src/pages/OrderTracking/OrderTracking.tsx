@@ -6,24 +6,26 @@ import cashSVG from '../../assets/cash.svg'
 import { useContext, useEffect, useState } from 'react'
 import { CartContext } from '../../context/cart'
 import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
-import { OrdersContext } from '../../context/orders'
 import { useParams } from 'react-router-dom'
+import { over } from 'stompjs'
+import SockJS from 'sockjs-client'
+import { UserContext } from '../../context/user'
 
 
 const OrderTracking = () => {
     const { user } = useAuth0();
     const { cart, clearCart }: any = useContext(CartContext);
     const { deliveryTakeAway, mp, deliveryAddress }: any = useContext(PaymenthDeliveryContext);
-    const { orders, setOrders }: any = useContext(OrdersContext);
     const { id } : any = useParams();
     const [order, setOrder] = useState([{
+        id: 0,
         date: '', 
         withdrawalMode: '', 
         totalPrice: 0,
         address: '',
         paymode: { id: 0, paymode: '' },
         products: [{ product: { name: '', price: 0}}],
-
+        statusOrder: { statusType: 'Unknown'}
     }]);
 
     let today = new Date();
@@ -32,7 +34,46 @@ const OrderTracking = () => {
     const yyyy = today.getFullYear();
     const day = yyyy + '-' + mm + '-' + dd;
 
-console.log(deliveryAddress)
+    const { userInfo, orders, setOrders }: any = useContext(UserContext)
+    const [stompClient, setStompClient] = useState<any>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
+
+    const conn = (idOrder: number) => {
+        stompClient.connect({}, () => onConnected(idOrder), onError)
+    }
+
+    const onConnected = async (idOrder: number) => {
+    
+        if (stompClient && stompClient.connected) {
+          try {
+            await stompClient.subscribe(`/user/${userInfo.mail}/private`, (payload: {body: string}) => onMessageReceived(payload, idOrder))
+            await stompClient.send(`/app/private-message`, {}, JSON.stringify(userInfo.id))
+          } catch (error) {
+            console.log(error)
+          }
+        } else {
+          console.log("WS is not connected")
+        }
+    
+    }
+
+    const onMessageReceived = (payload: { body: string; }, idOrder: number) => {
+        const payloadData: any = JSON.parse(payload.body);
+       
+        const ord = payloadData.find((o: any) => o.id === idOrder)
+
+        const updatedOrders = orders.map((o: any) => {
+            if(o.id === idOrder) return { ...o, statusOrder: ord.statusOrder };
+
+            return o;
+        });
+        
+        setOrders(updatedOrders);
+        setOrder([ord]);
+    }
+    
+    const onError = (err: any) => {
+        console.log(err);
+    }
 
     useEffect(() => {
         if(id == '0') {
@@ -86,6 +127,7 @@ console.log(deliveryAddress)
             .then( data => {
                 setOrders((prevState: any) => [...prevState, data]);
                 setOrder([data]);
+                conn(data.id)
             })
             .catch( e => console.log("Error:", e))
 
@@ -93,9 +135,12 @@ console.log(deliveryAddress)
         } else {
             const ord = orders.filter((o: any) => o.id === +id);
             setOrder(ord);
+            conn(+id);
         }
 
-        
+        return () => {
+            stompClient?.disconnect();
+        };
     }, []);
 
     return (
@@ -118,7 +163,7 @@ console.log(deliveryAddress)
 
                 {/* Info */}
                 <div className="flex flex-col justify-center w-full h-20 p-4 bg-white shadow rounded-3xl">
-                    <h1 className="my-1 font-bold">The restaurant is preparing your order</h1>
+                    <h1 className="my-1 font-bold">State of your Order: { order.length > 0 ? order[0].statusOrder.statusType : "Loading..." }</h1>
                     <p className="text-sm">Created 7:33 PM</p>
                 </div>
 
@@ -138,8 +183,8 @@ console.log(deliveryAddress)
                                     <p>{/*order.products.length*/} products</p>
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
-                                    {order[0].products.map((item: any) => {
-                                        return <div className='flex items-center'>
+                                    {order[0].products.map((item: any, index:number) => {
+                                        return <div key={index} className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                             <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
                                         </div>

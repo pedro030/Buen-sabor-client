@@ -8,7 +8,42 @@ import EditCartModal from '../../components/menu/EditCartModal/EditCartModal'
 import SelectAddressModal from './Components/SelectAddressModal'
 import { MAddress } from '../../models/MAddress'
 
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+
+
+
+
 const OrderDetail = () => {
+    const [preferenceId, setPreferenceId] = useState(null)
+    initMercadoPago('YOUR_PUBLIC_KEY');
+
+
+    const createPreference = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/create_preference", {
+                method: 'POST',
+                body: JSON.stringify({
+                    description: "Bananita contenta",
+                    price: 100,
+                    quantity: 1,
+                })
+            }
+            );
+
+            const { id } = response.body;
+            return id;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleBuy = async () => {
+        const id = await createPreference();
+        if (id) {
+            setPreferenceId(id);
+        }
+    };
+
     const { cart }: any = useContext(CartContext);
     const { deliveryTakeAway, setDeliveryTakeAway, mp, setMp, deliveryAddress, setDeliveryAddress }: any = useContext(PaymenthDeliveryContext);
     const navigate = useNavigate();
@@ -34,6 +69,9 @@ const OrderDetail = () => {
 
     };
 
+
+
+
     return (
         <>
             <div className='mb-5'>
@@ -54,8 +92,8 @@ const OrderDetail = () => {
                             <div className="flex justify-center">
                                 <div className={"grid grid-rows-[50px_1fr] bg-white h-64 w-[80%] rounded-3xl"}>
                                     <div className="grid grid-cols-2 join">
-                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => { setDeliveryTakeAway(true); setMp(true) }} checked={deliveryTakeAway ? true : false} />
-                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Take Away" onClick={() => setDeliveryTakeAway(false)} checked={!deliveryTakeAway ? true : false} />
+                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => { setDeliveryTakeAway(true); setMp(true) }} defaultChecked={deliveryTakeAway ? true : false} />
+                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Take Away" onClick={() => setDeliveryTakeAway(false)} defaultChecked={!deliveryTakeAway ? true : false} />
                                     </div>
 
                                     <div className="p-4">
@@ -130,7 +168,7 @@ const OrderDetail = () => {
                                     <div>
                                         <h1>Available Methods: </h1>
                                         <div className='flex flex-col items-center justify-between join'>
-                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" checked={mp ? true : false} onClick={() => setMp(true)} />
+                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" defaultChecked={mp ? true : false} onClick={() => setMp(true)} />
                                             <input className={deliveryTakeAway ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" onClick={() => setMp(false)} />
                                         </div>
                                     </div>
@@ -160,8 +198,8 @@ const OrderDetail = () => {
                                         <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
                                     </div>
                                 </div>
-                                {mp ? <button className="rounded-full btn btn-primary" onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className="rounded-full btn btn-primary" onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
-
+                                {mp ? <button className="rounded-full btn btn-primary" /*onClick={() => handleBuy}*/ onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className="rounded-full btn btn-primary" onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
+                                {preferenceId && <Wallet initialization={{ preferenceId }} />}
                             </div>
                         </div>
                     </div>

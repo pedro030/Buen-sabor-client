@@ -10,7 +10,12 @@ import { useMediaQuery } from 'react-responsive';
 import { CartContext } from '../../context/cart'
 import EditCartModal from '../menu/EditCartModal/EditCartModal'
 import { FiltersContext } from '../../context/filters'
-import { OrdersContext } from '../../context/orders'
+import SockJS from 'sockjs-client'
+import { over } from 'stompjs';
+import { UserContext } from '../../context/user'
+import { disconnect } from 'process'
+import PageLoader from '../../pages/page_loader/PageLoader'
+import { useAuth0 } from '@auth0/auth0-react'
 // import searcher from '../../assets/searcher.svg'
 
 interface NavbarLink {
@@ -20,10 +25,11 @@ interface NavbarLink {
 }
 
 const Header: React.FC = () => {
+    const {  getAccessTokenSilently } = useAuth0();
     const isTable = useMediaQuery({ maxWidth: 1024 });
     const context: any = useContext(CartContext);
     const { filters, setFilters } : any = useContext(FiltersContext);
-    const { orders }: any = useContext(OrdersContext);
+    const { userInfo }: any = useContext(UserContext)
 
     const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
@@ -52,10 +58,6 @@ const Header: React.FC = () => {
     };
 
     // esto tal vez se pueda borrar se
-    useEffect(() => {
-        const currentPath = window.location.pathname;
-        setActiveLink(currentPath);
-    }, []);
 
     const handleChangeSearch = (e : any) => {
         setFilters((prevState: any) => ({
@@ -75,6 +77,52 @@ const Header: React.FC = () => {
 
     //WebSocket
     const [pendingOrders, setPendingOrders] = useState([]);
+    const [stompClient, setStompClient] = useState<any>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
+    
+
+    const conn = () => {
+        stompClient.connect({}, onConnected, onError)
+    }
+
+    const onConnected = async (e: any) => {
+    
+        if (stompClient && stompClient.connected) {
+          try {
+            await stompClient.subscribe(`/user/${userInfo.mail}/private`, onMessageReceived)
+            await stompClient.send(`/app/private-message`, {}, JSON.stringify(userInfo.id))
+          } catch (error) {
+            console.log(error)
+          }
+        } else {
+          console.log("WS is not connected")
+        }
+    
+    }
+
+    const onMessageReceived = (payload: { body: string; }) => {
+        console.log('ESTOY EN ONMESSAGERECIEVED');
+        const payloadData: any = JSON.parse(payload.body);
+        setPendingOrders(payloadData);
+        console.log(payloadData);
+
+        if(payloadData.length === 0) stompClient?.disconnect()
+    }
+    
+    const onError = (err: any) => {
+        console.log(err);
+    }
+
+    useEffect(() => {
+        const currentPath = window.location.pathname;
+        setActiveLink(currentPath);
+
+        conn();
+
+        return () => {
+          stompClient?.disconnect();
+        };
+    }, []);
+
     
 
     return (
@@ -119,20 +167,12 @@ const Header: React.FC = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {orders.map((o: any) => {
+                                                { pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
                                                     return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
                                                         <th>{o.id}</th>
                                                         <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
                                                     </tr>
-                                                })}
-                                                {/*<tr className='cursor-pointer hover'>
-                                                    <th>1</th>
-                                                    <td><div className="badge badge-secondary">Preparing</div></td>
-                                                </tr>
-                                                <tr className='cursor-pointer hover'>
-                                                    <th>2</th>
-                                                    <td><div className="badge badge-warning">Delivery</div></td>
-                                            </tr>*/}
+                                                })) : <div>No Pending Orders</div>}
                                             </tbody>
                                         </table>
                                     </div>

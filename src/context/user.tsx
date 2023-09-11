@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, createContext, useEffect, useState} from 'react';
 import { MAddress } from '../models/MAddress';
 import { AdressService } from '../services/AdressService';
 import { MLocation } from '../models/MLocation';
@@ -6,6 +6,7 @@ import { LocationService } from '../services/LocationService';
 import { MUser } from '../models/MUser';
 import { UserService } from '../services/UserService';
 import { useAuth0 } from '@auth0/auth0-react';
+import { MOrder } from '../models/MOrder';
 
 interface IUserContext {
     userInfo: MUser,
@@ -13,9 +14,11 @@ interface IUserContext {
     editUserInfo(us:MUser):void,
     addresses: MAddress[],
     getAddresses(): void,
-    newAddress(ad: MAddress): Promise<boolean>
-    deleteAddress(ad: MAddress): Promise<boolean>
     tokenUser:string
+    newAddress(ad: MAddress): Promise<boolean>,
+    deleteAddress(ad: MAddress): Promise<boolean>,
+    orders: MOrder[],
+    setOrders: Dispatch<SetStateAction<MOrder[]>>
 }
 
 export const UserContext = createContext<IUserContext>({
@@ -26,6 +29,7 @@ export const UserContext = createContext<IUserContext>({
         lastName:"",
         blacklist:"",
         telephone:0,
+        orders: []
     },
     getUserInfo(mail) {},
     addresses:[],
@@ -33,16 +37,18 @@ export const UserContext = createContext<IUserContext>({
     newAddress: () => {return new Promise<boolean>(()=>true)}, 
     deleteAddress: () => { return new Promise<boolean>(() => true) },
     editUserInfo(){},
-    tokenUser:""
+    tokenUser:"",
+    orders: [],
+    setOrders: () => {}
 });
 
 export function UserProvider({children}: any){
-
     const adrService = new AdressService();
     const userService = new UserService();
     const {getAccessTokenSilently} = useAuth0();
     const [tokenUser, setTokenUser] = useState("")
     const [addresses, setAdresses] = useState<MAddress[]>([])
+    const [orders, setOrders] = useState<MOrder[]>([])
     const [userInfo, setUserInfo] = useState<MUser>({
         id: 0,
         mail: "",
@@ -50,16 +56,18 @@ export function UserProvider({children}: any){
         lastName: "",
         blacklist: "",
         telephone: 0,
+        orders: []
     })
 
     //user info
     const getUserInfo = (mail: string) => {
         // cambiar por llamada a getUserByEmail
         userService.getUserByMail(mail, tokenUser)
-        .then(user => {
-            if(user) {
-                setUserInfo(user);
-                if(user.addresses)setAdresses(user.addresses);
+        .then(sessionUser => {
+            if(sessionUser) {
+                setUserInfo(sessionUser);
+                if(sessionUser.addresses)setAdresses(sessionUser.addresses);
+                if(sessionUser.orders) setOrders(sessionUser.orders)
             }else{
                 signUpUser(mail)
             }
@@ -140,7 +148,9 @@ export function UserProvider({children}: any){
             getAddresses,
             newAddress,
             deleteAddress,
-            tokenUser
+            tokenUser,
+            orders,
+            setOrders
         }}>
             {children}
         </UserContext.Provider>

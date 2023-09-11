@@ -11,5 +11,5 @@ export interface MUser {
     addresses?: MAddress[];
     rol?: MRol
     password?: string
-    orders?: any[]
+    orders: []
 }
