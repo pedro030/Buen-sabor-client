@@ -10,4 +10,6 @@ export interface MUser {
     blacklist: string,
     addresses?: MAddress[];
     rol?: MRol
+    password?: string
+    orders?: any[]
 }

@@ -15,6 +15,7 @@ interface IUserContext {
     getAddresses(): void,
     newAddress(ad: MAddress): Promise<boolean>
     deleteAddress(ad: MAddress): Promise<boolean>
+    tokenUser:string
 }
 
 export const UserContext = createContext<IUserContext>({
@@ -31,7 +32,8 @@ export const UserContext = createContext<IUserContext>({
     getAddresses:()=>{},
     newAddress: () => {return new Promise<boolean>(()=>true)}, 
     deleteAddress: () => { return new Promise<boolean>(() => true) },
-    editUserInfo(){}
+    editUserInfo(){},
+    tokenUser:""
 });
 
 export function UserProvider({children}: any){
@@ -62,16 +64,6 @@ export function UserProvider({children}: any){
                 signUpUser(mail)
             }
         })
-        // userService.GetAll(tokenUser)
-        //     .then(data => {
-        //         const sessionUser = data.find(u => u.mail === mail)
-        //         if (sessionUser) {
-        //             setUserInfo(sessionUser);
-        //             if (sessionUser.addresses) setAdresses(sessionUser.addresses);
-        //         } else {
-        //             signUpUser(mail)
-        //         }
-        //     })
     }
 
     const signUpUser = (mail:string) => {
@@ -80,9 +72,12 @@ export function UserProvider({children}: any){
             mail: mail,
             firstName: "",
             lastName: "",
+            password: "",
             telephone: 0,
-            blacklist: "0",
-            rol: {id: 6, rol:"Client"}
+            blacklist: "Enabled",
+            rol: {id: 6, rol:"Client"},
+            addresses:[],
+            orders:[]
         }
         userService.Create(newUser, tokenUser)
         .then(() => {
@@ -100,11 +95,13 @@ export function UserProvider({children}: any){
     useEffect(()=>{
         getAccessTokenSilently({
             authorizationParams: {
-                audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+                audience: import.meta.env.VITE_REACT_APP_AUDIENCE,
             },
         }).then(token => {
-            console.log("token obtenido")
             setTokenUser(token);
+        })
+        .catch(err => {
+            console.log(err)
         })
     },[getAccessTokenSilently])
 
@@ -142,7 +139,8 @@ export function UserProvider({children}: any){
             addresses,
             getAddresses,
             newAddress,
-            deleteAddress
+            deleteAddress,
+            tokenUser
         }}>
             {children}
         </UserContext.Provider>

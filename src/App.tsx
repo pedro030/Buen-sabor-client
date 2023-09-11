@@ -27,7 +27,7 @@ import { LocationsProvider } from './context/locations';
 const  App = () => {
 
   const { isLoading, user } = useAuth0();
-  const { getUserInfo } = useContext(UserContext);
+  const { getUserInfo, tokenUser } = useContext(UserContext);
 
   if (isLoading) {
     return (
@@ -38,10 +38,10 @@ const  App = () => {
   }
 
   useEffect(() => {
-    if (user) {
+    if (user && tokenUser) {
       if (user.email) getUserInfo(user.email);
     }
-  }, [])
+  }, [tokenUser])
   
   
 

@@ -1,6 +1,7 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { MLocation } from '../models/MLocation';
 import { LocationService } from '../services/LocationService';
+import { UserContext } from './user';
 
 interface ILocationsContext {
     locations: MLocation[],
@@ -13,20 +14,23 @@ export const LocationsContext = createContext<ILocationsContext>({
 });
 
 export function LocationsProvider({ children }: any) {
+    const {tokenUser} = useContext(UserContext);
 
     const locService = new LocationService();
     const [locations, setLocations] = useState<MLocation[]>([])
 
     // addresses
     const getLocations = () => {
-        locService.GetAll()
-            .then(data => {
-                setLocations(data);
-            })
+        if(tokenUser){
+            locService.GetAll(tokenUser)
+                .then(data => {
+                    setLocations(data);
+                })
+        }
     }
     useEffect(()=>{
         getLocations()
-    },[])
+    },[tokenUser])
 
     return (
         <LocationsContext.Provider value={{

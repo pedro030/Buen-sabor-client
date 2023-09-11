@@ -5,13 +5,14 @@ export class UserService extends ApiService<MUser> {
     endpoint = "users";
 
     async getUserByMail(mail: string, token: string):Promise<MUser>{
-        return fetch(`${this.apiURL}/${this.endpoint}/getUserByEmail/${mail}`,{
+        const requestOptions: RequestInit = {
             headers:{
-                'Authorization': 'Bearer ' + token
+                Authorization: `Bearer ${token.trim()}`
             }
-        })
+        }
+        return fetch(`${this.apiURL}/${this.endpoint}/getUserByEmail/${mail}`,requestOptions)
             .then(res => {
-                return res.json()
+                return res.json();
             })
             .catch(err => {
                 console.log(err)
