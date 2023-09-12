@@ -1,4 +1,5 @@
 import { MAddress } from "./MAddress";
+import { MRol } from "./MRol";
 
 export interface MUser {
     id: number,
@@ -8,5 +9,7 @@ export interface MUser {
     mail: string,
     blacklist: string,
     addresses?: MAddress[];
+    rol?: MRol
+    password?: string
     orders: []
 }

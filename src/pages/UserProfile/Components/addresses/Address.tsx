@@ -73,7 +73,7 @@ const Address = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        { addresses?.map((a: MAddress, i: number) => (
+                        { addresses && addresses?.map((a: MAddress, i: number) => (
                             <tr key={i}>
                                 <td>{a.street}</td>
                                 <td>{a.number}</td>

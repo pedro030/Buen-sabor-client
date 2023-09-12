@@ -62,7 +62,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose, onConfirm 
                                 <Field as="select" name="location" className='my-2 input input-bordered'>
                                     <option value="">Select location</option>
                                     {
-                                        locations.map(loc => (
+                                        locations && locations?.map(loc => (
                                             <option value={loc.id} key={loc.id}>{loc.location}</option>
                                         ))
                                     }

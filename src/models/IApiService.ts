@@ -1,7 +1,7 @@
 export interface IApiService<T>{
-    GetAll(): Promise<T[]>;
-    GetById(id: number): Promise<T>;
-    Update(obj:T): Promise<boolean>; 
-    Delete(id: number): Promise<boolean>;
-    Create(obj:T): Promise<boolean>;
+    GetAll(token:string): Promise<T[]>;
+    GetById(id: number, token: string): Promise<T>;
+    Update(obj: T, token: string): Promise<boolean>; 
+    Delete(id: number, token: string): Promise<boolean>;
+    Create(obj: T, token: string): Promise<boolean>;
 }

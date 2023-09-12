@@ -16,11 +16,11 @@ import PageLoader from '../page_loader/PageLoader'
 const Home = () => {
 
     const { userInfo }: any = useContext(UserContext)
-    const [userInfoReady, setUserInfoReady] = useState(false);
+    const [userInfoReady, setUserInfoReady] = useState(true);
 
       useEffect(() => {
     
-        if(userInfo.mail.length !== 0) {
+        if(userInfo?.mail.length !== 0) {
           setUserInfoReady(true);
       }
     
