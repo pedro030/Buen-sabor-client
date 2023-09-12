@@ -12,6 +12,7 @@ export class UserService extends ApiService<MUser> {
         }
         return fetch(`${this.apiURL}/${this.endpoint}/getUserByEmail/${mail}`,requestOptions)
             .then(res => {
+                if(res.status != 200) return
                 return res.json();
             })
             .catch(err => {

@@ -39,7 +39,7 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${this.token}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(newObj)
