@@ -98,20 +98,20 @@ const OrderDetail = () => {
 
                                     <div className="p-4">
                                         <div className="flex justify-between py-2">
-                                            <h1>Delivery address</h1>
+                                            {deliveryTakeAway ? <h1>Delivery Address</h1> : <h1>Take Away Address</h1>}
                                             {deliveryTakeAway && <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Change</button>}
                                         </div>
                                         <hr />
                                         <div>
                                             <p className="mt-2 font-bold ">
                                                 {deliveryAddress ? `${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}` :
-                                                    <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>{deliveryTakeAway ? 'Select a delivery address' : "Take in 'Coronel Rodriguez 273, Mendoza'"}</button>}</p>
-                                            <div className="w-full mt-5 form-control">
+                                                    <button className="text-sm tracking-widest text-primary" onClick={() => deliveryTakeAway ? setSelectAddressOpen(true) : ''}>{deliveryTakeAway ? 'Select a delivery address' : "Take in 'Coronel Rodriguez 273, Mendoza'"}</button>}</p>
+                                            {deliveryTakeAway && <div className="w-full mt-5 form-control">
                                                 <label className="label">
                                                     <span className="label-text">Delivery instruction (optional)</span>
                                                 </label>
                                                 <input type="text" className="w-full rounded-full input" />
-                                            </div>
+                                            </div>}
                                         </div>
                                     </div>
 
@@ -126,33 +126,25 @@ const OrderDetail = () => {
                                         <div className="flex justify-between my-3">
                                             <h1>Order</h1>
                                             <div className='flex flex-row items-center gap-2'>
-                                                <a className='order-2 text-xs font-bold cursor-pointer btn-sm btn btn-primary' onClick={() => handleOpenProductModal()}>edit</a>
-                                                <p>{cart.length} products</p>
+                                                <button className='order-2 text-xs font-bold cursor-pointer btn-sm btn btn-primary' onClick={() => handleOpenProductModal()}>edit</button>
+                                                <p>{(cart[0].quantity != 0) ? cart.length : 0} products</p>
                                             </div>
                                         </div>
                                         <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
-                                            {cart.map((item: any) => {
+                                            {(cart[0].quantity != 0) ? (cart.map((item: any) => {
                                                 return <div key={item.id} className='flex items-center'>
                                                     <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                                     <p className="my-1">{item.quantity}x {item.name} ${item.price * item.quantity}</p>
                                                 </div>
-                                            })}
-                                            {/*<div className='flex items-center'>
-                                            <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                                            <p className="my-1">1x pizza muzzarella $1.700,00</p>
-                                        </div>
-                                        <div className='flex items-center'>
-                                            <img className='h-4 mr-5' src={iceCreamSVG} alt="category icon" />
-                                            <p className="my-1">1x 1kg Ice cream $2.990,00</p>
-                                    </div> */}
+                                            })) : ''}
                                         </div>
                                     </div>
                                     <div>
                                         <hr />
-                                        <div className="flex justify-between my-3">
+                                        {(cart[0].quantity != 0) && <div className="flex justify-between my-3">
                                             <p>Estimated Delivery:</p>
                                             <p> 26 - 41 min</p>
-                                        </div>
+                                        </div> }
                                     </div>
 
                                 </div>
@@ -181,10 +173,10 @@ const OrderDetail = () => {
                                 <div className="p-2">
                                     <h1 className="mb-2 tracking-widest">Summary</h1>
                                     <hr />
-                                    <div className="flex justify-between">
+                                    {(cart[0].quantity != 0) && <div className="flex justify-between">
                                         <p className="my-3 text-sm">Products cost</p>
                                         <p className="my-3 text-sm">${totalPrice}</p>
-                                    </div>
+                                    </div> }
                                     <div className="flex justify-between">
                                         <p className="my-3 text-sm">Service fee</p>
                                         <p className="my-3 text-sm">$100</p>
@@ -193,12 +185,16 @@ const OrderDetail = () => {
                                         <p className="my-3 text-sm">Shipping cost</p>
                                         <p className="my-3 text-sm">$300</p>
                                     </div> : ''}
-                                    <div className="flex justify-between">
+                                    { !deliveryTakeAway && (cart[0].quantity != 0) ? <div className="flex justify-between">
+                                        <p className="my-3 text-sm">Discount 10%</p>
+                                        <p className="my-3 text-sm">-${(totalPrice + 100) - ((totalPrice + 100) * 0.9)}</p>
+                                    </div> : ''}
+                                    { (cart[0].quantity != 0) && <div className="flex justify-between">
                                         <p className="my-3 text-sm font-bold">Total</p>
-                                        <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : (totalPrice + 100)}</p>
-                                    </div>
+                                        <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : ((totalPrice + 100) * 0.9)}</p>
+                                    </div> }
                                 </div>
-                                {mp ? <button className="rounded-full btn btn-primary" /*onClick={() => handleBuy}*/ onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className="rounded-full btn btn-primary" onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
+                                {mp ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} /*onClick={() => handleBuy}*/ onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
                                 {preferenceId && <Wallet initialization={{ preferenceId }} />}
                             </div>
                         </div>

@@ -85,7 +85,7 @@ const OrderTracking = () => {
             }, 0);
 
             if(deliveryTakeAway) totalPay += (100 + 300)
-            else totalPay += 100
+            else totalPay = ((totalPay + 100) * 0.9)
 
             const addrs = deliveryAddress.street + " " + deliveryAddress.number + ", " + deliveryAddress.location.location;
 

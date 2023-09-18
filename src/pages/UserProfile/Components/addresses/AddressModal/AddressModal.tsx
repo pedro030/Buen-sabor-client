@@ -2,7 +2,7 @@ import ReactModal from "react-modal";
 import MapPin from '../../../../../assets/MapPin.svg'
 import * as Yup from 'yup'
 import { ErrorMessage, Field, Form, Formik, useFormik } from 'formik'
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { MAddress } from "../../../../../models/MAddress";
 import { LocationsContext } from "../../../../../context/locations";
 
@@ -15,6 +15,8 @@ interface AddressModalProps {
 
 const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose, onConfirm }) => {
     const { locations } = useContext(LocationsContext);
+    const modalRef = useRef(null);
+
     // validation form schema
     const validationSchema = Yup.object({
         street: Yup.string()
@@ -36,10 +38,24 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose, onConfirm 
         onConfirm(newLoc)
     }
 
+    const handleClickOutside = (e: any) => {
+        if (modalRef.current && !modalRef.current.contains(e.target)) {
+            e.stopPropagation();
+            onClose();
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, []);
+
     return (
         <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">
             <div className="modal modal-open">
-                <div className="bg-white p-8 rounded-3xl modal-box min-w-[50rem] max-h-[30rem] mt-20">
+                <div ref={modalRef} className="bg-white p-8 rounded-3xl modal-box min-w-[50rem] max-h-[30rem] mt-20">
                     <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
                     <Formik
                         initialValues={{
