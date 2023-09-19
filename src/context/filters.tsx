@@ -20,7 +20,7 @@ export function FiltersProvider({ children }: any) {
                 &&
                 (
                     filters.category === "all" ||
-                    p.subcategory.parentCategory.name == filters.category
+                    p.subcategory.name == filters.category
                 )
                 &&
                 (
