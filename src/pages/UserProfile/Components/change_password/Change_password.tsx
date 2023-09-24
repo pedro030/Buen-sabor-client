@@ -2,9 +2,11 @@ import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik, FormikHelpers} from 'formik'
 import { updatePassword } from '../../../../services/Auth0Service';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect, useState } from 'react';
 
 const Change_password = () => {
     const {user} = useAuth0();
+    const[canChange, setCanChange] = useState<boolean>(false);
     const validationSchema = Yup.object({
         // oldPassword: Yup.string().required('Old password is required'),
         newPassword: Yup.string()
@@ -17,6 +19,11 @@ const Change_password = () => {
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('newPassword')], 'Passwords must match')
     })
+    useEffect(()=>{
+        if(user?.sub){
+            setCanChange(user.sub?.split('|')[0] === "auth0");
+        }
+    },[])
 
     const handleSubmit = (state: any, action: FormikHelpers<any>) =>{
         updatePassword(user?.sub || "", state.newPassword)
@@ -55,17 +62,18 @@ const Change_password = () => {
                             <label className="label">
                                 <span className="label-text">new password</span>
                             </label>
-                            <Field type="password" name="newPassword" className="w-full input input-bordered" />
+                            <Field disabled={!canChange} type="password" name="newPassword" className="w-full input input-bordered" />
                             <ErrorMessage name="newPassword">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
                         <div className="flex flex-col ">
                             <label className="label">
                                 <span className="label-text">repeat password</span>
                             </label>
-                            <Field type="password" name="confirmPassword" className="w-full input input-bordered" />
+                            <Field disabled={!canChange} type="password" name="confirmPassword" className="w-full input input-bordered" />
                             <ErrorMessage name="confirmPassword">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
-                        <button className="rounded-full btn btn-primary" type="submit">Save changes</button>
+                        <button disabled={!canChange} className="rounded-full btn btn-primary" type="submit">Save changes</button>
+                { canChange?(<></>):(<span>You can't change the password because you logged with google</span>)}
                     </Form>
                 </Formik>
             </div>

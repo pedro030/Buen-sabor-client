@@ -187,9 +187,9 @@ const Menu = () => {
                                         <div>
                                             <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
                                             <label className='label-text'>Todos</label><br />
-                                            {categories.map((c:any) => {
-                                                return <><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
-                                                <label className='label-text'>{c.name}</label><br /></>
+                                            {categories.map((c:any, i) => {
+                                                return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
+                                                <label className='label-text'>{c.name}</label><br /></span>
                                             })}
                                         </div>
                                         <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
@@ -222,9 +222,9 @@ const Menu = () => {
                                 <div>
                                     <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
                                     <label className='label-text'>Todos</label><br />
-                                    {categories.map((c:any) => {
-                                                return <><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
-                                                <label className='label-text'>{c.name}</label><br /></>
+                                    {categories.map((c:any, i) => {
+                                                return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
+                                                <label className='label-text'>{c.name}</label><br /></span>
                                     })}
                                 </div>
                                 <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
