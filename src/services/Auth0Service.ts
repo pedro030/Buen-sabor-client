@@ -21,7 +21,7 @@ function generateToken(){
 
 export async function updatePassword(userId: string, newPassword: string): Promise<boolean>{
     const token = await generateToken();
-    const url = `${import.meta.env.VITE_REACT_APP_MANAGEMENT_ID}/api/v2/users/${userId}`
+    const url = `${import.meta.env.VITE_REACT_APP_MANAGEMENT_URL}/api/v2/users/${userId}`
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
