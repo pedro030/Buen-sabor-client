@@ -9,6 +9,7 @@ import SelectAddressModal from './Components/SelectAddressModal'
 import { MAddress } from '../../models/MAddress'
 
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+import { BiArrowBack } from 'react-icons/bi'
 
 
 
@@ -74,8 +75,12 @@ const OrderDetail = () => {
 
     return (
         <>
-            <div className='mb-5'>
-                <h1 className="flex justify-center my-6 text-3xl font-bold text-red-600">Buen Sabor</h1>
+            <header className='flex items-center justify-between h-16 border flex-rows'>
+                <a className='flex flex-row items-center gap-2 pl-5 cursor-pointer' onClick={() => navigate('/')}><BiArrowBack /> Back </a>
+                <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
+                <div></div>
+            </header>
+            <div className='my-5'>
                 <div className='flex justify-center mb-5'>
                     <ul className="steps">
                         <li className="step step-primary">Choice Product</li>
@@ -144,7 +149,7 @@ const OrderDetail = () => {
                                         {(cart[0].quantity != 0) && <div className="flex justify-between my-3">
                                             <p>Estimated Delivery:</p>
                                             <p> 26 - 41 min</p>
-                                        </div> }
+                                        </div>}
                                     </div>
 
                                 </div>
@@ -176,7 +181,7 @@ const OrderDetail = () => {
                                     {(cart[0].quantity != 0) && <div className="flex justify-between">
                                         <p className="my-3 text-sm">Products cost</p>
                                         <p className="my-3 text-sm">${totalPrice}</p>
-                                    </div> }
+                                    </div>}
                                     <div className="flex justify-between">
                                         <p className="my-3 text-sm">Service fee</p>
                                         <p className="my-3 text-sm">$100</p>
@@ -185,14 +190,14 @@ const OrderDetail = () => {
                                         <p className="my-3 text-sm">Shipping cost</p>
                                         <p className="my-3 text-sm">$300</p>
                                     </div> : ''}
-                                    { !deliveryTakeAway && (cart[0].quantity != 0) ? <div className="flex justify-between">
+                                    {!deliveryTakeAway && (cart[0].quantity != 0) ? <div className="flex justify-between">
                                         <p className="my-3 text-sm">Discount 10%</p>
                                         <p className="my-3 text-sm">-${(totalPrice + 100) - ((totalPrice + 100) * 0.9)}</p>
                                     </div> : ''}
-                                    { (cart[0].quantity != 0) && <div className="flex justify-between">
+                                    {(cart[0].quantity != 0) && <div className="flex justify-between">
                                         <p className="my-3 text-sm font-bold">Total</p>
                                         <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : ((totalPrice + 100) * 0.9)}</p>
-                                    </div> }
+                                    </div>}
                                 </div>
                                 {mp ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} /*onClick={() => handleBuy}*/ onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
                                 {preferenceId && <Wallet initialization={{ preferenceId }} />}

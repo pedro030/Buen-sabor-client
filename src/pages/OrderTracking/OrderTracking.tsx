@@ -2,31 +2,34 @@ import { useAuth0 } from '@auth0/auth0-react'
 import questionSVG from '../../assets/question.svg'
 import pizzaSvg from '../../assets/pizza.svg'
 import iceCreamSVG from '../../assets/ice-cream.svg'
+import ArrowLeft from '../../assets/arrow-left.svg'
 import cashSVG from '../../assets/cash.svg'
 import { useContext, useEffect, useState } from 'react'
 import { CartContext } from '../../context/cart'
 import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { over } from 'stompjs'
 import SockJS from 'sockjs-client'
+import { BiArrowBack } from 'react-icons/bi'
 import { UserContext } from '../../context/user'
 
 
 const OrderTracking = () => {
+    const navigate = useNavigate()
     const { user } = useAuth0();
     const { cart, clearCart }: any = useContext(CartContext);
     const { tokenUser }: any = useContext(UserContext);
     const { deliveryTakeAway, mp, deliveryAddress }: any = useContext(PaymenthDeliveryContext);
-    const { id } : any = useParams();
+    const { id }: any = useParams();
     const [order, setOrder] = useState([{
         id: 0,
-        date: '', 
-        withdrawalMode: '', 
+        date: '',
+        withdrawalMode: '',
         totalPrice: 0,
         address: '',
         paymode: { id: 0, paymode: '' },
-        products: [{ product: { name: '', price: 0}}],
-        statusOrder: { statusType: 'Unknown'}
+        products: [{ product: { name: '', price: 0 } }],
+        statusOrder: { statusType: 'Unknown' }
     }]);
 
     let today = new Date();
@@ -43,49 +46,49 @@ const OrderTracking = () => {
     }
 
     const onConnected = async (idOrder: number) => {
-    
+
         if (stompClient && stompClient.connected) {
-          try {
-            await stompClient.subscribe(`/user/${userInfo.mail}/private`, (payload: {body: string}) => onMessageReceived(payload, idOrder))
-            await stompClient.send(`/app/private-message`, {}, JSON.stringify(userInfo.id))
-          } catch (error) {
-            console.log(error)
-          }
+            try {
+                await stompClient.subscribe(`/user/${userInfo.mail}/private`, (payload: { body: string }) => onMessageReceived(payload, idOrder))
+                await stompClient.send(`/app/private-message`, {}, JSON.stringify(userInfo.id))
+            } catch (error) {
+                console.log(error)
+            }
         } else {
-          console.log("WS is not connected")
+            console.log("WS is not connected")
         }
-    
+
     }
 
     const onMessageReceived = (payload: { body: string; }, idOrder: number) => {
         const payloadData: any = JSON.parse(payload.body);
-       
+
         const ord = payloadData.find((o: any) => o.id === idOrder)
 
         const updatedOrders = orders.map((o: any) => {
-            if(o.id === idOrder) return { ...o, statusOrder: ord.statusOrder };
+            if (o.id === idOrder) return { ...o, statusOrder: ord.statusOrder };
 
             return o;
         });
-        
+
         setOrders(updatedOrders);
         setOrder([ord]);
     }
-    
+
     const onError = (err: any) => {
         console.log(err);
     }
 
     useEffect(() => {
-        if(id == '0') {
-            let totalPay : number = 0;
+        if (id == '0') {
+            let totalPay: number = 0;
 
             totalPay = cart.reduce((total: any, item: any) => {
                 const itemPrice = item.price * item.quantity;
                 return total + itemPrice;
             }, 0);
 
-            if(deliveryTakeAway) totalPay += (100 + 300)
+            if (deliveryTakeAway) totalPay += (100 + 300)
             else totalPay = ((totalPay + 100) * 0.9)
 
             const addrs = deliveryAddress.street + " " + deliveryAddress.number + ", " + deliveryAddress.location.location;
@@ -122,16 +125,16 @@ const OrderTracking = () => {
                 },
                 body: JSON.stringify(newOrder)
             })
-            .then( response => {
-                if( !response.ok ) throw new Error("POST ERROR");
-                return response.json();
-            })
-            .then( data => {
-                setOrders((prevState: any) => [...prevState, data]);
-                setOrder([data]);
-                conn(data.id)
-            })
-            .catch( e => console.log("Error:", e))
+                .then(response => {
+                    if (!response.ok) throw new Error("POST ERROR");
+                    return response.json();
+                })
+                .then(data => {
+                    setOrders((prevState: any) => [...prevState, data]);
+                    setOrder([data]);
+                    conn(data.id)
+                })
+                .catch(e => console.log("Error:", e))
 
             clearCart();
         } else {
@@ -147,6 +150,11 @@ const OrderTracking = () => {
 
     return (
         <>
+            <header className='flex items-center justify-between h-16 border flex-rows'>
+                <a className='flex flex-row items-center gap-2 pl-5 cursor-pointer' onClick={() => navigate('/')}><BiArrowBack /> Back </a>
+                <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
+                <div></div>
+            </header>
             <div className="grid grid-rows-[120px_80px_1fr] gap-5 p-10 h-[100%]">
                 {/* Maps */}
                 {/* <div>
@@ -165,7 +173,7 @@ const OrderTracking = () => {
 
                 {/* Info */}
                 <div className="flex flex-col justify-center w-full h-20 p-4 bg-white shadow rounded-3xl">
-                    <h1 className="my-1 font-bold">State of your Order: { order.length > 0 ? order[0].statusOrder.statusType : "Loading..." }</h1>
+                    <h1 className="my-1 font-bold">State of your Order: {order.length > 0 ? order[0].statusOrder.statusType : "Loading..."}</h1>
                     <p className="text-sm">Created 7:33 PM</p>
                 </div>
 
@@ -185,7 +193,7 @@ const OrderTracking = () => {
                                     <p>{/*order.products.length*/} products</p>
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
-                                    {order[0].products.map((item: any, index:number) => {
+                                    {order[0].products.map((item: any, index: number) => {
                                         return <div key={index} className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                             <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
