@@ -15,6 +15,7 @@ import { UserContext } from '../../context/user'
 const OrderTracking = () => {
     const { user } = useAuth0();
     const { cart, clearCart }: any = useContext(CartContext);
+    const { tokenUser }: any = useContext(UserContext);
     const { deliveryTakeAway, mp, deliveryAddress }: any = useContext(PaymenthDeliveryContext);
     const { id } : any = useParams();
     const [order, setOrder] = useState([{
@@ -90,8 +91,8 @@ const OrderTracking = () => {
             const addrs = deliveryAddress.street + " " + deliveryAddress.number + ", " + deliveryAddress.location.location;
 
             const newOrder = {
-                date: day,
-                withdrawalMode: deliveryTakeAway ? 'Delivery' : 'Take Away',
+                //date: day,
+                withdrawalMode: deliveryTakeAway ? 'Delivery' : 'TakeAway',
                 totalPrice: totalPay,
                 paymode: {
                     id: mp ? 2 : 1,
@@ -116,7 +117,8 @@ const OrderTracking = () => {
             fetch("https://buen-sabor-backend-production.up.railway.app/api/orders/save", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenUser}`
                 },
                 body: JSON.stringify(newOrder)
             })
