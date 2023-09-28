@@ -172,7 +172,7 @@ const Header: React.FC = () => {
                                                         <th>{o.id}</th>
                                                         <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
                                                     </tr>
-                                                })) : <tr><td>No Pending Orders</td></tr>}
+                                                })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
                                             </tbody>
                                         </table>
                                     </div>
