@@ -7,7 +7,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import PageLoader from './pages/page_loader/PageLoader';
 import UserProfile from './pages/UserProfile/UserProfile';
 import { AuthenticationGuard } from './components/auth0/AuthenticationGuard';
-import Header from './components/header/Header';
 import MenuPage from './pages/Menu/Menu';
 import Footer from './components/footer/Footer';
 import About from './pages/About/AboutComponent';

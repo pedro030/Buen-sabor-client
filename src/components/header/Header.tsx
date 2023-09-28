@@ -172,7 +172,7 @@ const Header: React.FC = () => {
                                                         <th>{o.id}</th>
                                                         <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
                                                     </tr>
-                                                })) : <div>No Pending Orders</div>}
+                                                })) : <tr><td>No Pending Orders</td></tr>}
                                             </tbody>
                                         </table>
                                     </div>
