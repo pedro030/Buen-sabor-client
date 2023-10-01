@@ -1,20 +1,25 @@
+// React
 import { createContext, useContext, useEffect, useState } from 'react';
-import { MLocation } from '../models/MLocation';
+
+// Services
 import { LocationService } from '../services/LocationService';
+
+// Context
 import { UserContext } from './user';
 
-interface ILocationsContext {
-    locations: MLocation[],
-    getLocations(): void,
-}
+// Types
+import { MLocation } from '../models/MLocation';
+import { IContextProviderProps } from '../models/IContextProviderProps';
+import { ILocationsContext } from '../models/ILocationContext';
+import { IUserContext } from '../models/IUserContext';
 
 export const LocationsContext = createContext<ILocationsContext>({
     locations: [],
     getLocations: () => { },
 });
 
-export function LocationsProvider({ children }: any) {
-    const {tokenUser} = useContext(UserContext);
+export function LocationsProvider({ children }: IContextProviderProps) {
+    const { tokenUser } : IUserContext = useContext(UserContext);
 
     const locService = new LocationService();
     const [locations, setLocations] = useState<MLocation[]>([])

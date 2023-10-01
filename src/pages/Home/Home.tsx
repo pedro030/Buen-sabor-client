@@ -1,46 +1,49 @@
-import React, { useContext, useEffect, useState } from 'react'
-import './Home.scss'
-import Header from '../../components/header/Header'
-import Carousel from './carousel/Carousel'
-import Menu from '../../components/menu/Menu'
-import Footer from '../../components/footer/Footer'
-import OrderDetail from '../OrderDetail/OrderDetail'
-import OrderTracking from '../OrderTracking/OrderTracking'
-import Register from '../Register/Register'
-import Login from '../Login/Login'
-import { FiltersProvider } from '../../context/filters'
-import { CartProvider } from '../../context/cart'
-import { UserContext, UserProvider } from '../../context/user'
-import PageLoader from '../page_loader/PageLoader'
+// React
+import { useContext, useEffect, useState } from "react";
+
+// Auth0
+import { useAuth0 } from "@auth0/auth0-react";
+
+// Components
+import Header from "../../components/header/Header";
+import Carousel from "./carousel/Carousel";
+import Menu from "../../components/menu/Menu";
+import PageLoader from "../page_loader/PageLoader";
+
+// Context
+import { UserContext } from "../../context/user";
+
+// Types
+import { IUserContext } from "../../models/IUserContext";
 
 const Home = () => {
+  const { userInfo }: IUserContext = useContext(UserContext);
+  const {  isAuthenticated } = useAuth0();
+  const [userInfoReady, setUserInfoReady] = useState<boolean>(false);
 
-    const { userInfo }: any = useContext(UserContext)
-    const [userInfoReady, setUserInfoReady] = useState(true);
+  // Cada vez que cambia de estado userInfo verifica que exista un mail del user.
+  useEffect(() => {
+    if (userInfo?.mail.length !== 0) {
+      setUserInfoReady(true);
+    }
+  }, [userInfo]);
 
-      useEffect(() => {
-    
-        if(userInfo?.mail.length !== 0) {
-          setUserInfoReady(true);
-      }
-    
-      }, [userInfo])
-
-      if (!userInfoReady) {
-        return (
-          <div className="page-layout">
-            <PageLoader />
-          </div>
-        );
-      }
-
+  // Si el user está logueado y su información no está lista carga el PageLoader (Para el Socket).
+  if (isAuthenticated && !userInfoReady) {
     return (
-        <div>
-                <Header />
-                <Carousel />
-                <Menu />
-        </div >
-    )
-}
+      <div className="page-layout">
+        <PageLoader />
+      </div>
+    );
+  }
 
-export default Home
+  return (
+    <>
+      <Header />
+      <Carousel />
+      <Menu />
+    </>
+  );
+};
+
+export default Home;

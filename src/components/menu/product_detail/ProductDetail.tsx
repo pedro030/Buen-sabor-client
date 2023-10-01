@@ -1,36 +1,45 @@
-import React, { useContext, useState, useEffect, useRef } from 'react'
-import './ProductDetail.scss'
+// React
+import { useContext, useState, useEffect, useRef, FC } from 'react'
+import ReactModal from 'react-modal';
+
+// React Responsive
+import { useMediaQuery } from 'react-responsive'
+
+// Context
+import { CartContext } from '../../../context/cart'
+
+// Types
+import { IProductDetailModalProps } from '../../../models/IProductDetailModalProps'
+import { ICartContext } from '../../../models/ICartContext';
+
+// Assets
 import productImage from '../../../assets/salad.jpg'
 import pizzaSvg from '../../../assets/pizza.svg'
 import fireSvg from '../../../assets/fire.svg'
 import clockSvg from '../../../assets/clock.svg'
 import arrowLeftSvg from "../../../assets/arrow-left.svg";
-import ReactModal from 'react-modal';
-import { CartContext } from '../../../context/cart'
-import { useMediaQuery } from 'react-responsive'
+import { MProductIngredient } from '../../../models/MIngredient';
 
-interface ProductModalProps {
-  product: any;
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}
-
-const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, onConfirm }) => {
+const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose }) => {
+  // Responsive
   const isTable = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 640 });
 
+  // Quantity
   const [qty, setQty] = useState(1);
-  const { addToCart }: any = useContext(CartContext);
+  const { addToCart }: ICartContext = useContext(CartContext);
 
+  // Se resetea el qty a 1 cada vez que se agrega al carrito
   useEffect(() => {
     setQty(1);
   }, [addToCart])
 
-  const modalRef = useRef(null);
+  // Modal Reference
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
-  const handleClickOutside = (e: any) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) onClose();
+  // Si se clickea fuera del modal, el mismo se cierra
+  const handleClickOutside = (e: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) onClose();
   }
 
   useEffect(() => {
@@ -69,15 +78,13 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio aliquam quo quos officia voluptatem. Nobis enim, est recusandae ipsa deleniti corrupti veritatis, illo ipsam ad sint tenetur dolore, deserunt in?</p>
                 <h4>Ingredients:</h4>
                 <ul>
-                  { product.ingredients.map( (ingredinet:any, index:number) => {
-                    return <li key={index}>{ ingredinet.ingredient.name }</li>
+                  { product.ingredients.map( (ingredient: MProductIngredient, index: number) => {
+                    return <li key={index}>{ ingredient.ingredient.name }</li>
                   }) }
                 </ul>
               </div>
             </div>
           </div>
-
-
           {
             (!isTable) &&
             <>
@@ -105,9 +112,7 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
               </div>
             </>
           }
-
-          {/*  Bottom navbar of table*/}
-          {
+          { // Bottom navbar of table
             (isTable) &&
             <>
               <div className="grid grid-cols-3 max-lg:grid-cols-[1fr_auto_1fr] max-sm:grid-rows-2 max-sm:grid-cols-1 gap-3 p-4 border max-lg:gap-2">
@@ -122,8 +127,7 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
                         <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>category</span>
                       </div>
                     </div>
-
-                    {/* Quality */}
+                    {/* Quantity */}
                     <div className="flex items-center justify-center order-last">
                       <div className=" qty-input">
                         <label className='max-lg:text-xs' htmlFor="">Qty: </label>
@@ -134,7 +138,6 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
                     </div>
                   </div>
                 }
-
                 {
                   (!isMobile) &&
                   <>
@@ -146,7 +149,6 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
                         <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>category</span>
                       </div>
                     </div>
-
                     {/* Quality */}
                     <div className="flex items-center justify-center">
                       <div className=" qty-input">
@@ -158,14 +160,11 @@ const ProductDetail: React.FC<ProductModalProps> = ({ product, isOpen, onClose, 
                     </div>
                   </>
                 }
-
                 {/* Btn */}
                 <button className='mx-1 btn btn-primary max-sm:w-full' onClick={() => { addToCart(product, true, qty); onClose(); }}>Add to Cart</button>
-
               </div>
             </>
           }
-
         </div>
       </div>
     </ReactModal >

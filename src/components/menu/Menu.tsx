@@ -1,15 +1,27 @@
+// React
 import { useContext, useState, useEffect, ChangeEvent } from 'react'
-import './Menu.scss'
-import ProductCard from './product_card/ProductCard'
-import clean from '../../assets/clean.svg'
-import box from '../../assets/box.svg'
-import line from '../../assets/line.svg'
-import { FiltersContext } from '../../context/filters'
-import { products as initialProducts } from '../../mocks/products.json'
-import { CartContext } from '../../context/cart'
-import EditCartModal from './EditCartModal/EditCartModal'
+
+// React Router
+import { NavigateFunction, useNavigate } from 'react-router-dom'
+
+// React Responsive
 import { useMediaQuery } from 'react-responsive'
-import { useNavigate } from 'react-router-dom'
+
+// Contexts
+import { FiltersContext } from '../../context/filters'
+import { CartContext } from '../../context/cart'
+
+// Components
+import ProductCard from './product_card/ProductCard'
+import EditCartModal from './EditCartModal/EditCartModal'
+
+// Types
+import { MProduct } from '../../models/MProduct'
+import { MCategory } from '../../models/MCategory'
+import { ICartContext, MCart } from '../../models/ICartContext'
+
+// Assets
+import clean from '../../assets/clean.svg'
 
 
 const Menu = () => {
@@ -20,15 +32,16 @@ const Menu = () => {
     const { filters, setFilters, filterProducts }: any = useContext(FiltersContext);
 
     // Cart
-    const { cart }: any = useContext(CartContext);
+    const { cart }: ICartContext = useContext(CartContext);
 
     // Navigate
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
 
     // States: Categories & Products
-    const [productsFetch, setProductsFetch] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const [productsFetch, setProductsFetch] = useState<MProduct[]>([]);
+    const [categories, setCategories] = useState<MCategory[]>([]);
 
+    // Setea los Products y las Categories
     useEffect(() => {
         const getAndSetData = async () => {
             await fetch("https://buen-sabor-backend-production.up.railway.app/api/products/getActives", {
@@ -48,33 +61,31 @@ const Menu = () => {
                 redirect: 'follow',
             })
                 .then(res => res.json())
-                .then((data) => { const cat = data.filter((c:any) => c.parentCategory != null); console.log(cat); setCategories(cat)})
+                .then((data) => { const cat = data.filter((c: MCategory) => c.parentCategory != null); console.log(cat); setCategories(cat)})
                 .catch((error) => console.error(error))
-                
-
-                ;
         }
         getAndSetData();
     }, [])
 
-
+    // Inicializa todos los productos a ser filtrados
     const products = filterProducts(productsFetch);
 
-    const handleChangeCategory = (e: any) => {
+    // Handlers
+    const handleChangeCategory = (e: ChangeEvent<HTMLInputElement>) => {
         setFilters((prevState: any) => ({
             ...prevState,
             category: e.target.value
         }))
     }
 
-    const handleChangeMinPrice = (e: any) => {
+    const handleChangeMinPrice = (e: ChangeEvent<HTMLInputElement>) => {
         setFilters((prevState: any) => ({
             ...prevState,
             minPrice: +e.target.value
         }))
     }
 
-    const handleChangeMaxPrice = (e: any) => {
+    const handleChangeMaxPrice = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value != '') {
             setFilters((prevState: any) => ({
                 ...prevState,
@@ -86,16 +97,15 @@ const Menu = () => {
                 maxPrice: 20000
             }))
         }
-
     }
 
     // Total Price
-    const totalPrice = cart.reduce((total: any, item: any) => {
-        const itemPrice = item.price * item.quantity;
+    const totalPrice = cart.reduce((total: number, item: MCart) => {
+        const itemPrice = item.product.price * item.quantity;
         return total + itemPrice;
     }, 0);
 
-    // Edit Cart Modal
+    // Cart Modal State
     const [isEditCartModalOpen, setIsEditCartModalOpen] = useState(false);
 
     const handleOpenProductModal = () => {
@@ -106,51 +116,47 @@ const Menu = () => {
         setIsEditCartModalOpen(false);
     };
 
-    const handleConfirmDelete = () => {
+    // Sorting
+    const [sortedProducts, setSortedProducts] = useState<MProduct[]>([]);
+    const [currentSorting, setCurrentSorting] = useState<number>(1);
 
-    };
-
-    //Sorting
-    const [sortedProducts, setSortedProducts] = useState([]);
-    const [currentSorting, setCurrentSorting] = useState(1);
-
-    const sortProducts = (products: any, sortOp: number) => {
+    const sortProducts = (products: MProduct[], sortOp: number) => {
         switch (sortOp) {
             case 1: setSortedProducts(products);
                 break;
 
-            case 2: setSortedProducts(products.sort((a: any, b: any) => a.price > b.price ? 1 : -1))
+            case 2: setSortedProducts(products.sort((a: MProduct, b: MProduct) => a.price > b.price ? 1 : -1))
                 break;
 
-            case 3: setSortedProducts(products.sort((a: any, b: any) => a.price < b.price ? 1 : -1))
+            case 3: setSortedProducts(products.sort((a: MProduct, b: MProduct) => a.price < b.price ? 1 : -1))
                 break;
 
-            case 4: setSortedProducts(products.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
+            case 4: setSortedProducts(products.sort((a: MProduct, b: MProduct) => a.name > b.name ? 1 : -1))
                 break;
 
-            case 5: setSortedProducts(products.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
+            case 5: setSortedProducts(products.sort((a: MProduct, b: MProduct) => a.name < b.name ? 1 : -1))
                 break;
         }
     }
 
 
-    const handleChangeSorting = (e: any) => {
+    const handleChangeSorting = (e: ChangeEvent<HTMLSelectElement>) => {
         const sortOp = +e.target.value;
         console.log(sortOp);
         setCurrentSorting(sortOp);
         sortProducts(products, sortOp);
-        console.log(products);
     }
 
     //Pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage, setProductsPerPage] = useState(6);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [productsPerPage, setProductsPerPage] = useState<number>(6);
 
     useEffect(() => {
         setCurrentPage(1);
         sortProducts(products, currentSorting);
     }, [filters, productsFetch, categories])
 
+    // Calcula los productos a ser mostrados en la paginación
     const lastIndex = currentPage * productsPerPage;
     const beginIndex = lastIndex - productsPerPage;
     const currentProducts = sortedProducts.slice(beginIndex, lastIndex);
@@ -160,64 +166,61 @@ const Menu = () => {
         pages.push(i);
     }
 
-    const handleChecked = (currentPage: any, page: any) => (
-        (currentPage == page) ? true : false
-    )
-
-    // console.log(products)
-
     return (
         <>
             <div className="p-8 min-h-[140vh]">
                 <h1 className='mb-6 text-4xl'>Menu</h1>
-                {
-                    // FILTER TABLE
-                    (isTable) &&
-                    <>
-                        <div className="mb-3 dropdown">
-                            <label tabIndex={0} className='mb-1 w-52 btn btn-primary btn-sm'>Filters</label>
-                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                <div className='filter'>
-                                    <div className="flex items-center justify-between ">
-                                        <h2 className='card-title stat-title'>Filter</h2>
-                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: "all", minPrice: 0, maxPrice: 20000, search: '' }) }} />
-                                    </div>
-                                    <form className="pt-2 form-control">
-                                        <h4 className='pb-2 text-sm font-bold'>Category</h4>
-                                        <div>
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
-                                            <label className='label-text'>Todos</label><br />
-                                            {categories.map((c:any, i) => {
-                                                return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
-                                                <label className='label-text'>{c.name}</label><br /></span>
-                                            })}
-                                        </div>
-                                        <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
-                                        <div className='flex flex-col gap-3'>
-                                            <div className='flex flex-row items-center justify-between'>
-                                                <label className='mr-2 text-xs label-text'>Min Price:</label>
-                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={filters.minPrice == 0 ? '' : filters.minPrice} />
-                                            </div>
-                                            <div className='flex flex-row items-center justify-between'>
-                                                <label className='mr-2 text-xs label-text'>Max Price:</label>
-                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={filters.maxPrice == 20000 ? '' : filters.maxPrice} />
-                                            </div>
-                                        </div>
-                                    </form>
+                { // FILTER TABLE
+                (isTable) &&
+                <>
+                    <div className="mb-3 dropdown">
+                        <label tabIndex={0} className='mb-1 w-52 btn btn-primary btn-sm'>Filters</label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <div className='filter'>
+                                {/* RESET FILTERS */}
+                                <div className="flex items-center justify-between ">
+                                    <h2 className='card-title stat-title'>Filter</h2>
+                                    <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: "all", minPrice: 0, maxPrice: 20000, search: '' }) }} />
                                 </div>
-                            </ul>
-                        </div>
-                    </>
+                                <form className="pt-2 form-control">
+                                    {/* FILTER by CATEGORY */}
+                                    <h4 className='pb-2 text-sm font-bold'>Category</h4>
+                                    <div>
+                                        <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
+                                        <label className='label-text'>Todos</label><br />
+                                        {categories.map((c:any, i) => {
+                                            return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
+                                            <label className='label-text'>{c.name}</label><br /></span>
+                                        })}
+                                    </div>
+                                    {/* FILTER by MIN & MAX PRICE */}
+                                    <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
+                                    <div className='flex flex-col gap-3'>
+                                        <div className='flex flex-row items-center justify-between'>
+                                            <label className='mr-2 text-xs label-text'>Min Price:</label>
+                                            <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={filters.minPrice == 0 ? '' : filters.minPrice} />
+                                        </div>
+                                        <div className='flex flex-row items-center justify-between'>
+                                            <label className='mr-2 text-xs label-text'>Max Price:</label>
+                                            <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={filters.maxPrice == 20000 ? '' : filters.maxPrice} />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </ul>
+                    </div>
+                </>
                 }
                 <div className='grid grid-cols-[140px_3fr_1fr] max-lg:grid-cols-1 gap-2'>
-                    {
-                        (!isTable) &&
+                    { (!isTable) &&
                         <div className='filter'>
+                            {/* RESET FILTERS */}
                             <div className="flex items-center justify-between ">
                                 <h2 className='card-title stat-title'>Filter</h2>
                                 <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: "all", minPrice: 0, maxPrice: 20000, search: '' }) }} />
                             </div>
                             <form className="pt-2 form-control">
+                                {/* FILTER by CATEGORY */}
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
                                     <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
@@ -227,6 +230,7 @@ const Menu = () => {
                                                 <label className='label-text'>{c.name}</label><br /></span>
                                     })}
                                 </div>
+                                {/* FILTER by MIN & MAX PRICE */}
                                 <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
                                 <div className='flex flex-col gap-3'>
                                     <div className='flex flex-row items-center justify-between'>
@@ -245,6 +249,7 @@ const Menu = () => {
                         <div className='flex flex-row justify-between w-full'>
                             <p className=' xl:ml-10'>Found <span className='text-primary'>{products.length}</span> results</p>
                             <div className='flex flex-row gap-3 mb-5 xl:mr-10'>
+                                {/* SORTING */}
                                 <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
                                     <option selected value={1}>SORT BY: FEATURED</option>
                                     <option value={2}>SORT BY PRICE: LOW to HIGH</option>
@@ -254,27 +259,28 @@ const Menu = () => {
                                 </select>
                             </div>
                         </div>
+                        {/* PRODUCTS */}
                         <div className='flex items-center justify-center min-h-max'>
                             <div className="grid grid-cols-3 gap-2 h-[55rem]">
                                 {
                                     (products.length > 0) &&
-                                    currentProducts.map((p: any) => {
-                                        return (<ProductCard key={p.id} product={p} />)
+                                    currentProducts.map((product: MProduct) => {
+                                        return (<ProductCard key={product.id} product={product} />)
                                     })
                                 }
-
                             </div>
                             {(products.length === 0) &&
                                 <div className='flex items-center justify-center h-96'>
                                     <h1 className='font-bold text-primary'>There are no results matching your search</h1>
                                 </div>}
                         </div>
+                        {/* PAGINATION */}
                         <div className='flex justify-end'>
                             {
                                 (products.length > 0) && <div className="mt-5 join ">
                                     <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage - 1) : ''}>«</button>
                                     {pages.map((page: any, index: any) => {
-                                        return <input key={index} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} defaultChecked={currentPage === page} />
+                                        return <input key={index} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} checked={currentPage === page} />
                                     })
                                     }
                                     <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length / productsPerPage) ? setCurrentPage(currentPage + 1) : ''}>»</button>
@@ -282,7 +288,7 @@ const Menu = () => {
                             }
                         </div>
                     </div>
-                    {
+                    { // CART
                         (!isTable) &&
                         <div className='order '>
                             <div className='flex flex-col items-end mt-12 max-lg:mt-10'>
@@ -295,10 +301,10 @@ const Menu = () => {
                                         <hr className='my-2' />
                                         <div className='h-48 overflow-y-auto scrollbar'>
                                             {
-                                                (cart[0].quantity != 0) ? (cart.map((item: any) => {
-                                                    return <div key={item.id} className="pr-2 text-xs product_order">
-                                                        <h4>{item.quantity}x {item.name}</h4>
-                                                        <h4>${item.price * item.quantity}</h4>
+                                                (cart[0].quantity != 0) ? (cart.map((item: MCart) => {
+                                                    return <div key={item.product.id} className="pr-2 text-xs product_order">
+                                                        <h4>{item.quantity}x {item.product.name}</h4>
+                                                        <h4>${item.product.price * item.quantity}</h4>
                                                     </div>
                                                 })) : ''
 
@@ -318,10 +324,10 @@ const Menu = () => {
                     }
                 </div>
             </div>
+            {/* EDIT CART MODAL */}
             <EditCartModal
                 isOpen={isEditCartModalOpen}
                 onClose={handleCloseProductModal}
-                onConfirm={handleConfirmDelete}
             />
         </>
     )

@@ -1,48 +1,43 @@
-import React, {Dispatch, SetStateAction, createContext, useEffect, useState} from 'react';
-import { MAddress } from '../models/MAddress';
-import { AdressService } from '../services/AdressService';
-import { MLocation } from '../models/MLocation';
-import { LocationService } from '../services/LocationService';
-import { MUser } from '../models/MUser';
-import { UserService } from '../services/UserService';
-import { useAuth0 } from '@auth0/auth0-react';
-import { MOrder } from '../models/MOrder';
+// React
+import { createContext, useEffect, useState } from 'react';
 
-interface IUserContext {
-    userInfo: MUser,
-    getUserInfo(mail:string):void,
-    editUserInfo(us:MUser):void,
-    addresses: MAddress[],
-    getAddresses(): void,
-    tokenUser:string
-    newAddress(ad: MAddress): Promise<boolean>,
-    deleteAddress(ad: MAddress): Promise<boolean>,
-    orders: MOrder[],
-    setOrders: Dispatch<SetStateAction<MOrder[]>>
-}
+// Auth0
+import { useAuth0 } from '@auth0/auth0-react';
+
+// Services
+import { UserService } from '../services/UserService';
+import { AdressService } from '../services/AdressService';
+
+// Types
+import { IUserContext } from '../models/IUserContext';
+import { MUser } from '../models/MUser';
+import { MOrder } from '../models/MOrder';
+import { MAddress } from '../models/MAddress';
+import { IContextProviderProps } from '../models/IContextProviderProps';
+
 
 export const UserContext = createContext<IUserContext>({
     userInfo:{
-        id:0,
-        mail:"",
-        firstName:"",
-        lastName:"",
-        blacklist:"",
-        telephone:0,
-        orders: []
+        id: 0,
+        mail: "",
+        firstName: "",
+        lastName: "",
+        blacklist: "",
+        telephone: 0,
+        orders: [],
     },
-    getUserInfo(mail) {},
-    addresses:[],
-    getAddresses:()=>{},
-    newAddress: () => {return new Promise<boolean>(()=>true)}, 
+    getUserInfo(mail: string) {},
+    addresses: [],
+    getAddresses: () => {},
+    newAddress: () => { return new Promise<boolean>(()=>true) }, 
     deleteAddress: () => { return new Promise<boolean>(() => true) },
-    editUserInfo(){},
-    tokenUser:"",
+    editUserInfo() {},
+    tokenUser: "",
     orders: [],
     setOrders: () => {}
 });
 
-export function UserProvider({children}: any){
+export function UserProvider({children}: IContextProviderProps){
     const adrService = new AdressService();
     const userService = new UserService();
     const {getAccessTokenSilently} = useAuth0();

@@ -1,23 +1,37 @@
-import { useContext, useEffect, useRef, useState } from "react"
-import { CartContext } from "../../../context/cart"
-import TrashSimple from '../../../assets/TrashSimple.svg'
-import ReactModal from 'react-modal';
+// React
+import { useContext, useEffect, useRef, FC, MouseEvent } from "react"
+import ReactModal from 'react-modal'
+
+// React Router
 import { useNavigate } from "react-router-dom";
 
-interface EditCartModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
-}
+// Context
+import { CartContext } from "../../../context/cart"
 
-const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfirm }) => {
-    const { cart, clearCart, addToCart, removeFromCart }: any = useContext(CartContext);
-    const modalRef = useRef(null);
+// Types
+import { ICartContext, MCart } from "../../../models/ICartContext"
+import { EditCartModalProps } from "../../../models/IEditCartModalProps";
+
+// Assets
+import TrashSimple from '../../../assets/TrashSimple.svg'
+
+
+const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
+    // Cart
+    const { cart, clearCart, addToCart, removeFromCart }: ICartContext = useContext(CartContext);
+
+    // Navigate
     const navigate = useNavigate();
+
+    // Total
     let total = 0;
 
-    const handleClickOutside = (e: any) => {
-        if (modalRef.current && !modalRef.current.contains(e.target)) onClose();
+    // Modal Reference
+    const modalRef = useRef<HTMLDivElement | null>(null);
+
+    // Si se clickea fuera del modal, el mismo se cierra
+    const handleClickOutside = (e: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(e.target as Node)) onClose();
     }
 
     useEffect(() => {
@@ -27,10 +41,9 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
         }
     }, []);
 
+    // Calcula el Total de la compra
     const calcTotal = (num: number): number => {
-
         total += num
-
         return num
     }
 
@@ -54,28 +67,28 @@ const EditCartModal: React.FC<EditCartModalProps> = ({ isOpen, onClose, onConfir
                             <tbody>
                                 {cart[0].quantity === 0 ?
                                     <tr><td colSpan={5} className="py-20 text-xl font-bold text-center text-secondary">Empty Cart</td></tr> :
-                                    cart.map((p: any) => {
+                                    cart.map((item: MCart) => {
                                         return (
-                                            <tr key={p.id}>
+                                            <tr key={item.product.id}>
                                                 <td>
                                                     <img />
-                                                    {p.name}
+                                                    {item.product.name}
                                                 </td>
                                                 <td>
-                                                    {p.price}
+                                                    {item.product.price}
                                                 </td>
                                                 <td>
-                                                    <button className="btn btn-primary btn-xs btn-outline" onClick={() => addToCart(p, false)}>-</button>
-                                                    <input min={1} type='number' className="w-10 p-0 pl-2 mx-1 text-center input input-xs input-bordered" value={p.quantity} disabled />
-                                                    <button className="btn btn-primary btn-xs btn-outline" onClick={() => addToCart(p)}>+</button>
+                                                    <button className="btn btn-primary btn-xs btn-outline" onClick={() => addToCart(item.product, false)}>-</button>
+                                                    <input min={1} type='number' className="w-10 p-0 pl-2 mx-1 text-center input input-xs input-bordered" value={item.quantity} disabled />
+                                                    <button className="btn btn-primary btn-xs btn-outline" onClick={() => addToCart(item.product)}>+</button>
                                                 </td>
-                                                <td>
+                                                <td>$
                                                     {
-                                                        calcTotal(p.quantity * p.price)
+                                                        calcTotal(item.quantity * item.product.price)
                                                     }
                                                 </td>
                                                 <td>
-                                                    <button onClick={() => removeFromCart(p)}>
+                                                    <button onClick={() => removeFromCart(item.product)}>
                                                         <img className='p-1 btn btn-secondary btn-circle btn-xs' src={TrashSimple} />
                                                     </button>
                                                 </td>

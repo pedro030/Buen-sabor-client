@@ -1,9 +1,23 @@
+// React
 import { createContext, useState } from "react";
 
-export const FiltersContext = createContext([]);
+// Types
+import { IContextProviderProps } from "../models/IContextProviderProps";
+import { IFilterContext, MFilters } from "../models/IFilterContext";
 
-export function FiltersProvider({ children }: any) {
-    const [filters, setFilters] = useState({
+export const FiltersContext = createContext<IFilterContext>({
+    filters: {
+        category: "all",
+        minPrice: 0,
+        maxPrice: 20000,
+        search: ""
+    },
+    setFilters: () => {},
+    filterProducts: () => []
+});
+
+export function FiltersProvider({ children }: IContextProviderProps) {
+    const [filters, setFilters] = useState<MFilters>({
         category: "all",
         minPrice: 0,
         maxPrice: 20000,

@@ -1,24 +1,30 @@
-import './productCard.scss'
-import productImage from '../../assets/salad.jpg'
-import { useContext, useState } from 'react';
-import ProductDetail from '../product_detail/ProductDetail';
+// React
+import React, { useContext, useState } from 'react';
+
+// Context
 import { CartContext } from '../../../context/cart';
 
-const ProductCard = ({ product }: any) => {
+// Components
+import ProductDetail from '../product_detail/ProductDetail';
+import { IProductCardProps } from '../../../models/IProductCardProps';
+import { ICartContext } from '../../../models/ICartContext';
 
-  const { addToCart }: any = useContext(CartContext);
-  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
+const ProductCard = ({ product }: IProductCardProps) => {
+  // Add to Cart function
+  const { addToCart }: ICartContext = useContext(CartContext);
+
+  // Product Detail Modal State
+  const [isProductModalOpen, setIsProductModalOpen] = useState<boolean>(false);
+
+  // Open Product Detail Modal
   const handleOpenProductModal = () => {
     setIsProductModalOpen(true);
   };
 
+  // Close Product Detail Modal
   const handleCloseProductModal = () => {
     setIsProductModalOpen(false);
-  };
-
-  const handleConfirmDelete = () => {
-
   };
 
   return (
@@ -40,7 +46,6 @@ const ProductCard = ({ product }: any) => {
         product={product}
         isOpen={isProductModalOpen}
         onClose={handleCloseProductModal}
-        onConfirm={handleConfirmDelete}
       />
     </>
   )

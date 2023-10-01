@@ -1,59 +1,86 @@
+// React
 import { createContext, useEffect, useState } from 'react'
 
-export const CartContext = createContext([]);
+// Types
+import { MProduct } from '../models/MProduct';
+import { ICartContext, MCart } from '../models/ICartContext';
+import { IContextProviderProps } from '../models/IContextProviderProps';
 
-export function CartProvider({ children } : any) {
-    const [cart, setCart] = useState(() => {
+export const CartContext = createContext<ICartContext>({
+    cart: [{ product: {
+        id: 0,
+        name: "",
+        active: false,
+        price: 0,
+        cookingTime: 0,
+        image: "",
+        subcategory: { id: 0, name: "", parentCategory: null},
+        cost: 0,
+        ingredients: [{ id: 0, ingredient: { id: 0, name: "", cost: 0, stock: 0, stockMin: 0, measure: { id: 0, measure: ""}}, cant: 0}],
+    }, quantity: 0 }],
+    addToCart: () => {},
+    removeFromCart: () => {},
+    clearCart: () => {},
+    setCart: () => {},
+  });
+
+export function CartProvider({ children } : IContextProviderProps) {
+    const [cart, setCart] = useState<MCart[]>(() => {
         const storedCart = window.localStorage.getItem('cart');
-        return storedCart ? JSON.parse(storedCart) : [{ product: {}, quantity: 0 }];
+        return storedCart ? JSON.parse(storedCart) : [{}];
     });
-    
-    /*useState([{
-        product: {},
-        quantity: 0
-    }]);*/
 
     useEffect(() => {
         window.localStorage.setItem('cart', JSON.stringify(cart));
     }, [cart]);
 
-    const addToCart = (p : any, addQty = true, qty = 1) => {  
+    const addToCart = (product: MProduct, addQty: boolean = true, qty: number = 1) => {  
         if(cart[0].quantity === 0) setCart([]);
 
-        const productInCartIndex = cart.findIndex((item : any) => item.id === p.id)
+        const productInCartIndex: number = cart.findIndex((item : MCart) => item.product.id === product.id)
 
         if(productInCartIndex >= 0 && addQty) {
-            const newCart = structuredClone(cart);
-            newCart[productInCartIndex].quantity += qty
+            const newCart: MCart[] = structuredClone(cart);
+            newCart[productInCartIndex].quantity += qty;
+            console.log(newCart);
             return setCart(newCart)
         }
         else if(productInCartIndex >= 0 && !addQty) {
-            const newCart = structuredClone(cart);
+            const newCart: MCart[] = structuredClone(cart);
             newCart[productInCartIndex].quantity -= qty
-            if(newCart[productInCartIndex].quantity == 0) return removeFromCart(newCart[productInCartIndex]);
+            console.log(newCart);
+            if(newCart[productInCartIndex].quantity == 0) return removeFromCart(newCart[productInCartIndex].product);
             else return setCart(newCart);
         }
 
-        setCart(prevState => ([
+        setCart((prevState) => ([
             ...prevState,
             {
-                ...p,
+                product: { ...product },
                 quantity: qty
             }
         ]))
+
     }
 
-    const removeFromCart = (p:any) => {
-        if(cart.length >= 2) setCart(prevState => prevState.filter((item : any) => item.id !== p.id));
+    const removeFromCart = (p: MProduct) => {
+        if(cart.length >= 2) setCart(prevState => prevState.filter((item : MCart) => item.product.id !== p.id));
         else clearCart();
         
     }
 
     const clearCart = () => {
-        setCart([{
-            product: {},
-            quantity: 0
-        }]);
+        setCart([{ product: {
+            id: 0,
+            name: "",
+            active: false,
+            price: 0,
+            cookingTime: 0,
+            image: "",
+            subcategory: { id: 0, name: "", parentCategory: null},
+            cost: 0,
+            ingredients: [{ id: 0, ingredient: { id: 0, name: "", cost: 0, stock: 0, stockMin: 0, measure: { id: 0, measure: ""}}, cant: 0}],
+        }, quantity: 0}]);
     }
 
     return(

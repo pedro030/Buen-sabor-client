@@ -1,37 +1,50 @@
-import React, { useContext, useEffect, useState } from 'react'
-import './Header.scss'
+// React
+import { FC, useContext, useEffect, useState, ChangeEvent, KeyboardEvent } from 'react'
+
+// React Router
+import { NavLink, NavigateFunction, useNavigate } from 'react-router-dom'
+
+// React Responsive
+import { useMediaQuery } from 'react-responsive';
+
+// Socket
+import SockJS from 'sockjs-client'
+import { over, Client } from 'stompjs';
+
+// Contexts
+import { UserContext } from '../../context/user'
+import { CartContext } from '../../context/cart'
+import { FiltersContext } from '../../context/filters'
+
+// Components
+import DropdownSignin from './dropdown_signin/DropdownSignin'
+import EditCartModal from '../menu/EditCartModal/EditCartModal'
+
+// Types
+import { IUserContext } from '../../models/IUserContext'
+import { INavbarLink } from '../../models/INavBarLink'
+
+// Assets
 import setting from '../../assets/setting.svg'
 import notepad from '../../assets/notepad.svg'
 import searcher from '../../assets/searcher.svg'
-import cart from '../../assets/cart.svg'
-import DropdownSignin from './dropdown_signin/DropdownSignin'
-import { NavLink, useNavigate } from 'react-router-dom'
-import { useMediaQuery } from 'react-responsive';
-import { CartContext } from '../../context/cart'
-import EditCartModal from '../menu/EditCartModal/EditCartModal'
-import { FiltersContext } from '../../context/filters'
-import SockJS from 'sockjs-client'
-import { over } from 'stompjs';
-import { UserContext } from '../../context/user'
-import { disconnect } from 'process'
-import PageLoader from '../../pages/page_loader/PageLoader'
-import { useAuth0 } from '@auth0/auth0-react'
-// import searcher from '../../assets/searcher.svg'
+import cartImg from '../../assets/cart.svg'
+import { MOrder } from '../../models/MOrder';
 
-interface NavbarLink {
-    id: number;
-    title: string;
-    path: string;
-}
+const Header: FC = () => {
+    // User Information
+    const { userInfo }: IUserContext = useContext(UserContext);
 
-const Header: React.FC = () => {
-    const {  getAccessTokenSilently } = useAuth0();
+    // Responsive
     const isTable = useMediaQuery({ maxWidth: 1024 });
-    const context: any = useContext(CartContext);
-    const { filters, setFilters } : any = useContext(FiltersContext);
-    const { userInfo }: any = useContext(UserContext)
 
-    const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([
+    // Cart
+    const { cart }: any = useContext(CartContext);
+
+    // Filters
+    const { filters, setFilters } : any = useContext(FiltersContext);
+
+    const [navbarLinks, setNavbarLinks] = useState<INavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
         { id: 2, title: 'Help', path: '/help' },
         { id: 3, title: 'Menu', path: '/menu' },
@@ -41,9 +54,11 @@ const Header: React.FC = () => {
     //esto tal vez se pueda borrar
     const [activeLink, setActiveLink] = useState('');
 
-    const navigate = useNavigate()
+    // Navigate
+    const navigate: NavigateFunction = useNavigate();
 
-    const [isEditCartModalOpen, setIsEditCartModalOpen] = useState(false);
+    // Cart Modal State
+    const [isEditCartModalOpen, setIsEditCartModalOpen] = useState<boolean>(false);
 
     const handleOpenProductModal = () => {
         setIsEditCartModalOpen(true);
@@ -53,20 +68,15 @@ const Header: React.FC = () => {
         setIsEditCartModalOpen(false);
     };
 
-    const handleConfirmDelete = () => {
-
-    };
-
-    // esto tal vez se pueda borrar se
-
-    const handleChangeSearch = (e : any) => {
+    const handleChangeSearch = (e : ChangeEvent<HTMLInputElement>) => {
         setFilters((prevState: any) => ({
             ...prevState,
             search: e.target.value
         }))
     }
 
-    const scrollToSection = (e : any) => {
+    // Si se presiona Enter, se realiza un scroll hacia el Menú
+    const scrollToSection = (e : KeyboardEvent<HTMLInputElement>) => {
         if(e.key === 'Enter') {
             const seccionDestino = document.getElementById('menuSeccion');
             if (seccionDestino) {
@@ -75,39 +85,36 @@ const Header: React.FC = () => {
         }
     }
 
-    //WebSocket
-    const [pendingOrders, setPendingOrders] = useState([]);
-    const [stompClient, setStompClient] = useState<any>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
+    // WebSocket
+    const [pendingOrders, setPendingOrders] = useState<MOrder[]>([]);
+    const [stompClient, setStompClient] = useState<Client>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
     
-
+    // Conexion al Socket
     const conn = () => {
         stompClient.connect({}, onConnected, onError)
     }
 
-    const onConnected = async (e: any) => {
-    
-        if (stompClient && stompClient.connected) {
-          try {
+    // Que hacer cuando se conecta al socket
+    const onConnected = async () => {
+        try {
+            // Se subscribe al tópico
             await stompClient.subscribe(`/user/${userInfo.mail}/private`, onMessageReceived)
             await stompClient.send(`/app/private-message`, {}, JSON.stringify(userInfo.id))
-          } catch (error) {
+        } catch (error) {
             console.log(error)
-          }
-        } else {
-          console.log("WS is not connected")
         }
-    
     }
 
+    // Recibimiento y seteo de ordenes enviadas por el Socket
     const onMessageReceived = (payload: { body: string; }) => {
-        console.log('ESTOY EN ONMESSAGERECIEVED');
-        const payloadData: any = JSON.parse(payload.body);
+        const payloadData: MOrder[] = JSON.parse(payload.body);
         setPendingOrders(payloadData);
-        console.log(payloadData);
 
-        if(payloadData.length === 0) stompClient?.disconnect()
+        // Si no hay ordenes pendientes se desconecta del Socket
+        if(payloadData.length === 0) stompClient?.disconnect(() => {})
     }
     
+    // Por si hay un error en la conexion al Socket
     const onError = (err: any) => {
         console.log(err);
     }
@@ -116,79 +123,73 @@ const Header: React.FC = () => {
         const currentPath = window.location.pathname;
         setActiveLink(currentPath);
 
-        conn();
-
+        // Si existe el mail del user se conecta al Socket
+        if(userInfo.mail.length > 0) conn();
+        
+        // Al desmontar el componente
         return () => {
-          stompClient?.disconnect();
+            // Si la conexión está establecida se desconecta del Socket
+            stompClient.connected ? stompClient?.disconnect(() => {}) : '';
         };
     }, []);
-
-    
 
     return (
         <>
             <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] max-lg:grid-rows-1 bg-base-100 navbar shadow ">
                 <div className=' grid grid-cols-[250px_1fr_70px_70px_70px_130px] max-lg:gap-1 max-lg:grid-cols-[1fr_70px_70px_128px] '>
                     <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
-
-                    {
-                        (isTable) &&
-                        // Search
+                    { (isTable) &&
+                        // SEARCH
                         <div className='flex justify-center '>
                             <img src={searcher} height="25" />
                         </div>
                     }
 
-                    {
-                        (!isTable) && <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" onChange={handleChangeSearch} value={filters.search} onKeyDown={scrollToSection}/>
+                    { (!isTable) && 
+                        // SEARCH BAR
+                        <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" onChange={handleChangeSearch} value={filters.search} onKeyDown={scrollToSection}/>
                     }
 
-                    {
-                        (!isTable) &&
-
-                        <>
-                            {/* Settings */}
-                            <div className='flex justify-center max-md:hidden'>
-                                <img src={setting} height="25" />
-                            </div>
-
-                            {/* Order List */}
-                            <div className="dropdown dropdown-end">
-                                <div tabIndex={0} className='flex justify-center cursor-pointer max-md:hidden'>
-                                    <img src={notepad} height="25" />
-                                </div>
-                                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 ">
-                                    <div className="overflow-y-auto">
-                                        <table className="table ">
-                                            <thead>
-                                                <tr>
-                                                    <th>N Order</th>
-                                                    <th>State</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                { pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
-                                                    return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
-                                                        <th>{o.id}</th>
-                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
-                                                    </tr>
-                                                })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </ul>
-                            </div>
-
-
-                        </>
-
-                    }
-
-                    <div className="dropdown dropdown-end">
-                        <div tabIndex={0} className='flex justify-center cursor-pointer'>
-                            <img src={cart} height="25" />
+                    { (!isTable) &&
+                    <>
+                        {/* SETTINGS */}
+                        <div className='flex justify-center max-md:hidden'>
+                            <img src={setting} height="25" />
                         </div>
 
+                        {/* PENDING ORDERS */}
+                        <div className="dropdown dropdown-end">
+                            <div tabIndex={0} className='flex justify-center cursor-pointer max-md:hidden'>
+                                <img src={notepad} height="25" />
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 ">
+                                <div className="overflow-y-auto">
+                                    <table className="table ">
+                                        <thead>
+                                            <tr>
+                                                <th>N Order</th>
+                                                <th>State</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            { pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
+                                                return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
+                                                    <th>{o.id}</th>
+                                                    <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
+                                                </tr>
+                                            })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ul>
+                        </div>
+                    </>
+                    }
+                    { /* HEADER CART */}
+                    <div className="dropdown dropdown-end">
+                        <div tabIndex={0} className='flex justify-center cursor-pointer'>
+                            <img src={cartImg} height="25" />
+                        </div>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-64 mt-2">
                             <div className='flex justify-end pr-8'>
                                 <a className='text-xs font-bold cursor-pointer btn-sm btn btn-primary' onClick={() => handleOpenProductModal()}>edit</a>
@@ -202,7 +203,7 @@ const Header: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {context.cart[0].quantity === 0 ? <tr><td colSpan={5} className="my-auto text-xl font-bold text-center h-36 text-secondary">Empty Cart</td></tr> : (context.cart.map((item: any) => {
+                                        {cart[0].quantity === 0 ? <tr><td colSpan={5} className="my-auto text-xl font-bold text-center h-36 text-secondary">Empty Cart</td></tr> : (cart.map((item: any) => {
                                             return <tr key={item.id}>
                                                 <td className='text-xs'>{item.quantity}x {item.name}</td>
                                                 <td className='text-xs'>${item.price * item.quantity}</td>
@@ -211,29 +212,22 @@ const Header: React.FC = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            {context.cart[0].quantity === 0 ? <button className='w-full mt-1 rounded-full btn btn-primary btn-sm btn-disabled '>Continue</button> : <button className='w-full mt-1 rounded-full btn btn-primary btn-sm ' onClick={() => navigate('/order-detail')}>Continue</button>}
+                            {cart[0].quantity === 0 ? <button className='w-full mt-1 rounded-full btn btn-primary btn-sm btn-disabled '>Continue</button> : <button className='w-full mt-1 rounded-full btn btn-primary btn-sm ' onClick={() => navigate('/order-detail')}>Continue</button>}
 
                         </ul>
                     </div>
-
-
+                    { /* DROPDOWN: LOG IN / LOG OUT */}
                     <div className="flex justify-end w-full dropdown dropdown-end">
                         <DropdownSignin />
-                        {/* <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-        <div className="w-10 rounded-full">
-            <img src="" />
-        </div>
-    </label> */}
                     </div>
                 </div>
-
+                { /* NAV BAR */}
                 <ul className="flex flex-row justify-around pt-1 text-gray-400 max-lg:hidden">
                     {navbarLinks.map((link) => (
                         <li key={link.id}>
                             <NavLink
                                 to={link.path}
                                 className={({ isActive }) => isActive ? "active" : ""}
-                            // onClick={() => setActiveLink(link.path)}
                             >
                                 {link.title}
                             </NavLink>
@@ -241,10 +235,10 @@ const Header: React.FC = () => {
                     ))}
                 </ul>
             </nav>
+            { /* EDIT CART MODAL */}
             <EditCartModal
                 isOpen={isEditCartModalOpen}
                 onClose={handleCloseProductModal}
-                onConfirm={handleConfirmDelete}
             />
         </>
     )
