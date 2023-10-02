@@ -27,7 +27,7 @@ export const CartContext = createContext<ICartContext>({
 export function CartProvider({ children } : IContextProviderProps) {
     const [cart, setCart] = useState<MCart[]>(() => {
         const storedCart = window.localStorage.getItem('cart');
-        return storedCart ? JSON.parse(storedCart) : [{}];
+        return storedCart ? JSON.parse(storedCart) : clearCart();
     });
 
     useEffect(() => {
