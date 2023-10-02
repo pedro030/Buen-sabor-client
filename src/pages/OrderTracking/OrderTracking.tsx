@@ -1,78 +1,112 @@
+// React
+import { useContext, useEffect, useState } from 'react'
+
+// Auth0
 import { useAuth0 } from '@auth0/auth0-react'
+
+// React Router
+import { NavigateFunction, useNavigate, useParams } from 'react-router-dom'
+
+// Websocket
+import { over, Client } from 'stompjs'
+import SockJS from 'sockjs-client'
+
+// Contexts
+import { UserContext } from '../../context/user'
+
+// Types
+import { IUserContext } from '../../models/IUserContext'
+import { MOrder, MOrderProducts } from '../../models/MOrder'
+
+// Components
+import PageLoader from '../page_loader/PageLoader'
+
+// Assets
 import questionSVG from '../../assets/question.svg'
 import pizzaSvg from '../../assets/pizza.svg'
-import iceCreamSVG from '../../assets/ice-cream.svg'
-import ArrowLeft from '../../assets/arrow-left.svg'
 import cashSVG from '../../assets/cash.svg'
-import { useContext, useEffect, useState } from 'react'
-import { CartContext } from '../../context/cart'
-import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
-import { useNavigate, useParams } from 'react-router-dom'
-import { over } from 'stompjs'
-import SockJS from 'sockjs-client'
 import { BiArrowBack } from 'react-icons/bi'
-import { UserContext } from '../../context/user'
 
 
 const OrderTracking = () => {
-    const navigate = useNavigate()
+    // React Router
+    const navigate: NavigateFunction = useNavigate()
+    const { id } = useParams<string>();
+    const [isReady, setIsReady] = useState(false);
+
+    // User Info: Auth0 & UserContext
     const { user } = useAuth0();
-    const { cart, clearCart }: any = useContext(CartContext);
-    const { tokenUser }: any = useContext(UserContext);
-    const { deliveryTakeAway, mp, deliveryAddress }: any = useContext(PaymenthDeliveryContext);
-    const { id }: any = useParams();
-    const [order, setOrder] = useState([{
-        id: 0,
-        date: '',
+    const { userInfo, orders, setOrders }: IUserContext = useContext(UserContext)
+
+    // Order to Show
+    const [order, setOrder] = useState<MOrder>({
+        id: -1,
+        creationDate: '',
+        totalCookingTime: 0,
         withdrawalMode: '',
         totalPrice: 0,
         address: '',
         paymode: { id: 0, paymode: '' },
-        products: [{ product: { name: '', price: 0 } }],
-        statusOrder: { statusType: 'Unknown' }
-    }]);
+        user: {
+            id: 0,
+            firstName: '',
+            lastName: '',
+            telephone: 0,
+            mail: '',
+            blacklist: '',
+            orders: []
+        },
+        products: [{ 
+            id: 0, 
+            product: { 
+                id: 0,
+                name: '',
+                active: false,
+                price: 0,
+                cookingTime: 0,
+                image: '',
+                subcategory: { id: 0, name: '', parentCategory: null},
+                cost: 0,
+                ingredients: [{ id: 0, ingredient: { id: 0, name: '', stock: 0, cost: 0, stockMin: 0, measure: { id: 0, measure: ''}}, cant: 0}]},
+            cant: 0
+        }],
+        statusOrder: { id: 0, statusType: '' }
+    });
 
-    let today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    const yyyy = today.getFullYear();
-    const day = yyyy + '-' + mm + '-' + dd;
+    // Websocket
+    const [stompClient, setStompClient] = useState<Client>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
 
-    const { userInfo, orders, setOrders }: any = useContext(UserContext)
-    const [stompClient, setStompClient] = useState<any>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
-
-    const conn = (idOrder: number) => {
+    const connectSocket = (idOrder: number) => {
         stompClient.connect({}, () => onConnected(idOrder), onError)
     }
 
     const onConnected = async (idOrder: number) => {
-
-        if (stompClient && stompClient.connected) {
-            try {
-                await stompClient.subscribe(`/user/${userInfo.mail}/private`, (payload: { body: string }) => onMessageReceived(payload, idOrder))
-                await stompClient.send(`/app/private-message`, {}, JSON.stringify(userInfo.id))
-            } catch (error) {
-                console.log(error)
-            }
-        } else {
-            console.log("WS is not connected")
+        try {
+            await stompClient.subscribe(`/user/${userInfo.mail}/private`, (payload: { body: string }) => onMessageReceived(payload, idOrder))
+            await stompClient.send(`/app/private-message`, {}, JSON.stringify(userInfo.id))
+        } catch (error) {
+            console.log(error)
         }
-
     }
 
     const onMessageReceived = (payload: { body: string; }, idOrder: number) => {
-        const payloadData: any = JSON.parse(payload.body);
+        const payloadData: MOrder[] = JSON.parse(payload.body);
 
-        const ord = payloadData.find((o: any) => o.id === idOrder)
+        const ord: MOrder | undefined = payloadData.find((order: MOrder) => order.id === idOrder)
 
-        const updatedOrders = orders.map((o: any) => {
-            if (o.id === idOrder) return { ...o, statusOrder: ord.statusOrder };
-
-            return o;
-        });
-
-        setOrders(updatedOrders);
-        setOrder([ord]);
+        if(ord) {
+            const updatedOrders = orders.map((order: MOrder) => {
+                if (order.id === idOrder) return { ...order, statusOrder: ord.statusOrder };
+                return order;
+            });
+    
+            setOrders(updatedOrders);
+            setOrder(ord);
+        } else {
+            console.log('DESCONECTANDO');
+            stompClient?.disconnect(() => {});
+            navigate('/');
+        }
     }
 
     const onError = (err: any) => {
@@ -80,76 +114,32 @@ const OrderTracking = () => {
     }
 
     useEffect(() => {
-        if (id == '0') {
-            let totalPay: number = 0;
+        if(id && !isReady) {
+            const ord: MOrder | undefined= orders.find((o: MOrder) => o.id === +id);
 
-            totalPay = cart.reduce((total: any, item: any) => {
-                const itemPrice = item.price * item.quantity;
-                return total + itemPrice;
-            }, 0);
-
-            if (deliveryTakeAway) totalPay += (100 + 300)
-            else totalPay = ((totalPay + 100) * 0.9)
-
-            const addrs = deliveryAddress.street + " " + deliveryAddress.number + ", " + deliveryAddress.location.location;
-
-            const newOrder = {
-                //date: day,
-                withdrawalMode: deliveryTakeAway ? 'Delivery' : 'TakeAway',
-                totalPrice: totalPay,
-                paymode: {
-                    id: mp ? 2 : 1,
-                    paymode: mp ? "MercadoPago" : "Cash"
-                },
-                address: addrs,
-                user: deliveryAddress.user,
-                statusOrder: {
-                    id: 1,
-                    statusType: 'In_Queue'
-                },
-                products: cart.map((item: any) => ({
-                    product: item,
-                    cant: item.quantity
-                }))
-            };
-
-            newOrder.products.map((p: any) => {
-                delete p.product.quantity
-            })
-
-            fetch("https://buen-sabor-backend-production.up.railway.app/api/orders/save", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokenUser}`
-                },
-                body: JSON.stringify(newOrder)
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error("POST ERROR");
-                    return response.json();
-                })
-                .then(data => {
-                    setOrders((prevState: any) => [...prevState, data]);
-                    setOrder([data]);
-                    conn(data.id)
-                })
-                .catch(e => console.log("Error:", e))
-
-            clearCart();
-        } else {
-            const ord = orders.filter((o: any) => o.id === +id);
-            setOrder(ord);
-            conn(+id);
+            if(ord) {
+                setOrder(ord);
+                connectSocket(+id);
+                setIsReady(true);
+            }
         }
 
         return () => {
-            stompClient?.disconnect();
+            stompClient.connected && isReady ? stompClient?.disconnect(() => {}) : '';
         };
-    }, []);
+    }, [orders]);
+
+    if (!isReady) {
+        return (
+          <div className="page-layout">
+            <PageLoader />
+          </div>
+        );
+      }
 
     return (
         <>
+        { /*order.id != 0 ?  TODO: Si carga una orden muestra la vista, sino que muestre una pagina de error 404 not found*/}
             <header className='flex items-center justify-between h-16 border flex-rows'>
                 <a className='flex flex-row items-center gap-2 pl-5 cursor-pointer' onClick={() => navigate('/')}><BiArrowBack /> Back </a>
                 <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
@@ -167,13 +157,17 @@ const OrderTracking = () => {
                         <li className="step step-primary">Choice Product</li>
                         <li className="step step-primary">Create Order</li>
                         <li className="step step-primary">Follow Up</li>
-                        {mp ? <><li className='step step-primary'>Paid</li><li className='step step-primary'>Ordered</li><li className='step'>Delivered!</li></> : <><li className='step step-primary'>Ordered</li><li className='step'>Delivered!</li></>}
+                        <li className='step step-primary'>Paid</li>
+                        <li className='step step-primary'>Ordered</li>
+                        {order.statusOrder.statusType !== 'Delivered' ? <li className='step'>Delivered!</li>
+                            :
+                         order.statusOrder.statusType === 'Delivered' ? <li className='step step-primary'>Delivered!</li> : <li className='step step-primary'>Cancelled</li>}
                     </ul>
                 </div>
 
                 {/* Info */}
                 <div className="flex flex-col justify-center w-full h-20 p-4 bg-white shadow rounded-3xl">
-                    <h1 className="my-1 font-bold">State of your Order: {order.length > 0 ? order[0].statusOrder.statusType : "Loading..."}</h1>
+                    <h1 className="my-1 font-bold">State of your Order: {order.id != -1 ? order.statusOrder.statusType : "Loading..."}</h1>
                     <p className="text-sm">Created 7:33 PM</p>
                 </div>
 
@@ -182,7 +176,7 @@ const OrderTracking = () => {
                         {/* BUEN SABOR */}
                         <div className="flex flex-col justify-center w-full h-24 p-4 bg-white shadow rounded-3xl">
                             <h1 className='text-2xl font-bold text-red-600'>Buen Sabor</h1>
-                            <p className='text-sm tracking-widest'>{order[0].address}</p>
+                            <p className='text-sm tracking-widest'>{order.address}</p>
                         </div>
 
                         {/* ORDER */}
@@ -190,10 +184,10 @@ const OrderTracking = () => {
                             <div>
                                 <div className="flex justify-between my-3">
                                     <h1>Order</h1>
-                                    <p>{/*order.products.length*/} products</p>
+                                    <p>{ order.products.length } products</p>
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
-                                    {order[0].products.map((item: any, index: number) => {
+                                    {order.products.map((item: MOrderProducts, index: number) => {
                                         return <div key={index} className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                             <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
@@ -218,14 +212,14 @@ const OrderTracking = () => {
                                 <p className="text-md">Your payment methotd is: </p>
                             </div>
 
-                            <p>{order[0].paymode.paymode}</p>
+                            <p>{order.paymode.paymode}</p>
                         </div>
 
                         {/* TOTAL */}
                         <div tabIndex={0} className="w-full bg-white shadow cursor-pointer collapse rounded-3xl">
                             <div className="flex items-center justify-between p-4">
                                 <h1 className='font-bold'>Total to pay:</h1>
-                                <p className='font-bold'>${order[0].totalPrice}</p>
+                                <p className='font-bold'>${order.totalPrice}</p>
                             </div>
                             <div className="collapse-content">
                                 <div className="flex ">
@@ -235,20 +229,20 @@ const OrderTracking = () => {
                                             <hr />
                                             <div className="flex justify-between w-full">
                                                 <p className="my-3 text-sm">Products cost</p>
-                                                <p className="my-3 text-sm">${order[0].withdrawalMode == 'Delivery' ? order[0].totalPrice - 400 : order[0].totalPrice - 100}</p>
+                                                <p className="my-3 text-sm">${order.withdrawalMode == 'Delivery' ? order.totalPrice - 400 : order.totalPrice - 100}</p>
                                             </div>
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Service fee</p>
                                                 <p className="my-3 text-sm">$100</p>
                                             </div>
-                                            {order[0].withdrawalMode == 'Delivery' ? <div className="flex justify-between">
+                                            {order.withdrawalMode == 'Delivery' ? <div className="flex justify-between">
                                                 <p className="my-3 text-sm">Shipping cost</p>
                                                 <p className="my-3 text-sm">$300</p>
                                             </div> : ''
                                             }
                                             <div className="flex justify-between">
                                                 <p className="my-3 text-sm font-bold">Total</p>
-                                                <p className="my-3 text-sm font-bold">${order[0].totalPrice}</p>
+                                                <p className="my-3 text-sm font-bold">${order.totalPrice}</p>
                                             </div>
                                         </div>
                                     </div>

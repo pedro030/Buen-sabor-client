@@ -13,7 +13,6 @@ import AppRouter from './router/routes';
 import { CartProvider } from './context/cart';
 import { FiltersProvider } from './context/filters';
 import { UserContext } from './context/user';
-import { PaymenthDeliveryProvider } from './context/paymenth-delivery';
 import { LocationsProvider } from './context/locations';
 
 
@@ -74,9 +73,7 @@ const  App = () => {
       <CartProvider>
       <FiltersProvider>
       <LocationsProvider>
-      <PaymenthDeliveryProvider>
         <AppRouter/>
-      </PaymenthDeliveryProvider>
       </LocationsProvider>
       </FiltersProvider>
       </CartProvider>

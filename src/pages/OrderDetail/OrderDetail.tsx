@@ -1,6 +1,6 @@
 // React
 import { useContext, useState } from 'react'
-import { BiArrowBack } from 'react-icons/bi'
+import { BiArrowBack, BiCycling } from 'react-icons/bi'
 
 // React Router
 import { NavigateFunction, useNavigate } from 'react-router-dom'
@@ -10,7 +10,7 @@ import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 
 // Contexts
 import { CartContext } from '../../context/cart'
-import { PaymenthDeliveryContext } from '../../context/paymenth-delivery'
+import { UserContext } from '../../context/user'
 
 // Components
 import EditCartModal from '../../components/menu/EditCartModal/EditCartModal'
@@ -18,6 +18,9 @@ import SelectAddressModal from './Components/SelectAddressModal'
 
 // Types
 import { ICartContext, MCart } from '../../models/ICartContext'
+import { IUserContext } from '../../models/IUserContext'
+import { MAddress } from '../../models/MAddress'
+import { MOrder } from '../../models/MOrder'
 
 // Assets
 import pizzaSvg from '../../assets/pizza.svg'
@@ -25,10 +28,13 @@ import pizzaSvg from '../../assets/pizza.svg'
 
 const OrderDetail = () => {
     // Cart
-    const { cart }: ICartContext = useContext(CartContext);
+    const { cart, clearCart }: ICartContext = useContext(CartContext);
+    const { tokenUser, setOrders, userInfo }: IUserContext = useContext(UserContext);
 
-    // States: Delivery / Take Away - Cash / MP - Address
-    const { deliveryTakeAway, setDeliveryTakeAway, mp, setMp, deliveryAddress, setDeliveryAddress }: any = useContext(PaymenthDeliveryContext);
+    // States: Delivery - Take Away / Cash - MP / Address
+    const [isDelivery, setIsDelivery] = useState<boolean>(true);
+    const [isMP, setIsMP] = useState<boolean>(true);
+    const [deliveryAddress, setDeliveryAddress] = useState<MAddress | undefined>(undefined);
 
     // Navigation
     const navigate: NavigateFunction = useNavigate();
@@ -56,7 +62,7 @@ const OrderDetail = () => {
             }
             );
 
-            const { id } = response.body;
+            const { id }: any = response.body;
             return id;
         } catch (error) {
             console.log(error);
@@ -71,7 +77,7 @@ const OrderDetail = () => {
     };
 
     // Calcula el total del carrito
-    const totalPrice = cart.reduce((total: number, item: MCart) => {
+    const totalCartPrice = cart.reduce((total: number, item: MCart) => {
         const itemPrice = item.product.price * item.quantity;
         return total + itemPrice;
     }, 0);
@@ -91,6 +97,62 @@ const OrderDetail = () => {
         return actualItem.product.cookingTime > prevItem.product.cookingTime ? actualItem : prevItem;
       });
 
+    const confirmCashPaymenth = () => {
+        const confirmation = confirm('Did you pay the order?')
+
+        if(confirmation) createOrder();
+        else alert('Come to the place')
+    }
+
+    // Create Order
+    const createOrder = async () => {
+        const totalToPay: number = isDelivery ? (totalCartPrice + 100 + 300) : ((totalCartPrice + 100) * 0.9)
+        const addrs: string = isDelivery ? `${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}` : 'Coronel Rodriguez 273, Mendoza';
+
+        const newOrder = {
+            withdrawalMode: isDelivery ? 'Delivery' : 'Take Away',
+            totalPrice: totalToPay,
+            paymode: {
+                id: isMP ? 2 : 1,
+                paymode: isMP ? "MercadoPago" : "Cash"
+            },
+            address: addrs,
+            user: userInfo,
+            statusOrder: {
+                id: 1,
+                statusType: 'In_Queue'
+            },
+            products: cart.map((item: MCart) => ({
+                product: item.product,
+                cant: item.quantity
+            }))
+        };
+
+        try {
+            const response = await fetch("https://buen-sabor-backend-production.up.railway.app/api/orders/save", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenUser}`
+                },
+                body: JSON.stringify(newOrder)
+            })
+
+            if(!response.ok) throw new Error('Post Error');
+
+            const data: MOrder = await response.json();
+            setOrders((prevState: MOrder[]) => [...prevState, data]);
+            if(isMP) return data.id;
+            else navigate(`/order-tracking/${data.id}`)
+
+        } catch(e) {
+            console.log('Error: ', e)
+            return 0;
+        }
+    }
+
+    
+
     return (
         <>
             { /* HEADER */}
@@ -106,7 +168,7 @@ const OrderDetail = () => {
                         <li className="step step-primary">Choice Product</li>
                         <li className="step step-primary">Create Order</li>
                         <li className="step step-primary">Follow Up</li>
-                        {mp ? <><li className='step'>Pay</li><li className='step'>Ordered</li><li className='step'>Delivered!</li></> : <><li className='step'>Ordered</li><li className='step'>Delivered!</li></>}
+                        {isMP ? <><li className='step'>Pay</li><li className='step'>Ordered</li><li className='step'>Delivered!</li></> : <><li className='step'>Ordered</li><li className='step'>Delivered!</li></>}
                     </ul>
                 </div>
                 <div className='flex justify-center'>
@@ -118,23 +180,23 @@ const OrderDetail = () => {
                                 <div className={"grid grid-rows-[50px_1fr] bg-white h-64 w-[80%] rounded-3xl"}>
                                     { /* SELECT DELIVERY / TAKE AWAY */}
                                     <div className="grid grid-cols-2 join">
-                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => { setDeliveryTakeAway(true); setMp(true) }} defaultChecked={deliveryTakeAway ? true : false} />
-                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Take Away" onClick={() => setDeliveryTakeAway(false)} defaultChecked={!deliveryTakeAway ? true : false} />
+                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => { setIsDelivery(true); setIsMP(true) }} defaultChecked={isDelivery ? true : false} />
+                                        <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Take Away" onClick={() => setIsDelivery(false)} defaultChecked={!isDelivery ? true : false} />
                                     </div>
 
                                     { /* SELECT ADDRESS */}
                                     <div className="p-4">
                                         <div className="flex justify-between py-2">
-                                            { deliveryTakeAway ? <h1>Delivery Address</h1> : <h1>Take Away Address</h1> }
-                                            { deliveryTakeAway && <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Change</button> }
+                                            { isDelivery ? <h1>Delivery Address</h1> : <h1>Take Away Address</h1> }
+                                            { isDelivery && <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Change</button> }
                                         </div>
                                         <hr />
                                         <div>
                                             <p className="mt-2 font-bold ">
                                                 { deliveryAddress ? `${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}` :
-                                                    deliveryTakeAway ? <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Select a delivery address</button> : `Take in 'Coronel Rodriguez 273, Mendoza'` }
+                                                    isDelivery ? <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Select a delivery address</button> : `Take in 'Coronel Rodriguez 273, Mendoza'` }
                                             </p>
-                                            { deliveryTakeAway && <div className="w-full mt-5 form-control">
+                                            { isDelivery && <div className="w-full mt-5 form-control">
                                                 <label className="label">
                                                     <span className="label-text">Delivery Instructions (Optional)</span>
                                                 </label>
@@ -168,8 +230,8 @@ const OrderDetail = () => {
                                     <div>
                                         <hr />
                                         {(cart[0].quantity != 0) && <div className="flex justify-between my-3">
-                                            { deliveryTakeAway ? <p>Estimated Delivery Time:</p> : <p>Estimated Cooking Time</p> }
-                                            <p>{ deliveryTakeAway ? (estimatedTime.product.cookingTime + 10) : estimatedTime.product.cookingTime} minutes</p>
+                                            { isDelivery ? <p>Estimated Delivery Time:</p> : <p>Estimated Cooking Time</p> }
+                                            <p>{ isDelivery ? (estimatedTime.product.cookingTime + 10) : estimatedTime.product.cookingTime} minutes</p>
                                         </div>}
                                     </div>
 
@@ -186,8 +248,8 @@ const OrderDetail = () => {
                                     <div>
                                         <h1>Available Methods: </h1>
                                         <div className='flex flex-col items-center justify-between join'>
-                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" checked={mp ? true : false} onClick={() => setMp(true)} />
-                                            <input className={deliveryTakeAway ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" onClick={() => setMp(false)} />
+                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" checked={isMP ? true : false} onClick={() => setIsMP(true)} />
+                                            <input className={isDelivery ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" onClick={() => setIsMP(false)} />
                                         </div>
                                     </div>
                                 </div>
@@ -202,27 +264,27 @@ const OrderDetail = () => {
                                     <hr />
                                     {(cart[0].quantity != 0) && <div className="flex justify-between">
                                         <p className="my-3 text-sm">Products cost</p>
-                                        <p className="my-3 text-sm">${totalPrice}</p>
+                                        <p className="my-3 text-sm">${totalCartPrice}</p>
                                     </div>}
                                     <div className="flex justify-between">
                                         <p className="my-3 text-sm">Service fee</p>
                                         <p className="my-3 text-sm">$100</p>
                                     </div>
-                                    {deliveryTakeAway ? <div className="flex justify-between">
+                                    {isDelivery ? <div className="flex justify-between">
                                         <p className="my-3 text-sm">Shipping cost</p>
                                         <p className="my-3 text-sm">$300</p>
                                     </div> : ''}
-                                    {!deliveryTakeAway && (cart[0].quantity != 0) ? <div className="flex justify-between">
+                                    {!isDelivery && (cart[0].quantity != 0) ? <div className="flex justify-between">
                                         <p className="my-3 text-sm">Discount 10%</p>
-                                        <p className="my-3 text-sm">-${(totalPrice + 100) - ((totalPrice + 100) * 0.9)}</p>
+                                        <p className="my-3 text-sm">-${(totalCartPrice + 100) - ((totalCartPrice + 100) * 0.9)}</p>
                                     </div> : ''}
                                     {(cart[0].quantity != 0) && <div className="flex justify-between">
                                         <p className="my-3 text-sm font-bold">Total</p>
-                                        <p className="my-3 text-sm font-bold">${deliveryTakeAway ? (totalPrice + 100 + 300) : ((totalPrice + 100) * 0.9)}</p>
+                                        <p className="my-3 text-sm font-bold">${isDelivery ? (totalCartPrice + 100 + 300) : ((totalCartPrice + 100) * 0.9)}</p>
                                     </div>}
                                 </div>
-                                {/* TODO: Validación de dirección / toast */}
-                                {mp ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} /*onClick={() => handleBuy}*/ onClick={() => { mp ? navigate('/order-tracking/0') : '' }}>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={() => { !mp ? navigate('/order-tracking/0') : '' }}>Make the order</button>}
+                                {/* TODO: toast de mensajes */}
+                                {isMP ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} /*onClick={() => handleBuy}*/ onClick={() => { isDelivery && !deliveryAddress ? alert('Select an Address') : '' }}>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
                                 {preferenceId && <Wallet initialization={{ preferenceId }} />}
                             </div>
                         </div>

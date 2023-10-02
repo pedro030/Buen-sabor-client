@@ -92,7 +92,7 @@ const Header: FC = () => {
     const [stompClient, setStompClient] = useState<Client>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
     
     // Conexion al Socket
-    const conn = () => {
+    const connectSocket = () => {
         stompClient.connect({}, onConnected, onError)
     }
 
@@ -126,7 +126,7 @@ const Header: FC = () => {
         setActiveLink(currentPath);
 
         // Si existe el mail del user se conecta al Socket
-        if(userInfo.mail.length > 0) conn();
+        //if(userInfo.mail.length > 0) connectSocket();
         
         // Al desmontar el componente
         return () => {

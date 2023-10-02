@@ -1,4 +1,5 @@
 import { MAddress } from "./MAddress";
+import { MOrder } from "./MOrder";
 import { MRol } from "./MRol";
 
 export interface MUser {
@@ -11,5 +12,5 @@ export interface MUser {
     addresses?: MAddress[];
     rol?: MRol
     password?: string
-    orders: []
+    orders: MOrder[]
 }
