@@ -19,6 +19,7 @@ import EditCartModal from './EditCartModal/EditCartModal'
 import { MProduct } from '../../models/MProduct'
 import { MCategory } from '../../models/MCategory'
 import { ICartContext, MCart } from '../../models/ICartContext'
+import { IFilterContext, MFilters } from '../../models/IFilterContext'
 
 // Assets
 import clean from '../../assets/clean.svg'
@@ -29,7 +30,7 @@ const Menu = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
 
     // Filters
-    const { filters, setFilters, filterProducts }: any = useContext(FiltersContext);
+    const { filters, setFilters, filterProducts }: IFilterContext = useContext(FiltersContext);
 
     // Cart
     const { cart }: ICartContext = useContext(CartContext);
@@ -68,18 +69,18 @@ const Menu = () => {
     }, [])
 
     // Inicializa todos los productos a ser filtrados
-    const products = filterProducts(productsFetch);
+    const products: MProduct[] = filterProducts(productsFetch);
 
     // Handlers
     const handleChangeCategory = (e: ChangeEvent<HTMLInputElement>) => {
-        setFilters((prevState: any) => ({
+        setFilters((prevState: MFilters) => ({
             ...prevState,
             category: e.target.value
         }))
     }
 
     const handleChangeMinPrice = (e: ChangeEvent<HTMLInputElement>) => {
-        setFilters((prevState: any) => ({
+        setFilters((prevState: MFilters) => ({
             ...prevState,
             minPrice: +e.target.value
         }))
@@ -87,12 +88,12 @@ const Menu = () => {
 
     const handleChangeMaxPrice = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value != '') {
-            setFilters((prevState: any) => ({
+            setFilters((prevState: MFilters) => ({
                 ...prevState,
                 maxPrice: +e.target.value
             }))
         } else {
-            setFilters((prevState: any) => ({
+            setFilters((prevState: MFilters) => ({
                 ...prevState,
                 maxPrice: 20000
             }))

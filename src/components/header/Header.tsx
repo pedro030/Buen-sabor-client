@@ -23,13 +23,15 @@ import EditCartModal from '../menu/EditCartModal/EditCartModal'
 // Types
 import { IUserContext } from '../../models/IUserContext'
 import { INavbarLink } from '../../models/INavBarLink'
+import { MOrder } from '../../models/MOrder';
+import { ICartContext } from '../../models/ICartContext';
 
 // Assets
 import setting from '../../assets/setting.svg'
 import notepad from '../../assets/notepad.svg'
 import searcher from '../../assets/searcher.svg'
 import cartImg from '../../assets/cart.svg'
-import { MOrder } from '../../models/MOrder';
+
 
 const Header: FC = () => {
     // User Information
@@ -39,7 +41,7 @@ const Header: FC = () => {
     const isTable = useMediaQuery({ maxWidth: 1024 });
 
     // Cart
-    const { cart }: any = useContext(CartContext);
+    const { cart }: ICartContext = useContext(CartContext);
 
     // Filters
     const { filters, setFilters } : any = useContext(FiltersContext);

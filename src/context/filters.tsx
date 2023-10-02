@@ -4,6 +4,7 @@ import { createContext, useState } from "react";
 // Types
 import { IContextProviderProps } from "../models/IContextProviderProps";
 import { IFilterContext, MFilters } from "../models/IFilterContext";
+import { MProduct } from "../models/MProduct";
 
 export const FiltersContext = createContext<IFilterContext>({
     filters: {
@@ -24,8 +25,8 @@ export function FiltersProvider({ children }: IContextProviderProps) {
         search: ""
     })
 
-    const filterProducts = (products: any) => {
-        return products.filter((p: any) => {
+    const filterProducts = (products: MProduct[]) => {
+        return products.filter((p: MProduct) => {
             return (
                 (
                     p.price >= filters.minPrice &&
