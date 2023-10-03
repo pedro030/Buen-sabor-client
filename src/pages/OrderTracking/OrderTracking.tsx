@@ -31,12 +31,17 @@ import { BiArrowBack } from 'react-icons/bi'
 const OrderTracking = () => {
     // React Router
     const navigate: NavigateFunction = useNavigate()
-    const { id } = useParams<string>();
     const [isReady, setIsReady] = useState(false);
-
+    const urlApi = import.meta.env.VITE_REACT_APP_API_URL
+    const { id } = useParams<string>();
+    const currentURL = window.location.href;
+    const urlParams = new URLSearchParams(window.location.search)
+    const status = urlParams.get('status');
+    const external_reference = urlParams.get('external_reference');
+    
     // User Info: Auth0 & UserContext
     const { user } = useAuth0();
-    const { userInfo, orders, setOrders }: IUserContext = useContext(UserContext)
+    const { tokenUser, userInfo, orders, setOrders }: IUserContext = useContext(UserContext)
 
     // Order to Show
     const [order, setOrder] = useState<MOrder>({
@@ -56,18 +61,19 @@ const OrderTracking = () => {
             blacklist: '',
             orders: []
         },
-        products: [{ 
-            id: 0, 
-            product: { 
+        products: [{
+            id: 0,
+            product: {
                 id: 0,
                 name: '',
                 active: false,
                 price: 0,
                 cookingTime: 0,
                 image: '',
-                subcategory: { id: 0, name: '', parentCategory: null},
+                subcategory: { id: 0, name: '', parentCategory: null },
                 cost: 0,
-                ingredients: [{ id: 0, ingredient: { id: 0, name: '', stock: 0, cost: 0, stockMin: 0, measure: { id: 0, measure: ''}}, cant: 0}]},
+                ingredients: [{ id: 0, ingredient: { id: 0, name: '', stock: 0, cost: 0, stockMin: 0, measure: { id: 0, measure: '' } }, cant: 0 }]
+            },
             cant: 0
         }],
         statusOrder: { id: 0, statusType: '' }
@@ -94,17 +100,17 @@ const OrderTracking = () => {
 
         const ord: MOrder | undefined = payloadData.find((order: MOrder) => order.id === idOrder)
 
-        if(ord) {
+        if (ord) {
             const updatedOrders = orders.map((order: MOrder) => {
                 if (order.id === idOrder) return { ...order, statusOrder: ord.statusOrder };
                 return order;
             });
-    
+
             setOrders(updatedOrders);
             setOrder(ord);
         } else {
             console.log('DESCONECTANDO');
-            stompClient?.disconnect(() => {});
+            stompClient?.disconnect(() => { });
             navigate('/');
         }
     }
@@ -114,10 +120,10 @@ const OrderTracking = () => {
     }
 
     useEffect(() => {
-        if(id && !isReady) {
-            const ord: MOrder | undefined= orders.find((o: MOrder) => o.id === +id);
+        if (id && !isReady) {
+            const ord: MOrder | undefined = orders.find((o: MOrder) => o.id === +id);
 
-            if(ord) {
+            if (ord) {
                 setOrder(ord);
                 connectSocket(+id);
                 setIsReady(true);
@@ -125,21 +131,35 @@ const OrderTracking = () => {
         }
 
         return () => {
-            stompClient.connected && isReady ? stompClient?.disconnect(() => {}) : '';
+            stompClient.connected && isReady ? stompClient?.disconnect(() => { }) : '';
         };
     }, [orders]);
 
     if (!isReady) {
         return (
-          <div className="page-layout">
-            <PageLoader />
-          </div>
+            <div className="page-layout">
+                <PageLoader />
+            </div>
         );
-      }
+    }
+
+    if (status == 'approved') {
+        fetch(`${urlApi}/orders/changeStatus/${external_reference}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${tokenUser}`
+            },
+            body: JSON.stringify({
+                "id": 2,
+                "statusType": "In_Preparation"
+            })
+        })
+    }
 
     return (
         <>
-        { /*order.id != 0 ?  TODO: Si carga una orden muestra la vista, sino que muestre una pagina de error 404 not found*/}
+            { /*order.id != 0 ?  TODO: Si carga una orden muestra la vista, sino que muestre una pagina de error 404 not found*/}
             <header className='flex items-center justify-between h-16 border flex-rows'>
                 <a className='flex flex-row items-center gap-2 pl-5 cursor-pointer' onClick={() => navigate('/')}><BiArrowBack /> Back </a>
                 <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
@@ -161,7 +181,7 @@ const OrderTracking = () => {
                         <li className='step step-primary'>Ordered</li>
                         {order.statusOrder.statusType !== 'Delivered' ? <li className='step'>Delivered!</li>
                             :
-                         order.statusOrder.statusType === 'Delivered' ? <li className='step step-primary'>Delivered!</li> : <li className='step step-primary'>Cancelled</li>}
+                            order.statusOrder.statusType === 'Delivered' ? <li className='step step-primary'>Delivered!</li> : <li className='step step-primary'>Cancelled</li>}
                     </ul>
                 </div>
 
@@ -184,7 +204,7 @@ const OrderTracking = () => {
                             <div>
                                 <div className="flex justify-between my-3">
                                     <h1>Order</h1>
-                                    <p>{ order.products.length } products</p>
+                                    <p>{order.products.length} products</p>
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
                                     {order.products.map((item: MOrderProducts, index: number) => {

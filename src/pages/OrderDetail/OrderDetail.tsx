@@ -1,9 +1,9 @@
 // React
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { BiArrowBack, BiCycling } from 'react-icons/bi'
 
 // React Router
-import { NavigateFunction, useNavigate } from 'react-router-dom'
+import { NavigateFunction, useNavigate, useParams } from 'react-router-dom'
 
 // Mercado Pago
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
@@ -30,6 +30,14 @@ const OrderDetail = () => {
     // Cart
     const { cart, clearCart }: ICartContext = useContext(CartContext);
     const { tokenUser, setOrders, userInfo }: IUserContext = useContext(UserContext);
+    const urlApi = import.meta.env.VITE_REACT_APP_API_URL
+    const {  id } = useParams<string>();
+    const currentURL = window.location.href;
+    const urlParams = new URLSearchParams(window.location.search)
+    const status = urlParams.get('status');
+    const external_reference = urlParams.get('external_reference');
+
+    const [value, setValue] = useState<number>(0);
 
     // States: Delivery - Take Away / Cash - MP / Address
     const [isDelivery, setIsDelivery] = useState<boolean>(true);
@@ -46,35 +54,7 @@ const OrderDetail = () => {
     const [isEditCartModalOpen, setIsEditCartModalOpen] = useState<boolean>(false);
 
     // Mercado Pago
-    const [preferenceId, setPreferenceId] = useState(null)
-    initMercadoPago('YOUR_PUBLIC_KEY');
-
-    // TODO: Agregar al precio final $100 Service Fee y Descuento del 10% si es Take Away
-    const createPreference = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/create_preference", {
-                method: 'POST',
-                body: JSON.stringify({
-                    description: "Bananita contenta",
-                    price: 100,
-                    quantity: 1,
-                })
-            }
-            );
-
-            const { id }: any = response.body;
-            return id;
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const handleBuy = async () => {
-        const id = await createPreference();
-        if (id) {
-            setPreferenceId(id);
-        }
-    };
+    initMercadoPago('TEST-ccef55f6-eb14-4d67-8380-2d8ca6889032');
 
     // Calcula el total del carrito
     const totalCartPrice = cart.reduce((total: number, item: MCart) => {
@@ -95,12 +75,12 @@ const OrderDetail = () => {
     // Max coocking time product to calculate estimated time
     const estimatedTime = cart.reduce((prevItem: MCart, actualItem: MCart) => {
         return actualItem.product.cookingTime > prevItem.product.cookingTime ? actualItem : prevItem;
-      });
+    });
 
     const confirmCashPaymenth = () => {
         const confirmation = confirm('Did you pay the order?')
 
-        if(confirmation) createOrder();
+        if (confirmation) createOrder();
         else alert('Come to the place')
     }
 
@@ -128,31 +108,62 @@ const OrderDetail = () => {
             }))
         };
 
-        try {
-            const response = await fetch("https://buen-sabor-backend-production.up.railway.app/api/orders/save", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokenUser}`
-                },
-                body: JSON.stringify(newOrder)
+
+        fetch(`${urlApi}/orders/save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${tokenUser}`
+            },
+            body: JSON.stringify(newOrder)
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                return response.json()
             })
+            .then( async (data: (MOrder)) => {
+                updateOrders(data);
+                setValue(data.id)
+            })
+            .catch((error) => { throw new Error(error) })
+            
+    }
 
-            if(!response.ok) throw new Error('Post Error');
-
-            const data: MOrder = await response.json();
-            setOrders((prevState: MOrder[]) => [...prevState, data]);
-            if(isMP) return data.id;
-            else navigate(`/order-tracking/${data.id}`)
-
-        } catch(e) {
-            console.log('Error: ', e)
-            return 0;
+    const updateOrders = (data: MOrder) => {
+        try {
+            setOrders((prevState: MOrder[]) => [...prevState, data])
+        } catch (error) {
+            console.error(error)
         }
     }
 
-    
+    const PayWithMP = async () => {
+        
+        await createOrder()
 
+        // console.log(value)
+        await fetch(`${urlApi}/mp/create-preference/${value}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${(tokenUser).trim()}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => { window.location.href = (data.initPoint) })
+            .catch(err => console.error(err))
+    }
+
+    if (status == 'null') {
+        fetch(`${urlApi}/orders/delete/${external_reference}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${tokenUser}`
+            }
+        })
+    }
     return (
         <>
             { /* HEADER */}
@@ -187,21 +198,21 @@ const OrderDetail = () => {
                                     { /* SELECT ADDRESS */}
                                     <div className="p-4">
                                         <div className="flex justify-between py-2">
-                                            { isDelivery ? <h1>Delivery Address</h1> : <h1>Take Away Address</h1> }
-                                            { isDelivery && <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Change</button> }
+                                            {isDelivery ? <h1>Delivery Address</h1> : <h1>Take Away Address</h1>}
+                                            {isDelivery && <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Change</button>}
                                         </div>
                                         <hr />
                                         <div>
                                             <p className="mt-2 font-bold ">
-                                                { deliveryAddress ? `${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}` :
-                                                    isDelivery ? <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Select a delivery address</button> : `Take in 'Coronel Rodriguez 273, Mendoza'` }
+                                                {deliveryAddress ? `${deliveryAddress?.street} ${deliveryAddress?.number}, ${deliveryAddress?.location.location}` :
+                                                    isDelivery ? <button className="text-sm tracking-widest text-primary" onClick={() => setSelectAddressOpen(true)}>Select a delivery address</button> : `Take in 'Coronel Rodriguez 273, Mendoza'`}
                                             </p>
-                                            { isDelivery && <div className="w-full mt-5 form-control">
+                                            {isDelivery && <div className="w-full mt-5 form-control">
                                                 <label className="label">
                                                     <span className="label-text">Delivery Instructions (Optional)</span>
                                                 </label>
                                                 <input type="text" className="w-full rounded-full input" />
-                                            </div> }
+                                            </div>}
                                         </div>
                                     </div>
                                 </div>
@@ -230,8 +241,8 @@ const OrderDetail = () => {
                                     <div>
                                         <hr />
                                         {(cart[0].quantity != 0) && <div className="flex justify-between my-3">
-                                            { isDelivery ? <p>Estimated Delivery Time:</p> : <p>Estimated Cooking Time</p> }
-                                            <p>{ isDelivery ? (estimatedTime.product.cookingTime + 10) : estimatedTime.product.cookingTime} minutes</p>
+                                            {isDelivery ? <p>Estimated Delivery Time:</p> : <p>Estimated Cooking Time</p>}
+                                            <p>{isDelivery ? (estimatedTime.product.cookingTime + 10) : estimatedTime.product.cookingTime} minutes</p>
                                         </div>}
                                     </div>
 
@@ -284,8 +295,12 @@ const OrderDetail = () => {
                                     </div>}
                                 </div>
                                 {/* TODO: toast de mensajes */}
-                                {isMP ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} /*onClick={() => handleBuy}*/ onClick={() => { isDelivery && !deliveryAddress ? alert('Select an Address') : '' }}>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
-                                {preferenceId && <Wallet initialization={{ preferenceId }} />}
+                                {isMP ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={PayWithMP}/*onClick={() => { isDelivery && !deliveryAddress ? alert('Select an Address') : '' }}*/>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
+                                {/* <Wallet
+                                    onSubmit={onSubmit}
+                                    onReady={onReady}
+                                    onError={onError}
+                                /> */}
                             </div>
                         </div>
                     </div>
