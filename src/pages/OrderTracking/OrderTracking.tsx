@@ -29,11 +29,16 @@ import { BiArrowBack } from 'react-icons/bi'
 
 
 const OrderTracking = () => {
-    // React Router
-    const navigate: NavigateFunction = useNavigate()
-    const [isReady, setIsReady] = useState(false);
     const urlApi = import.meta.env.VITE_REACT_APP_API_URL
+
+    // React Router
+    const navigate: NavigateFunction = useNavigate();
     const { id } = useParams<string>();
+
+    // State para verificar si la información está lista para ser mostrada
+    const [isReady, setIsReady] = useState(false);
+    
+    // Mercado Pago URL
     const currentURL = window.location.href;
     const urlParams = new URLSearchParams(window.location.search)
     const status = urlParams.get('status');

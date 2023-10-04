@@ -27,16 +27,15 @@ import pizzaSvg from '../../assets/pizza.svg'
 
 
 const OrderDetail = () => {
+    const urlApi = import.meta.env.VITE_REACT_APP_API_URL
+
     // Cart
     const { cart, clearCart }: ICartContext = useContext(CartContext);
-    const { tokenUser, setOrders, userInfo }: IUserContext = useContext(UserContext);
-    const urlApi = import.meta.env.VITE_REACT_APP_API_URL
-    const {  id } = useParams<string>();
-    const currentURL = window.location.href;
-    const urlParams = new URLSearchParams(window.location.search)
-    const status = urlParams.get('status');
-    const external_reference = urlParams.get('external_reference');
 
+    // User
+    const { tokenUser, setOrders, userInfo }: IUserContext = useContext(UserContext);
+
+    // State: Order ID para Mercado Pago
     const [value, setValue] = useState<number>(0);
 
     // States: Delivery - Take Away / Cash - MP / Address
@@ -55,6 +54,10 @@ const OrderDetail = () => {
 
     // Mercado Pago
     initMercadoPago('TEST-ccef55f6-eb14-4d67-8380-2d8ca6889032');
+    const currentURL = window.location.href;
+    const urlParams = new URLSearchParams(window.location.search)
+    const status = urlParams.get('status');
+    const external_reference = urlParams.get('external_reference');
 
     // Calcula el total del carrito
     const totalCartPrice = cart.reduce((total: number, item: MCart) => {
