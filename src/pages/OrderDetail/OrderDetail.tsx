@@ -27,7 +27,6 @@ import swal from 'sweetalert'
 
 // Assets
 import pizzaSvg from '../../assets/pizza.svg'
-import swal from 'sweetalert'
 
 const OrderDetail = () => {
     // Api URL
