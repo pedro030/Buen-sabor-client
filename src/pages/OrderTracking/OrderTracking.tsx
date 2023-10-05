@@ -129,11 +129,9 @@ const OrderTracking = () => {
 
     // Setea la hora y minuto en el que será entregado el pedido. Todo esto en base al coockingTime
     const setDeliveryTime = (date: Date, coockingTime: number) => {
-        console.log(date)
         const deliveryTime = new Date(date.getTime() + coockingTime * 60000);
-        console.log(deliveryTime)
         const amOrPm = deliveryTime.getHours() >= 12 ? "PM" : "AM";
-        return `${deliveryTime.getHours()}:${deliveryTime.getMinutes()} ${amOrPm}`;
+        return `${deliveryTime.getHours()-3}:${deliveryTime.getMinutes() < 10 ? "0" + deliveryTime.getMinutes() : deliveryTime.getMinutes()} ${amOrPm}`;
     }
 
     useEffect(() => {
@@ -204,7 +202,7 @@ const OrderTracking = () => {
                 {/* INFO */}
                 <div className="flex flex-col justify-center w-full h-20 p-4 bg-white shadow rounded-3xl">
                     <h1 className="my-1 font-bold">State of your Order: <span className='text-red-600'>{order.id != -1 ? order.statusOrder.statusType.replace('_', ' ') : "Loading..."}</span></h1>
-                    <p className="text-sm">Order created at {order.creationDate.split(' ')[1].substring(0, 5)} { +order.creationDate.split(' ')[1].substring(0, 3) >= 12 ? 'AM' : 'PM' }</p>
+                    <p className="text-sm">Order created at {(+order.creationDate.split(' ')[1].substring(0, 2) - 3) + ":" + order.creationDate.split(' ')[1].substring(3, 5)} { (+order.creationDate.split(' ')[1].substring(0, 2) - 3) >= 12 ? 'PM' : 'AM' }</p>
                 </div>
 
                 <div className="grid grid-cols-[2fr_1fr] gap-5">

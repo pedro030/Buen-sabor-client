@@ -95,7 +95,7 @@ const OrderDetail = () => {
             dangerMode: true
         })
             .then((value) => {
-                value ? console.log('createOrder()') : ''
+                value ? createOrder() : ''
             })
     }
 
@@ -113,7 +113,8 @@ const OrderDetail = () => {
     const cartOutOfStock = () => {
         swal({
             icon: "error",
-            text: "We're sorry, one or more products in your cart are no longer available in stock. Please modify your cart and try again.",
+            title: "We're sorry",
+            text: "One or more products in your cart are no longer available in stock. Please modify your cart and try again",
             buttons: [false, true],
             closeOnEsc: false,
             closeOnClickOutside: false,
@@ -234,19 +235,27 @@ const OrderDetail = () => {
 
         try {
             const response = await fetch(`${urlApi}/products/validarStock`, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenUser.trim()}`
                 },
                 body: JSON.stringify(verifyCart),
             });
 
-            console.log(response);
+            if(response.ok) {
+                const data = await response.json();
 
-            if(!response) cartOutOfStock();
-            else return response;
+                if(!data) {
+                    cartOutOfStock();
+                    return false;
+                } else return true
+
+            } else throw new Error('Validation Error: ')
+
         } catch(e) {
             console.log(e)
+            return false;
         }
     }
 
