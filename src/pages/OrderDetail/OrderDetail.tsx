@@ -27,6 +27,7 @@ import swal from 'sweetalert'
 
 // Assets
 import pizzaSvg from '../../assets/pizza.svg'
+import swal from 'sweetalert'
 
 const OrderDetail = () => {
     // Api URL
@@ -85,6 +86,7 @@ const OrderDetail = () => {
 
     // Sweet Alert. Si se confirma el pago en efectivo se crea la orden.
     const confirmCashPaymenth = () => {
+        if(userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true})
         swal({
             title: "Did you pay the order to the Casher?",
             text: "If you check yes and have not paid, your order will be canceled anyway",
@@ -194,6 +196,7 @@ const OrderDetail = () => {
 
     // Pago con Mercado Pago
     const PayWithMP = async () => {
+        if(userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true})
         // Primero valida si hay stock.
         const stock = await validateStock();
         
