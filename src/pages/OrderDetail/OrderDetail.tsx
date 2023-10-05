@@ -22,11 +22,14 @@ import { IUserContext } from '../../models/IUserContext'
 import { MAddress } from '../../models/MAddress'
 import { MOrder } from '../../models/MOrder'
 
+// Sweet Alert
+import swal from 'sweetalert'
+
 // Assets
 import pizzaSvg from '../../assets/pizza.svg'
 
-
 const OrderDetail = () => {
+    // Api URL
     const urlApi = import.meta.env.VITE_REACT_APP_API_URL
 
     // Cart
@@ -80,11 +83,58 @@ const OrderDetail = () => {
         return actualItem.product.cookingTime > prevItem.product.cookingTime ? actualItem : prevItem;
     });
 
+    // Sweet Alert. Si se confirma el pago en efectivo se crea la orden.
     const confirmCashPaymenth = () => {
-        const confirmation = confirm('Did you pay the order?')
+        swal({
+            title: "Did you pay the order to the Casher?",
+            text: "If you check yes and have not paid, your order will be canceled anyway",
+            icon: "warning",
+            buttons: ["Not Yet", "Yes I Did"],
+            closeOnEsc: false,
+            closeOnClickOutside: false,
+            dangerMode: true
+        })
+            .then((value) => {
+                value ? console.log('createOrder()') : ''
+            })
+    }
 
-        if (confirmation) createOrder();
-        else alert('Come to the place')
+    // Sweet Alert. Aparece cuando se entrega por Delivery y no hay direccion seleccionada.
+    const selectAnAddress = () => {
+        swal({
+            icon: "warning",
+            title: "Select an Address",
+            buttons: [false, true],
+            dangerMode: true
+        })
+    }
+
+    // Sweet Alert. Cuando el carrito no cumple con el stock.
+    const cartOutOfStock = () => {
+        swal({
+            icon: "error",
+            text: "We're sorry, one or more products in your cart are no longer available in stock. Please modify your cart and try again.",
+            buttons: [false, true],
+            closeOnEsc: false,
+            closeOnClickOutside: false,
+            dangerMode: true
+        })
+            .then((value) => {
+                value ? navigate('/') : ''
+            })
+    }
+
+    // Sweet Alert. Order creada y redireccion a OrderTracking
+    const orderCreated = (id: number) => {
+        swal({
+            icon: "success",
+            title: "Your order was created",
+            text: "See ya in a few minutes!",
+            timer: 3000
+        })
+            .then(() => {
+                navigate(`/order-tracking/${id}`)
+            })
     }
 
     // Create Order
@@ -111,7 +161,6 @@ const OrderDetail = () => {
             }))
         };
 
-
         fetch(`${urlApi}/orders/save`, {
             method: 'POST',
             headers: {
@@ -128,12 +177,13 @@ const OrderDetail = () => {
             })
             .then( async (data: (MOrder)) => {
                 updateOrders(data);
-                setValue(data.id)
+                if(data.paymode.paymode === "Cash") orderCreated(data.id)
+                else setValue(data.id)
             })
             .catch((error) => { throw new Error(error) })
-            
     }
 
+    // Cuando se crea una orden, se setea la misma junto con las demás ordenes del cliente.
     const updateOrders = (data: MOrder) => {
         try {
             setOrders((prevState: MOrder[]) => [...prevState, data])
@@ -142,20 +192,25 @@ const OrderDetail = () => {
         }
     }
 
+    // Pago con Mercado Pago
     const PayWithMP = async () => {
+        // Primero valida si hay stock.
+        const stock = await validateStock();
         
-        await createOrder()
-
-        // console.log(value)
-        await fetch(`${urlApi}/mp/create-preference/${value}`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${(tokenUser).trim()}`
-            }
-        })
-            .then(res => res.json())
-            .then(data => { window.location.href = (data.initPoint) })
-            .catch(err => console.error(err))
+        // Si hay stock se crea la orden para obtener el 'id' para crear la preferencia.
+        if(stock) {
+            await createOrder()
+            // Se crea la preferencia.
+            await fetch(`${urlApi}/mp/create-preference/${value}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${(tokenUser).trim()}`
+                }
+            })
+                .then(res => res.json())
+                .then(data => { window.location.href = (data.initPoint) })
+                .catch(err => console.error(err))
+        }
     }
 
     if (status == 'null') {
@@ -167,6 +222,38 @@ const OrderDetail = () => {
             }
         })
     }
+
+    // Valida si el carrito tiene stock para cubrir todo el pedido
+    const validateStock = async () => {
+        const verifyCart = cart.map((item: MCart) => {
+            return {
+                product: { id: item.product.id },
+                cant: item.quantity
+            }
+        })
+
+        try {
+            const response = await fetch(`${urlApi}/products/validarStock`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(verifyCart),
+            });
+
+            console.log(response);
+
+            if(!response) cartOutOfStock();
+            else return response;
+        } catch(e) {
+            console.log(e)
+        }
+    }
+
+    useEffect(() => {
+        validateStock()
+    }, [])
+
     return (
         <>
             { /* HEADER */}
@@ -244,7 +331,7 @@ const OrderDetail = () => {
                                     <div>
                                         <hr />
                                         {(cart[0].quantity != 0) && <div className="flex justify-between my-3">
-                                            {isDelivery ? <p>Estimated Delivery Time:</p> : <p>Estimated Cooking Time</p>}
+                                            {isDelivery ? <p>Estimated Delivery Time:</p> : <p>Estimated Cooking Time:</p>}
                                             <p>{isDelivery ? (estimatedTime.product.cookingTime + 10) : estimatedTime.product.cookingTime} minutes</p>
                                         </div>}
                                     </div>
@@ -297,8 +384,7 @@ const OrderDetail = () => {
                                         <p className="my-3 text-sm font-bold">${isDelivery ? (totalCartPrice + 100 + 300) : ((totalCartPrice + 100) * 0.9)}</p>
                                     </div>}
                                 </div>
-                                {/* TODO: toast de mensajes */}
-                                {isMP ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={PayWithMP}/*onClick={() => { isDelivery && !deliveryAddress ? alert('Select an Address') : '' }}*/>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
+                                {isMP ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={() => { isDelivery && !deliveryAddress ? selectAnAddress() : PayWithMP()}}>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
                                 {/* <Wallet
                                     onSubmit={onSubmit}
                                     onReady={onReady}

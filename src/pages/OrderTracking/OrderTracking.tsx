@@ -29,6 +29,7 @@ import { BiArrowBack } from 'react-icons/bi'
 
 
 const OrderTracking = () => {
+    // Api URL
     const urlApi = import.meta.env.VITE_REACT_APP_API_URL
 
     // React Router
@@ -113,15 +114,26 @@ const OrderTracking = () => {
 
             setOrders(updatedOrders);
             setOrder(ord);
-        } else {
-            console.log('DESCONECTANDO');
+        } else if (orders.find((order: MOrder) => order.id === idOrder)?.statusOrder.statusType === "Delivered" ||
+        orders.find((order: MOrder) => order.id === idOrder)?.statusOrder.statusType ==="Cancelled") {
             stompClient?.disconnect(() => { });
-            navigate('/');
+        } else {
+            stompClient?.disconnect(() => { });
+            navigate('/')
         }
     }
 
     const onError = (err: any) => {
         console.log(err);
+    }
+
+    // Setea la hora y minuto en el que será entregado el pedido. Todo esto en base al coockingTime
+    const setDeliveryTime = (date: Date, coockingTime: number) => {
+        console.log(date)
+        const deliveryTime = new Date(date.getTime() + coockingTime * 60000);
+        console.log(deliveryTime)
+        const amOrPm = deliveryTime.getHours() >= 12 ? "PM" : "AM";
+        return `${deliveryTime.getHours()}:${deliveryTime.getMinutes()} ${amOrPm}`;
     }
 
     useEffect(() => {
@@ -164,7 +176,6 @@ const OrderTracking = () => {
 
     return (
         <>
-            { /*order.id != 0 ?  TODO: Si carga una orden muestra la vista, sino que muestre una pagina de error 404 not found*/}
             <header className='flex items-center justify-between h-16 border flex-rows'>
                 <a className='flex flex-row items-center gap-2 pl-5 cursor-pointer' onClick={() => navigate('/')}><BiArrowBack /> Back </a>
                 <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
@@ -190,10 +201,10 @@ const OrderTracking = () => {
                     </ul>
                 </div>
 
-                {/* Info */}
+                {/* INFO */}
                 <div className="flex flex-col justify-center w-full h-20 p-4 bg-white shadow rounded-3xl">
-                    <h1 className="my-1 font-bold">State of your Order: {order.id != -1 ? order.statusOrder.statusType : "Loading..."}</h1>
-                    <p className="text-sm">Created 7:33 PM</p>
+                    <h1 className="my-1 font-bold">State of your Order: <span className='text-red-600'>{order.id != -1 ? order.statusOrder.statusType.replace('_', ' ') : "Loading..."}</span></h1>
+                    <p className="text-sm">Order created at {order.creationDate.split(' ')[1].substring(0, 5)} { +order.creationDate.split(' ')[1].substring(0, 3) >= 12 ? 'AM' : 'PM' }</p>
                 </div>
 
                 <div className="grid grid-cols-[2fr_1fr] gap-5">
@@ -201,7 +212,7 @@ const OrderTracking = () => {
                         {/* BUEN SABOR */}
                         <div className="flex flex-col justify-center w-full h-24 p-4 bg-white shadow rounded-3xl">
                             <h1 className='text-2xl font-bold text-red-600'>Buen Sabor</h1>
-                            <p className='text-sm tracking-widest'>{order.address}</p>
+                            <p className='text-sm tracking-widest'>{order.withdrawalMode === "Delivery" ? `Delivery Address: ${order.address}` : `Take Away In: ${order.address}`}</p>
                         </div>
 
                         {/* ORDER */}
@@ -223,8 +234,8 @@ const OrderTracking = () => {
                             <div>
                                 <hr />
                                 <div className="flex justify-between my-3">
-                                    <p>Estimated Delivery:</p>
-                                    <p> 26 - 41 min</p>
+                                    <p>{ order.withdrawalMode === "Delivery" ? <p>Approximate Delivery Time: </p> : <p>Approximate Take Away Time:</p> }</p>
+                                    <p>{ setDeliveryTime(new Date(order.creationDate), order.totalCookingTime !== null ? order.totalCookingTime : 0)}</p>
                                 </div>
                             </div>
 
@@ -288,7 +299,7 @@ const OrderTracking = () => {
                         </div>
 
                         {/* DELIVERY */}
-                        <div className="flex flex-row w-full h-20 p-4 bg-white shadow rounded-3xl">
+                        {/*<div className="flex flex-row w-full h-20 p-4 bg-white shadow rounded-3xl">
                             <div className="mr-4 avatar">
                                 <div className="w-12 rounded-full">
                                     <img src={user?.picture} />
@@ -298,7 +309,7 @@ const OrderTracking = () => {
                                 <p className='font-bold'>Leonardo David</p>
                                 <p className='text-sm'>Your delivery</p>
                             </div>
-                        </div>
+                        </div>*/}
                     </div>
                 </div>
             </div>
