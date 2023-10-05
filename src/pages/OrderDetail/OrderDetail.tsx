@@ -24,6 +24,7 @@ import { MOrder } from '../../models/MOrder'
 
 // Assets
 import pizzaSvg from '../../assets/pizza.svg'
+import swal from 'sweetalert'
 
 
 const OrderDetail = () => {
@@ -78,6 +79,7 @@ const OrderDetail = () => {
     });
 
     const confirmCashPaymenth = () => {
+        if(userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true})
         const confirmation = confirm('Did you pay the order?')
 
         if (confirmation) createOrder();
@@ -140,6 +142,7 @@ const OrderDetail = () => {
     }
 
     const PayWithMP = async () => {
+        if(userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true})
         
         await createOrder()
 
@@ -295,7 +298,9 @@ const OrderDetail = () => {
                                     </div>}
                                 </div>
                                 {/* TODO: toast de mensajes */}
-                                {isMP ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={PayWithMP}/*onClick={() => { isDelivery && !deliveryAddress ? alert('Select an Address') : '' }}*/>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
+                                {isMP ? 
+                                    <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={PayWithMP}/*onClick={() => { isDelivery && !deliveryAddress ? alert('Select an Address') : '' }}*/>Go to Pay</button> 
+                                    : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
                                 {/* <Wallet
                                     onSubmit={onSubmit}
                                     onReady={onReady}
