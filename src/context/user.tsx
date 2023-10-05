@@ -15,6 +15,9 @@ import { MOrder } from '../models/MOrder';
 import { MAddress } from '../models/MAddress';
 import { IContextProviderProps } from '../models/IContextProviderProps';
 
+// External
+import swal from 'sweetalert';
+
 
 export const UserContext = createContext<IUserContext>({
     userInfo:{
@@ -61,6 +64,7 @@ export function UserProvider({children}: IContextProviderProps){
         .then(sessionUser => {
             if(sessionUser) {
                 setUserInfo(sessionUser);
+                if(sessionUser.blacklist !== "Enabled")swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true});
                 if(sessionUser.addresses)setAdresses(sessionUser.addresses);
                 if(sessionUser.orders) setOrders(sessionUser.orders)
             }else{
