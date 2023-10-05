@@ -26,6 +26,9 @@ import clean from '../../assets/clean.svg'
 
 
 const Menu = () => {
+    // Api URL
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL
+
     // Responsive
     const isTable = useMediaQuery({ maxWidth: 1024 });
 
@@ -45,7 +48,7 @@ const Menu = () => {
     // Setea los Products y las Categories
     useEffect(() => {
         const getAndSetData = async () => {
-            await fetch("https://buen-sabor-backend-production.up.railway.app/api/products/getActives", {
+            await fetch(`${apiUrl}/products/getActives`, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -55,7 +58,7 @@ const Menu = () => {
                 .then((data) => setProductsFetch(data))
                 .catch((error) => console.error(error))
 
-            await fetch("https://buen-sabor-backend-production.up.railway.app/api/categories/getAll", {
+            await fetch(`${apiUrl}/categories/getAll`, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
