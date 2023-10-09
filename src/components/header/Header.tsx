@@ -154,10 +154,7 @@ const Header: FC = () => {
 
                     { (!isTable) &&
                     <>
-                        {/* SETTINGS */}
-                        <div className='flex justify-center max-md:hidden'>
-                            <img src={setting} height="25" />
-                        </div>
+                    <div></div>
 
                         {/* PENDING ORDERS */}
                         <div className="dropdown dropdown-end">
