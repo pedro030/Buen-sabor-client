@@ -60,7 +60,7 @@ const SelectAddressModal: React.FC<SelectAddressModalProps> = ({ isOpen, onClose
                             <tbody>
                                 {addresses?.map((a: MAddress, i: number) => (
                                     <tr key={i} onClick={() => handleSelectAddress(a)}>
-                                        <td><input type="checkbox" checked={a.id === addressSelected?.id} className="checkbox checkbox-xs checkbox-error" /></td>
+                                        <td><input type="checkbox" defaultChecked={a.id === addressSelected?.id} className="checkbox checkbox-xs checkbox-error" /></td>
                                         <td>{a.street}</td>
                                         <td>{a.number}</td>
                                         <td>{a.location.location}</td>

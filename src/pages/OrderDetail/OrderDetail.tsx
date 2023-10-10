@@ -360,7 +360,7 @@ const OrderDetail = () => {
                                     <div>
                                         <h1>Available Methods: </h1>
                                         <div className='flex flex-col items-center justify-between join'>
-                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" checked={isMP ? true : false} onClick={() => setIsMP(true)} />
+                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" defaultChecked={isMP ? true : false} onClick={() => setIsMP(true)} />
                                             <input className={isDelivery ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" onClick={() => setIsMP(false)} />
                                         </div>
                                     </div>

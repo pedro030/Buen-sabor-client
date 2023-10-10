@@ -65,7 +65,7 @@ const Menu = () => {
                 redirect: 'follow',
             })
                 .then(res => res.json())
-                .then((data) => { const cat = data.filter((c: MCategory) => c.parentCategory != null); console.log(cat); setCategories(cat)})
+                .then((data) => { const cat = data.filter((c: MCategory) => c.parentCategory != null); setCategories(cat) })
                 .catch((error) => console.error(error))
         }
         getAndSetData();
@@ -175,48 +175,48 @@ const Menu = () => {
             <div className="p-8 min-h-[140vh]">
                 <h1 className='mb-6 text-4xl'>Menu</h1>
                 { // FILTER TABLE
-                (isTable) &&
-                <>
-                    <div className="mb-3 dropdown">
-                        <label tabIndex={0} className='mb-1 w-52 btn btn-primary btn-sm'>Filters</label>
-                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                            <div className='filter'>
-                                {/* RESET FILTERS */}
-                                <div className="flex items-center justify-between ">
-                                    <h2 className='card-title stat-title'>Filter</h2>
-                                    <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: "all", minPrice: 0, maxPrice: 20000, search: '' }) }} />
+                    (isTable) &&
+                    <>
+                        <div className="mb-3 dropdown">
+                            <label tabIndex={0} className='mb-1 w-52 btn btn-primary btn-sm'>Filters</label>
+                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <div className='filter'>
+                                    {/* RESET FILTERS */}
+                                    <div className="flex items-center justify-between ">
+                                        <h2 className='card-title stat-title'>Filter</h2>
+                                        <img className='items-center h-4 cursor-pointer' src={clean} onClick={() => { setFilters({ category: "all", minPrice: 0, maxPrice: 20000, search: '' }) }} />
+                                    </div>
+                                    <form className="pt-2 form-control">
+                                        {/* FILTER by CATEGORY */}
+                                        <h4 className='pb-2 text-sm font-bold'>Category</h4>
+                                        <div>
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} defaultChecked={filters.category == "all" ? true : false} />
+                                            <label className='label-text'>Todos</label><br />
+                                            {categories.map((c: any, i) => {
+                                                return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
+                                                    <label className='label-text'>{c.name}</label><br /></span>
+                                            })}
+                                        </div>
+                                        {/* FILTER by MIN & MAX PRICE */}
+                                        <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
+                                        <div className='flex flex-col gap-3'>
+                                            <div className='flex flex-row items-center justify-between'>
+                                                <label className='mr-2 text-xs label-text'>Min Price:</label>
+                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={filters.minPrice == 0 ? '' : filters.minPrice} />
+                                            </div>
+                                            <div className='flex flex-row items-center justify-between'>
+                                                <label className='mr-2 text-xs label-text'>Max Price:</label>
+                                                <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={filters.maxPrice == 20000 ? '' : filters.maxPrice} />
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                                <form className="pt-2 form-control">
-                                    {/* FILTER by CATEGORY */}
-                                    <h4 className='pb-2 text-sm font-bold'>Category</h4>
-                                    <div>
-                                        <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
-                                        <label className='label-text'>Todos</label><br />
-                                        {categories.map((c:any, i) => {
-                                            return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
-                                            <label className='label-text'>{c.name}</label><br /></span>
-                                        })}
-                                    </div>
-                                    {/* FILTER by MIN & MAX PRICE */}
-                                    <h4 className='mt-4 mb-2 text-sm font-bold'>Price</h4>
-                                    <div className='flex flex-col gap-3'>
-                                        <div className='flex flex-row items-center justify-between'>
-                                            <label className='mr-2 text-xs label-text'>Min Price:</label>
-                                            <input type="number" className="w-14 input input-bordered input-xs" min={0} onChange={handleChangeMinPrice} value={filters.minPrice == 0 ? '' : filters.minPrice} />
-                                        </div>
-                                        <div className='flex flex-row items-center justify-between'>
-                                            <label className='mr-2 text-xs label-text'>Max Price:</label>
-                                            <input type="number" className="w-14 input input-bordered input-xs" min={0} max={3000} onChange={handleChangeMaxPrice} value={filters.maxPrice == 20000 ? '' : filters.maxPrice} />
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </ul>
-                    </div>
-                </>
+                            </ul>
+                        </div>
+                    </>
                 }
                 <div className='grid grid-cols-[140px_3fr_1fr] max-lg:grid-cols-1 gap-2'>
-                    { (!isTable) &&
+                    {(!isTable) &&
                         <div className='filter'>
                             {/* RESET FILTERS */}
                             <div className="flex items-center justify-between ">
@@ -227,11 +227,11 @@ const Menu = () => {
                                 {/* FILTER by CATEGORY */}
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} defaultChecked={filters.category == "all" ? true : false} />
                                     <label className='label-text'>Todos</label><br />
-                                    {categories.map((c:any, i) => {
-                                                return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
-                                                <label className='label-text'>{c.name}</label><br /></span>
+                                    {categories.map((c: any, i) => {
+                                        return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
+                                            <label className='label-text'>{c.name}</label><br /></span>
                                     })}
                                 </div>
                                 {/* FILTER by MIN & MAX PRICE */}
@@ -255,7 +255,7 @@ const Menu = () => {
                             <div className='flex flex-row gap-3 mb-5 xl:mr-10'>
                                 {/* SORTING */}
                                 <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                                    <option selected value={1}>SORT BY: FEATURED</option>
+                                    <option defaultValue={1}>SORT BY: FEATURED</option>
                                     <option value={2}>SORT BY PRICE: LOW to HIGH</option>
                                     <option value={3}>SORT BY PRICE: HIGH to LOW</option>
                                     <option value={4}>SORT BY NAME: A - Z</option>
@@ -264,8 +264,8 @@ const Menu = () => {
                             </div>
                         </div>
                         {/* PRODUCTS */}
-                        <div className='flex items-center justify-center min-h-max'>
-                            <div className="grid grid-cols-3 gap-2 h-[55rem]">
+                        <div className='flex justify-center'>
+                            <div className="flex flex-row flex-wrap justify-center gap-5">
                                 {
                                     (products.length > 0) &&
                                     currentProducts.map((product: MProduct) => {

@@ -79,7 +79,7 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                 <h4>Ingredients:</h4>
                 <ul>
                   { product.ingredients.map( (ingredient: MProductIngredient, index: number) => {
-                    return <li key={index}>{ ingredient.ingredient.name }</li>
+                    return <li key={index}> - { ingredient.ingredient.name }</li>
                   }) }
                 </ul>
               </div>

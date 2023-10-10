@@ -52,18 +52,18 @@ const DropdownSignin = () => {
 
                 {switchButton()}
 
-                <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 border">
 
                     {!isAuthenticated && (
                         <>
-                            <li className='dropdown-item cursor-pointer' onClick={handleLogin}>Log In</li>
-                            <li className='dropdown-item cursor-pointer' onClick={handleSignUp}>Sign Up</li>
+                            <li className='cursor-pointer dropdown-item' onClick={handleLogin}>Log In</li>
+                            <li className='cursor-pointer dropdown-item' onClick={handleSignUp}>Sign Up</li>
                         </>
                     )}
                     {isAuthenticated && (
                         <>
-                            <li className='dropdown-item cursor-pointer' onClick={() => navigate('myprofile')}>My Profile</li>
-                            <li className='dropdown-item cursor-pointer' onClick={handleLogout}>Log out</li>
+                            <li className='cursor-pointer dropdown-item' onClick={() => navigate('myprofile')}>My Profile</li>
+                            <li className='cursor-pointer dropdown-item' onClick={handleLogout}>Log out</li>
                         </>
                     )}
                 </ul>

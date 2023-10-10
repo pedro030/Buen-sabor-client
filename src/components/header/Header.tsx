@@ -24,7 +24,7 @@ import EditCartModal from '../menu/EditCartModal/EditCartModal'
 import { IUserContext } from '../../models/IUserContext'
 import { INavbarLink } from '../../models/INavBarLink'
 import { MOrder } from '../../models/MOrder';
-import { ICartContext } from '../../models/ICartContext';
+import { ICartContext, MCart } from '../../models/ICartContext';
 
 // Assets
 import setting from '../../assets/setting.svg'
@@ -39,12 +39,13 @@ const Header: FC = () => {
 
     // Responsive
     const isTable = useMediaQuery({ maxWidth: 1024 });
+    const isMobile = useMediaQuery({ maxWidth: 750 });
 
     // Cart
     const { cart }: ICartContext = useContext(CartContext);
 
     // Filters
-    const { filters, setFilters } : any = useContext(FiltersContext);
+    const { filters, setFilters }: any = useContext(FiltersContext);
 
     const [navbarLinks, setNavbarLinks] = useState<INavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
@@ -70,7 +71,7 @@ const Header: FC = () => {
         setIsEditCartModalOpen(false);
     };
 
-    const handleChangeSearch = (e : ChangeEvent<HTMLInputElement>) => {
+    const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
         setFilters((prevState: any) => ({
             ...prevState,
             search: e.target.value
@@ -78,8 +79,8 @@ const Header: FC = () => {
     }
 
     // Si se presiona Enter, se realiza un scroll hacia el Menú
-    const scrollToSection = (e : KeyboardEvent<HTMLInputElement>) => {
-        if(e.key === 'Enter') {
+    const scrollToSection = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
             const seccionDestino = document.getElementById('menuSeccion');
             if (seccionDestino) {
                 seccionDestino.scrollIntoView({ behavior: 'smooth' });
@@ -90,7 +91,7 @@ const Header: FC = () => {
     // WebSocket
     const [pendingOrders, setPendingOrders] = useState<MOrder[]>([]);
     const [stompClient, setStompClient] = useState<Client>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
-    
+
     // Conexion al Socket
     const connectSocket = () => {
         stompClient.connect({}, onConnected, onError)
@@ -113,9 +114,9 @@ const Header: FC = () => {
         setPendingOrders(payloadData);
 
         // Si no hay ordenes pendientes se desconecta del Socket
-        if(payloadData.length === 0) stompClient?.disconnect(() => {})
+        if (payloadData.length === 0) stompClient?.disconnect(() => { })
     }
-    
+
     // Por si hay un error en la conexion al Socket
     const onError = (err: any) => {
         console.log(err);
@@ -127,62 +128,127 @@ const Header: FC = () => {
 
         // Si existe el mail del user se conecta al Socket
         //if(userInfo.mail.length > 0) connectSocket();
-        
+
         // Al desmontar el componente
         return () => {
             // Si la conexión está establecida se desconecta del Socket
-            stompClient.connected ? stompClient?.disconnect(() => {}) : '';
+            stompClient.connected ? stompClient?.disconnect(() => { }) : '';
         };
     }, []);
 
     return (
         <>
             <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] max-lg:grid-rows-1 bg-base-100 navbar shadow ">
-                <div className=' grid grid-cols-[250px_1fr_70px_70px_70px_130px] max-lg:gap-1 max-lg:grid-cols-[1fr_70px_70px_128px] '>
+                <div className=' grid grid-cols-[250px_1fr_70px_70px_70px_130px] max-lg:gap-1 max-lg:grid-cols-[1fr_70px_70px_70px_128px]  '>
                     <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
-                    { (isTable) &&
+                    {(isTable) &&
                         // SEARCH
-                        <div className='flex justify-center '>
-                            <img src={searcher} height="25" />
-                        </div>
-                    }
-
-                    { (!isTable) && 
-                        // SEARCH BAR
-                        <input type="text" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" onChange={handleChangeSearch} value={filters.search} onKeyDown={scrollToSection}/>
-                    }
-
-                    { (!isTable) &&
-                    <>
-                    <div></div>
-
-                        {/* PENDING ORDERS */}
-                        <div className="dropdown dropdown-end">
-                            <div tabIndex={0} className='flex justify-center cursor-pointer max-md:hidden'>
-                                <img src={notepad} height="25" />
+                        <>
+                            <div className='flex justify-center '>
+                                <img src={searcher} height="25" />
                             </div>
-                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 ">
-                                <div className="overflow-y-auto">
-                                    <table className="table ">
-                                        <thead>
-                                            <tr>
-                                                <th>N Order</th>
-                                                <th>State</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            { pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
-                                                return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
-                                                    <th>{o.id}</th>
-                                                    <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
-                                                </tr>
-                                            })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
-                                        </tbody>
-                                    </table>
+
+                            <div className="dropdown dropdown-end">
+                                <div tabIndex={0} className='flex justify-center cursor-pointer '>
+                                    <img src={notepad} height="25" />
                                 </div>
-                            </ul>
-                        </div>
-                    </>
+                                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 ">
+                                    <div className="overflow-y-auto">
+                                        <table className="table ">
+                                            <thead>
+                                                <tr>
+                                                    <th>N Order</th>
+                                                    <th>State</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
+                                                    return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
+                                                        <th>{o.id}</th>
+                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
+                                                    </tr>
+                                                })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ul>
+                            </div>
+                        </>
+
+
+                    }
+
+                    {(isMobile) &&
+                        // SEARCH
+                        <>
+                            <div className='flex justify-center '>
+                                <img src={searcher} height="25" />
+                            </div>
+
+                            <div className="dropdown dropdown-end">
+                                <div tabIndex={0} className='flex justify-center cursor-pointer '>
+                                    <img src={notepad} height="25" />
+                                </div>
+                                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 ">
+                                    <div className="overflow-y-auto">
+                                        <table className="table ">
+                                            <thead>
+                                                <tr>
+                                                    <th>N Order</th>
+                                                    <th>State</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
+                                                    return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
+                                                        <th>{o.id}</th>
+                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
+                                                    </tr>
+                                                })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ul>
+                            </div>
+                        </>
+                    }
+
+
+
+                    {(!isTable) &&
+                        <>
+                            {/* //Search */}
+                            <input type="search" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" onChange={handleChangeSearch} value={filters.search} onKeyDown={scrollToSection} />
+
+                            <div></div>
+
+                            {/* PENDING ORDERS */}
+                            <div className="dropdown dropdown-end">
+                                <div tabIndex={0} className='flex justify-center cursor-pointer '>
+                                    <img src={notepad} height="25" />
+                                </div>
+                                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 ">
+                                    <div className="overflow-y-auto">
+                                        <table className="table ">
+                                            <thead>
+                                                <tr>
+                                                    <th>N Order</th>
+                                                    <th>State</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
+                                                    return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
+                                                        <th>{o.id}</th>
+                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
+                                                    </tr>
+                                                })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ul>
+                            </div>
+                        </>
                     }
                     { /* HEADER CART */}
                     <div className="dropdown dropdown-end">
@@ -202,10 +268,11 @@ const Header: FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {cart[0].quantity === 0 ? <tr><td colSpan={5} className="my-auto text-xl font-bold text-center h-36 text-secondary">Empty Cart</td></tr> : (cart.map((item: any) => {
-                                            return <tr key={item.id}>
-                                                <td className='text-xs'>{item.quantity}x {item.name}</td>
-                                                <td className='text-xs'>${item.price * item.quantity}</td>
+                                        {cart[0].quantity === 0 ? <tr><td colSpan={5} className="my-auto text-xl font-bold text-center h-36 text-secondary">Empty Cart</td></tr> : (cart.map((item: MCart, index: number) => {
+                                            // console.log(item)
+                                            return <tr key={index}>
+                                                <td className='text-xs'>{item.quantity}x {item.product.name}</td>
+                                                <td className='text-xs'>${item.product.price * item.quantity}</td>
                                             </tr>
                                         }))}
                                     </tbody>
@@ -221,7 +288,7 @@ const Header: FC = () => {
                     </div>
                 </div>
                 { /* NAV BAR */}
-                <ul className="flex flex-row justify-around pt-1 text-gray-400 max-lg:hidden">
+                <ul className="flex flex-row justify-around pt-1 text-gray-400 ">
                     {navbarLinks.map((link) => (
                         <li key={link.id}>
                             <NavLink
