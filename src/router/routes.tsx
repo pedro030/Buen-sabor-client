@@ -12,12 +12,14 @@ import MenuPage from "../pages/Menu/Menu";
 import UserProfile from "../pages/UserProfile/UserProfile";
 import OrderDetail from "../pages/OrderDetail/OrderDetail";
 import OrderTracking from "../pages/OrderTracking/OrderTracking";
+import { Help } from "../pages/Help/Help";
 
 function AppRouter() {
   return (
     <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/help" element={<Help />} />
         <Route path="/about" element={<About />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/myprofile/*" element={<AuthenticationGuard component={UserProfile}/>} />
