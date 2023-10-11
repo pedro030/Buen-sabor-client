@@ -180,12 +180,6 @@ const OrderTracking = () => {
                 <div></div>
             </header>
             <div className="grid grid-rows-[120px_80px_1fr] gap-5 p-10 h-[100%]">
-                {/* Maps */}
-                {/* <div>
-                    <iframe className="w-full h-48 rounded-3xl"
-                        src="https://www.google.com/maps/embed/v1/place?q=Av.%20Las%20Heras%20y%20Av.%20San%20Martin%2C%20Ciudad%20de%20Mendoza&key=AIzaSyBEq7nhkPKV-rRkGcFmEWeAtICCTWf7pxs"></iframe>
-                </div> */}
-
                 <div className='flex justify-center mb-5'>
                     <ul className="steps">
                         <li className="step step-primary">Choice Product</li>
@@ -283,11 +277,8 @@ const OrderTracking = () => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
                     <div className="grid grid-rows-[56px_80px] gap-5">
-
                         {/* QUESTIONS */}
                         <div className="w-full p-4 bg-white shadow h-14 rounded-3xl">
                             <div className='flex '>
@@ -295,19 +286,6 @@ const OrderTracking = () => {
                                 <p>Have any questions?</p>
                             </div>
                         </div>
-
-                        {/* DELIVERY */}
-                        {/*<div className="flex flex-row w-full h-20 p-4 bg-white shadow rounded-3xl">
-                            <div className="mr-4 avatar">
-                                <div className="w-12 rounded-full">
-                                    <img src={user?.picture} />
-                                </div>
-                            </div>
-                            <div className='flex flex-col'>
-                                <p className='font-bold'>Leonardo David</p>
-                                <p className='text-sm'>Your delivery</p>
-                            </div>
-                        </div>*/}
                     </div>
                 </div>
             </div>
