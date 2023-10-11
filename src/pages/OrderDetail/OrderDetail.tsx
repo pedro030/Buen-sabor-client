@@ -23,7 +23,7 @@ import { MAddress } from '../../models/MAddress'
 import { MOrder } from '../../models/MOrder'
 
 // Sweet Alert
-import swal from 'sweetalert'
+import Swal from 'sweetalert2'
 
 // Assets
 import pizzaSvg from '../../assets/pizza.svg'
@@ -85,57 +85,82 @@ const OrderDetail = () => {
 
     // Sweet Alert. Si se confirma el pago en efectivo se crea la orden.
     const confirmCashPaymenth = () => {
-        if (userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", { dangerMode: true })
-        swal({
+        if (userInfo.blacklist != "Enabled") return Swal.fire({
+            icon: 'error',
+            title: "This user is not enabled to place orders",
+            text: "For more information contact the administrator",
+            confirmButtonColor: '#E73636'
+        })
+
+        Swal.fire({
             title: "Did you pay the order to the Casher?",
             text: "If you check yes and have not paid, your order will be canceled anyway",
             icon: "warning",
-            buttons: ["Not Yet", "Yes I Did"],
-            closeOnEsc: false,
-            closeOnClickOutside: false,
-            dangerMode: true
+            confirmButtonText: 'Yes, I Did',
+            cancelButtonText: 'Not Yet',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            confirmButtonColor: '#E73636',
+            showCancelButton: true,
+            reverseButtons: true
         })
-            .then((value) => {
-                value ? createOrder() : ''
+            .then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Loading...',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCancelButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                    createOrder();
+                }
             })
     }
 
     // Sweet Alert. Aparece cuando se entrega por Delivery y no hay direccion seleccionada.
     const selectAnAddress = () => {
-        swal({
+        Swal.fire({
             icon: "warning",
             title: "Select an Address",
-            buttons: [false, true],
-            dangerMode: true
+            confirmButtonColor: '#E73636',
         })
     }
 
     // Sweet Alert. Cuando el carrito no cumple con el stock.
     const cartOutOfStock = () => {
-        swal({
+        Swal.fire({
             icon: "error",
             title: "We're sorry",
             text: "One or more products in your cart are no longer available in stock. Please modify your cart and try again",
-            buttons: [false, true],
-            closeOnEsc: false,
-            closeOnClickOutside: false,
-            dangerMode: true
+            confirmButtonColor: '#E73636',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
         })
-            .then((value) => {
-                value ? navigate('/') : ''
+            .then((result) => {
+                if(result.isConfirmed) {
+                    navigate('/');
+                }
             })
     }
 
     // Sweet Alert. Order creada y redireccion a OrderTracking
     const orderCreated = (id: number) => {
-        swal({
+        Swal.fire({
             icon: "success",
             title: "Your order was created",
             text: "See ya in a few minutes!",
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
             timer: 3000
         })
             .then(() => {
-                navigate(`/order-tracking/${id}`)
+                clearCart();
+                navigate(`/order-tracking/${id}`);
             })
     }
 
@@ -182,7 +207,7 @@ const OrderDetail = () => {
                 if (data.paymode.paymode === "Cash") orderCreated(data.id)
                 else setValue(data.id)
             })
-            .catch((error) => { throw new Error(error) })
+            .catch((error) => { Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' }); throw new Error(error) })
     }
 
     // Cuando se crea una orden, se setea la misma junto con las demás ordenes del cliente.
@@ -196,7 +221,12 @@ const OrderDetail = () => {
 
     // Pago con Mercado Pago
     const PayWithMP = async () => {
-        if (userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", { dangerMode: true })
+        if (userInfo.blacklist != "Enabled") return Swal.fire({
+            icon: 'error',
+            title: "This user is not enabled to place orders",
+            text: "For more information contact the administrator",
+            confirmButtonColor: '#E73636'
+        })
         // Primero valida si hay stock.
         const stock = await validateStock();
 
@@ -212,7 +242,7 @@ const OrderDetail = () => {
             })
                 .then(res => res.json())
                 .then(data => { window.location.href = (data.initPoint) })
-                .catch(err => console.error(err))
+                .catch(err => { Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' }) })
         }
     }
 
