@@ -9,7 +9,7 @@ const About = () => {
       <h1 className='mb-10 text-2xl stat-title'>Integrantes</h1>
 
       <div className='flex items-center justify-center my-5'> 
-        <div className="flex flex-row flex-wrap gap-4 text-lg text-center place-items-center max-lg:gap-3">
+        <div className="flex flex-row flex-wrap items-center justify-center gap-4 text-lg text-center place-items-center max-lg:gap-3">
 
           <div>
             <h1 className='mb-1 text-2xl font-bold text-primary max-lg:text-lg'>Araya Alejo</h1>

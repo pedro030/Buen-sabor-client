@@ -85,7 +85,7 @@ const OrderDetail = () => {
 
     // Sweet Alert. Si se confirma el pago en efectivo se crea la orden.
     const confirmCashPaymenth = () => {
-        if(userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true})
+        if (userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", { dangerMode: true })
         swal({
             title: "Did you pay the order to the Casher?",
             text: "If you check yes and have not paid, your order will be canceled anyway",
@@ -177,9 +177,9 @@ const OrderDetail = () => {
                 }
                 return response.json()
             })
-            .then( async (data: (MOrder)) => {
+            .then(async (data: (MOrder)) => {
                 updateOrders(data);
-                if(data.paymode.paymode === "Cash") orderCreated(data.id)
+                if (data.paymode.paymode === "Cash") orderCreated(data.id)
                 else setValue(data.id)
             })
             .catch((error) => { throw new Error(error) })
@@ -196,12 +196,12 @@ const OrderDetail = () => {
 
     // Pago con Mercado Pago
     const PayWithMP = async () => {
-        if(userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true})
+        if (userInfo.blacklist != "Enabled") return swal("This user is not enabled to place orders\nFor more information contact the administrator", { dangerMode: true })
         // Primero valida si hay stock.
         const stock = await validateStock();
-        
+
         // Si hay stock se crea la orden para obtener el 'id' para crear la preferencia.
-        if(stock) {
+        if (stock) {
             await createOrder()
             // Se crea la preferencia.
             await fetch(`${urlApi}/mp/create-preference/${value}`, {
@@ -245,17 +245,17 @@ const OrderDetail = () => {
                 body: JSON.stringify(verifyCart),
             });
 
-            if(response.ok) {
+            if (response.ok) {
                 const data = await response.json();
 
-                if(!data) {
+                if (!data) {
                     cartOutOfStock();
                     return false;
                 } else return true
 
             } else throw new Error('Validation Error: ')
 
-        } catch(e) {
+        } catch (e) {
             console.log(e)
             return false;
         }
@@ -265,6 +265,8 @@ const OrderDetail = () => {
         validateStock()
     }, [])
 
+
+
     return (
         <>
             { /* HEADER */}
@@ -273,23 +275,25 @@ const OrderDetail = () => {
                 <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
                 <div></div>
             </header>
+
             { /* STEPS */}
-            <div className='my-5'>
-                <div className='flex justify-center mb-5'>
-                    <ul className="steps">
-                        <li className="step step-primary">Choice Product</li>
-                        <li className="step step-primary">Create Order</li>
-                        <li className="step step-primary">Follow Up</li>
-                        {isMP ? <><li className='step'>Pay</li><li className='step'>Ordered</li><li className='step'>Delivered!</li></> : <><li className='step'>Ordered</li><li className='step'>Delivered!</li></>}
+            <div className='m-5 '>
+                <div className='flex justify-center mb-5 '>
+                    <ul className="z-0 overflow-hidden steps">
+                        <li className="step step-primary max-md:text-sm">Choice Product</li>
+                        <li className="step step-primary max-md:text-sm ">Create Order</li>
+                        <li className="step step-primary max-md:text-sm ">Follow Up</li>
+                        {isMP ? <><li className='step max-md:text-sm'>Pay</li><li className='step max-md:text-sm'>Ordered</li><li className='step max-md:text-sm'>Delivered!</li></> : <><li className='step max-md:text-sm'>Ordered</li><li className='step max-md:text-sm'>Delivered!</li></>}
                     </ul>
                 </div>
+
                 <div className='flex justify-center'>
-                    <div className="grid grid-cols-[1000px_400px] ">
+                    <div className="grid lg:grid-cols-[3fr_1fr] max-lg:grid-rows-[1fr_20rem]  max-lg:gap-7 w-full ">
                         <div className="grid grid-rows-3 gap-7 ">
 
                             {/* DELIVERY */}
-                            <div className="flex justify-center">
-                                <div className={"grid grid-rows-[50px_1fr] bg-white h-64 w-[80%] rounded-3xl"}>
+                            <div className="flex justify-center ">
+                                <div className="bg-white h-64 w-[80%] max-sm:w-full rounded-3xl">
                                     { /* SELECT DELIVERY / TAKE AWAY */}
                                     <div className="grid grid-cols-2 join">
                                         <input className="rounded-full join-item btn" type="radio" name="delivery" aria-label="Delivery" onClick={() => { setIsDelivery(true); setIsMP(true) }} defaultChecked={isDelivery ? true : false} />
@@ -320,8 +324,8 @@ const OrderDetail = () => {
                             </div>
 
                             {/* PRODUCTS SUMMARY */}
-                            <div className="flex justify-center">
-                                <div className="bg-white h-64 w-[80%] rounded-3xl p-4 grid grid-rows-[1fr_50px]">
+                            <div className="flex justify-center ">
+                                <div className="bg-white h-64 w-[80%] max-sm:w-full rounded-3xl p-4 grid grid-rows-[1fr_50px]">
                                     <div>
                                         <div className="flex justify-between my-3">
                                             <h1>Order</h1>
@@ -332,16 +336,16 @@ const OrderDetail = () => {
                                         </div>
                                         <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
                                             {(cart[0].quantity != 0) ? (cart.map((item: MCart) => {
-                                                return <div key={item.product.id} className='flex items-center'>
-                                                    <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                                                    <p className="my-1">{item.quantity}x {item.product.name} ${item.product.price * item.quantity}</p>
+                                                return <div key={item.product.id} className='flex items-center '>
+                                                    {/* <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" /> */}
+                                                    <p className="my-1 max-md:text-sm">{item.quantity}x {item.product.name} ${item.product.price * item.quantity}</p>
                                                 </div>
                                             })) : ''}
                                         </div>
                                     </div>
                                     <div>
                                         <hr />
-                                        {(cart[0].quantity != 0) && <div className="flex justify-between my-3">
+                                        {(cart[0].quantity != 0) && <div className="flex justify-between mt-2">
                                             {isDelivery ? <p>Estimated Delivery Time:</p> : <p>Estimated Cooking Time:</p>}
                                             <p>{isDelivery ? (estimatedTime.product.cookingTime + 10) : estimatedTime.product.cookingTime} minutes</p>
                                         </div>}
@@ -352,14 +356,14 @@ const OrderDetail = () => {
 
                             {/* PAYMENT METHOD */}
                             <div className="flex justify-center">
-                                <div className="bg-white h-64 w-[80%] rounded-3xl grid grid-rows-[50px_1fr] p-4">
+                                <div className="bg-white h-64 w-[80%] max-sm:w-full rounded-3xl grid grid-rows-[50px_1fr] p-4">
                                     <div>
                                         <h1 className='mb-3'>Payment Methods</h1>
                                         <hr />
                                     </div>
-                                    <div>
-                                        <h1>Available Methods: </h1>
-                                        <div className='flex flex-col items-center justify-between join'>
+                                    <div >
+                                        <h1 className='mb-5'>Available Methods: </h1>
+                                        <div className='flex flex-col join'>
                                             <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" defaultChecked={isMP ? true : false} onClick={() => setIsMP(true)} />
                                             <input className={isDelivery ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" onClick={() => setIsMP(false)} />
                                         </div>
@@ -368,9 +372,9 @@ const OrderDetail = () => {
                             </div>
                         </div>
 
-                        { /* SUMMARY */}
-                        <div className="flex ">
-                            <div className="bg-white rounded-3xl w-80 h-80 grid grid-rows-[1fr_50px] p-1">
+                        <div className='flex justify-center'>
+                            { /* SUMMARY */}
+                            <div className="bg-white rounded-3xl w-80 h-80 max-lg:w-[80%] max-sm:w-full  grid grid-rows-[1fr_50px] p-1">
                                 <div className="p-2">
                                     <h1 className="mb-2 tracking-widest">Summary</h1>
                                     <hr />
@@ -395,7 +399,7 @@ const OrderDetail = () => {
                                         <p className="my-3 text-sm font-bold">${isDelivery ? (totalCartPrice + 100 + 300) : ((totalCartPrice + 100) * 0.9)}</p>
                                     </div>}
                                 </div>
-                                {isMP ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={() => { isDelivery && !deliveryAddress ? selectAnAddress() : PayWithMP()}}>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
+                                {isMP ? <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={() => { isDelivery && !deliveryAddress ? selectAnAddress() : PayWithMP() }}>Go to Pay</button> : <button className={(cart[0].quantity != 0) ? "rounded-full btn btn-primary" : "rounded-full btn btn-primary btn-disabled"} onClick={confirmCashPaymenth}>Pay to Cahser</button>}
                                 {/* <Wallet
                                     onSubmit={onSubmit}
                                     onReady={onReady}

@@ -135,13 +135,14 @@ const Header: FC = () => {
             stompClient.connected ? stompClient?.disconnect(() => { }) : '';
         };
     }, []);
-
+    
     return (
         <>
             <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] max-lg:grid-rows-1 bg-base-100 navbar shadow ">
                 <div className=' grid grid-cols-[250px_1fr_70px_70px_70px_130px] max-lg:gap-1 max-lg:grid-cols-[1fr_70px_70px_70px_128px]  '>
                     <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
-                    {(isTable) &&
+                    { (isTable) &&
+
                         // SEARCH
                         <>
                             <div className='flex justify-center '>

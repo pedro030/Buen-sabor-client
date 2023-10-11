@@ -29,11 +29,11 @@ const ProductCard = ({ product }: IProductCardProps) => {
 
   return (
     <>
-      <div className="w-[250px] shadow-xl h-[350px] card-compact card bg-base-100 max-xl:max-h-[20rem] max-lg:max-h-[15rem]">
-        <div style={{ backgroundImage: `url(${product.image ? product.image : 'src/assets/salad.jpg'})` }} className={`hero h-[50%] w-full rounded-md flex items-start justify-end`}>
+      <div className="w-[250px] max-sm:w-[80%] shadow-xl  card-compact card bg-base-100  h-[15rem]">
+        <div style={{ backgroundImage: `url(${product.image ? product.image : 'src/assets/salad.jpg'})` }} className={`hero  h-[80%] w-full rounded-md flex items-start justify-end`}>
           <div className="bg-opacity-80 "></div>
           <div className=" hero-content">
-            <button className='btn btn-primary btn-circle btn-xs' onClick={() => addToCart(product)}>+</button>
+            <button className='btn btn-primary btn-circle btn-xs max-sm:btn-sm' onClick={() => addToCart(product)}><span className='max-sm:text-lg'>+</span></button>
           </div>
         </div>
         <div onClick={() => handleOpenProductModal()} className="card-body">
