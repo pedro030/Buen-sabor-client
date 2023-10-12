@@ -29,7 +29,7 @@ const History_Order = () => {
                 <h2 className='mb-5 text-center stat-title'>Order history</h2>
 
                 <div className="overflow-x-auto">
-                    <table className="table table-xs">
+                    <table className="table overflow-auto table-xs">
                         <thead>
                             <tr>
                                 <th>Date</th>

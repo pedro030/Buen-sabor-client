@@ -22,7 +22,7 @@ const ConfirmationModal: React.FC<confirmationModalProps> = ({ isOpen, onClose, 
                 <div className="bg-white p-8 rounded-3xl modal-box min-w-[50rem] max-h-[30rem] mt-20">
                     <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
                     <h1>{mainText}</h1>
-                    <button className='my-2 rounded-full btn'>Cancel</button>
+                    <button onClick={onClose} className='my-2 rounded-full btn'>Cancel</button>
                     <button className='my-2 rounded-full btn btn-primary' onClick={handleSubmit}>{buttonText}</button>
                 </div>
             </div>

@@ -172,7 +172,7 @@ const Menu = () => {
 
     return (
         <>
-            <div className="p-8 min-h-[140vh]">
+            <div className="p-8">
                 <h1 className='mb-6 text-4xl'>Menu</h1>
                 { // FILTER TABLE
                     (isTable) &&

@@ -37,8 +37,8 @@ const ProductCard = ({ product }: IProductCardProps) => {
           </div>
         </div>
         <div onClick={() => handleOpenProductModal()} className="card-body">
-          <h2 className="text-lg card-title max-xl:text-sm">{product.name}</h2>
-          <p className='max-xl:hidden'>Product short description</p>
+          <h2 className="text-sm card-title">{product.name}</h2>
+          {/* <p className='max-xl:hidden'>Product short description</p> */}
           <p>${product.price}</p>
         </div>
       </div>
