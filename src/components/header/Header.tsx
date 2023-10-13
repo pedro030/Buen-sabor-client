@@ -25,9 +25,9 @@ import { IUserContext } from '../../models/IUserContext'
 import { INavbarLink } from '../../models/INavBarLink'
 import { MOrder } from '../../models/MOrder';
 import { ICartContext, MCart } from '../../models/ICartContext';
+import { IFilterContext } from '../../models/IFilterContext';
 
 // Assets
-import setting from '../../assets/setting.svg'
 import notepad from '../../assets/notepad.svg'
 import searcher from '../../assets/searcher.svg'
 import cartImg from '../../assets/cart.svg'
@@ -45,7 +45,7 @@ const Header: FC = () => {
     const { cart }: ICartContext = useContext(CartContext);
 
     // Filters
-    const { filters, setFilters }: any = useContext(FiltersContext);
+    const { filters, setFilters }: IFilterContext = useContext(FiltersContext);
 
     const [navbarLinks, setNavbarLinks] = useState<INavbarLink[]>([
         { id: 1, title: 'Home', path: '/' },
@@ -163,10 +163,10 @@ const Header: FC = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
+                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: MOrder) => {
                                                     return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
                                                         <th>{o.id}</th>
-                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
+                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType.replace("_", " ")}</div></td>
                                                     </tr>
                                                 })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
                                             </tbody>
@@ -200,10 +200,10 @@ const Header: FC = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
+                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: MOrder) => {
                                                     return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
                                                         <th>{o.id}</th>
-                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
+                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType.replace("_", " ")}</div></td>
                                                     </tr>
                                                 })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
                                             </tbody>
@@ -238,10 +238,10 @@ const Header: FC = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: any) => {
+                                                {pendingOrders.length > 0 ? (pendingOrders.map((o: MOrder) => {
                                                     return <tr key={o.id} className='cursor-pointer hover' onClick={() => navigate(`/order-tracking/${o.id}`)}>
                                                         <th>{o.id}</th>
-                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType}</div></td>
+                                                        <td><div className="badge badge-secondary">{o.statusOrder.statusType.replace("_", " ")}</div></td>
                                                     </tr>
                                                 })) : <tr><td colSpan={5} className="my-auto text-lg font-bold text-center h-36 text-secondary">No Pending Orders</td></tr>}
                                             </tbody>

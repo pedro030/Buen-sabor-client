@@ -10,6 +10,7 @@ import { useMediaQuery } from 'react-responsive'
 // Contexts
 import { FiltersContext } from '../../context/filters'
 import { CartContext } from '../../context/cart'
+import { UserContext } from '../../context/user'
 
 // Components
 import ProductCard from './product_card/ProductCard'
@@ -23,11 +24,19 @@ import { IFilterContext, MFilters } from '../../models/IFilterContext'
 
 // Assets
 import clean from '../../assets/clean.svg'
+import Swal from 'sweetalert2'
+import { useAuth0 } from '@auth0/auth0-react'
 
 
 const Menu = () => {
+    // Auth0
+    const { loginWithRedirect } = useAuth0();
+
     // Api URL
-    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+
+    // User Context
+    const { userInfo } = useContext(UserContext);
 
     // Responsive
     const isTable = useMediaQuery({ maxWidth: 1024 });
@@ -170,6 +179,26 @@ const Menu = () => {
         pages.push(i);
     }
 
+    // The User is Logged?
+    const handleLogin = () => {
+        if(userInfo.id === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Login',
+                text: 'To continue shopping you need to login',
+                showCancelButton: true,
+                reverseButtons: true,
+                confirmButtonText: 'Login',
+                confirmButtonColor: '#E73636'
+            })
+                .then((result) => {
+                    if(result.isConfirmed) {
+                        loginWithRedirect();
+                    }
+                })
+        } else navigate('/order-detail');
+    }
+
     return (
         <>
             <div className="p-8">
@@ -255,7 +284,7 @@ const Menu = () => {
                             <div className='flex flex-row gap-3 mb-5 xl:mr-10'>
                                 {/* SORTING */}
                                 <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                                    <option defaultValue={1}>SORT BY: FEATURED</option>
+                                    <option value={1}>SORT BY: FEATURED</option>
                                     <option value={2}>SORT BY PRICE: LOW to HIGH</option>
                                     <option value={3}>SORT BY PRICE: HIGH to LOW</option>
                                     <option value={4}>SORT BY NAME: A - Z</option>
@@ -319,7 +348,7 @@ const Menu = () => {
                                     <div>
                                         <h4 className='text-right max-lg:text-sm'>subtotal: <span className='font-bold'>${(totalPrice ? totalPrice : 0)}</span></h4>
                                         <div className='flex justify-center mt-2'>
-                                            <button className={`w-full mb-2 rounded-full btn btn-primary ${cart[0].quantity === 0 && `btn-disabled`}`} onClick={() => navigate('/order-detail')} >Continue</button>
+                                            <button className={`w-full mb-2 rounded-full btn btn-primary ${cart[0].quantity === 0 && `btn-disabled`}`} onClick={handleLogin} >Continue</button>
                                         </div>
                                     </div>
                                 </div>

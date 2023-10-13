@@ -6,7 +6,7 @@ import ReactModal from 'react-modal';
 
 
 interface PDFBillModalProps {
-    obj?: any;
+    obj?: MOrder;
     isOpen: boolean;
     onClose: () => void;
 }

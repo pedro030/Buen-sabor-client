@@ -37,7 +37,8 @@ export const UserContext = createContext<IUserContext>({
     editUserInfo() {},
     tokenUser: "",
     orders: [],
-    setOrders: () => {}
+    setOrders: () => {},
+    getOrders: () => { return new Promise<MOrder[]>(()=>[]) }
 });
 
 export function UserProvider({children}: IContextProviderProps){
@@ -138,6 +139,13 @@ export function UserProvider({children}: IContextProviderProps){
             })
     }
 
+    const getOrders = (): Promise<MOrder[]> => {
+        return userService.getOrdersByUser(userInfo.id, tokenUser)
+        .then((res) => {
+            return res;
+        })
+    }
+
     return(
         <UserContext.Provider value={{
             userInfo,
@@ -149,7 +157,8 @@ export function UserProvider({children}: IContextProviderProps){
             deleteAddress,
             tokenUser,
             orders,
-            setOrders
+            setOrders,
+            getOrders
         }}>
             {children}
         </UserContext.Provider>

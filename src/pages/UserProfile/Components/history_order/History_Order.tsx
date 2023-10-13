@@ -6,17 +6,37 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import PDFDocument from './PDFDocument/PDFDocument';
 
 import { AiOutlineEye, AiOutlineFilePdf } from 'react-icons/ai'
+import { MOrder } from '../../../../models/MOrder';
+import PageLoader from '../../../page_loader/PageLoader';
 
 
 const History_Order = () => {
-    const { orders } = useContext(UserContext)
+    const { getOrders } = useContext(UserContext)
     const [isOpen, setIsOpen] = useState(false);
-    const [bill, setBill] = useState();
+    const [isReady, setIsReady] = useState<boolean>(false);
+    const [orders, setOrders] = useState<MOrder[]>();
+    const [bill, setBill] = useState<MOrder>();
 
-    const viewPDF = (b: any) => {
+    const viewPDF = (b: MOrder) => {
         setBill(b);
         setIsOpen(true);
     }
+
+    useEffect(() => {
+        getOrders()
+        .then(res => {
+            setOrders(res);
+        })
+        .then(() => setIsReady(true));
+    }, [])
+
+    if (!isReady) {
+        return (
+          <div className="page-layout">
+            <PageLoader />
+          </div>
+        );
+      }
 
     return (
         <>
@@ -43,7 +63,7 @@ const History_Order = () => {
                         </thead>
                         <tbody>
                             {
-                                orders.map((o: any) => (
+                                orders?.map((o: MOrder) => (
                                     <tr key={o.id}>
                                         <td>{o.creationDate}</td>
                                         <td>{o.withdrawalMode}</td>

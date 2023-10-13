@@ -18,7 +18,6 @@ const UserProfile = () => {
   return (
     <>
       <Header />
-
       <div className='grid grid-cols-[260px_1fr] max-lg:grid-cols-1 '>
       <details className='mt-3 ml-3 lg:hidden dropdown'>
             <summary className='m-1 btn btn-circle btn-secondary'><FaBars className="w-5 h-5"/></summary>

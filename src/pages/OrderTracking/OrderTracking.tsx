@@ -16,6 +16,9 @@ import {
 import { over, Client } from "stompjs";
 import SockJS from "sockjs-client";
 
+// Services
+import { OrdersService } from "../../services/OrdersService";
+
 // Contexts
 import { UserContext } from "../../context/user";
 
@@ -31,10 +34,14 @@ import questionSVG from "../../assets/question.svg";
 import pizzaSvg from "../../assets/pizza.svg";
 import cashSVG from "../../assets/cash.svg";
 import { BiArrowBack } from "react-icons/bi";
+import Swal from "sweetalert2";
 
 const OrderTracking = () => {
   // Api URL
   const urlApi = import.meta.env.VITE_REACT_APP_API_URL;
+
+  // Order Service
+  const orderService = new OrdersService();
 
   // React Router
   const navigate: NavigateFunction = useNavigate();
@@ -104,6 +111,7 @@ const OrderTracking = () => {
     ],
     statusOrder: { id: 0, statusType: "" },
   });
+  const [isOrdersReady, setIsOrdersReady] = useState<boolean>(false);
 
   // Websocket
   const [stompClient, setStompClient] = useState<Client>(
@@ -146,16 +154,52 @@ const OrderTracking = () => {
 
       setOrders(updatedOrders);
       setOrder(ord);
-    } else if (
-      orders.find((order: MOrder) => order.id === idOrder)?.statusOrder
-        .statusType === "Delivered" ||
-      orders.find((order: MOrder) => order.id === idOrder)?.statusOrder
-        .statusType === "Cancelled"
-    ) {
-      stompClient?.disconnect(() => {});
     } else {
       stompClient?.disconnect(() => {});
-      navigate("/");
+      orderService.GetById(idOrder, tokenUser)
+      .then((order) => {
+        const updatedOrders = orders.map((o: MOrder) => {
+          if (o.id === idOrder)
+            return { ...o, statusOrder: order.statusOrder };
+          return o;
+        });
+        setOrders(updatedOrders);
+        setOrder(order);
+
+        if(order.statusOrder.statusType === 'Cancelled') {
+          Swal.fire({
+            icon: "error",
+            title: "Order Cancelled",
+            text: `We're sorry, your order ${order.id} was cancelled`,
+            showCancelButton: true,
+            reverseButtons: true,
+            cancelButtonText: 'Stay Here',
+            confirmButtonText: 'Back',
+            confirmButtonColor: '#E73636',
+          })
+            .then((result) => {
+              if(result.isConfirmed) {
+                navigate('/');
+              }
+            })
+        } else {
+          Swal.fire({
+            icon: "success",
+            title: "Order Delivered",
+            text: `Your order ${order.id} was delivered. Enjoy it!`,
+            showCancelButton: true,
+            reverseButtons: true,
+            cancelButtonText: 'Stay Here',
+            confirmButtonText: 'Back',
+            confirmButtonColor: '#E73636',
+          })
+            .then((result) => {
+              if(result.isConfirmed) {
+                navigate('/');
+              }
+            })
+        }
+      })
     }
   };
 
@@ -175,20 +219,26 @@ const OrderTracking = () => {
   };
 
   useEffect(() => {
-    if (id && !isReady) {
+    if (id && !isReady && isOrdersReady) {
       const ord: MOrder | undefined = orders.find((o: MOrder) => o.id === +id);
 
       if (ord) {
         setOrder(ord);
         connectSocket(+id);
         setIsReady(true);
-      }
+      } else navigate(-1);
     }
 
     return () => {
       stompClient.connected && isReady ? stompClient?.disconnect(() => {}) : "";
     };
-  }, [orders]);
+  }, [isOrdersReady]);
+
+  useEffect(() => {
+    if(orders.length > 0) {
+      setIsOrdersReady(true);
+    }
+  }, [orders])
 
   if (!isReady) {
     return (

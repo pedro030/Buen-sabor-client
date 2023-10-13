@@ -292,10 +292,10 @@ const OrderDetail = () => {
     }
 
     useEffect(() => {
-        validateStock()
+        if(userInfo.id != 0) {
+            validateStock();
+        } else navigate('/');
     }, [])
-
-
 
     return (
         <>

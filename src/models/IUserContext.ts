@@ -13,5 +13,6 @@ export interface IUserContext {
     newAddress(ad: MAddress): Promise<boolean>,
     deleteAddress(ad: MAddress): Promise<boolean>,
     orders: MOrder[],
-    setOrders: Dispatch<SetStateAction<MOrder[]>>
+    setOrders: Dispatch<SetStateAction<MOrder[]>>,
+    getOrders(): Promise<MOrder[]>
 }
