@@ -4,6 +4,7 @@ import { UserContext } from "../../../context/user";
 import { MAddress } from "../../../models/MAddress";
 import MapPin from '../../../assets/MapPin.svg';
 import AddressModal from "../../UserProfile/Components/addresses/AddressModal/AddressModal";
+import Swal from "sweetalert2";
 
 
 interface SelectAddressModalProps {
@@ -27,19 +28,36 @@ const SelectAddressModal: React.FC<SelectAddressModalProps> = ({ isOpen, onClose
     }
 
     const handleCreateAddress= (ad: MAddress) => {
+        Swal.fire({
+            title: 'Adding...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCancelButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        })
+        
         newAddress(ad)
-            .then((data) => {
-                if(data){
-                    alert("Agregado")
+            .then((res) => {
+                console.log(res)
+                if(res) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: `The address was added`,
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        confirmButtonColor: '#E73636'
+                    })
                     setIsAddressModalOpen(false);
-                    getAddresses()
-                }else{
-                    alert("Error al agregar")
+                    getAddresses();                
+                } else {
+                    Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
                 }
             })
     };
-
-
 
     return (
         <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">

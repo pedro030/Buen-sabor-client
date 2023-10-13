@@ -1,16 +1,13 @@
 import TrashSimple from "../../../../assets/TrashSimple.svg";
 import MapPin from "../../../../assets/MapPin.svg";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AddressModal from "./AddressModal/AddressModal";
 import { UserContext } from "../../../../context/user";
 import { MAddress } from "../../../../models/MAddress";
-import ConfirmationModal from "../../../../components/confirmation-modal/confirmation-modal";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const Address = () => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [addressToDelete, setAddressToDelete] = useState<MAddress>();
   const { addresses, newAddress, deleteAddress } = useContext(UserContext);
 
   const handleOpenAddressModal = () => {
@@ -22,49 +19,74 @@ const Address = () => {
   };
 
   const handleConfirmCreate = (ad: MAddress) => {
+    Swal.fire({
+        title: 'Adding...',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        showCancelButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    })
     newAddress(ad)
-      .then(() => {
-        swal({
-          icon: "success",
-          text: "Agregado",
-          buttons: [false],
-          timer: 2000,
-        });
-        handleCloseAddressModal();
-      })
-      .catch(() => {
-        swal({
-          icon: "error",
-          text: "Error al agregar",
-        });
-      });
-  };
-
-  const handleConfirmDelete = () => {
-    if (addressToDelete)
-      deleteAddress(addressToDelete).then((data) => {
-        if (data) {
-          swal({
-            icon: "success",
-            text: "Eliminado con exito",
-            buttons: [false],
-            timer: 2000,
-          });
-          setIsConfirmationModalOpen(false);
+    .then((res) => {
+      console.log(res);
+        if(res) {
+            Swal.fire({
+                icon: 'success',
+                title: `The address was added`,
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showCancelButton: false,
+                confirmButtonColor: '#E73636'
+            })                
         } else {
-          swal({
-            icon: "error",
-            text: "Error al eliminar",
-          });
-          setIsConfirmationModalOpen(false);
+            Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
         }
-      });
-  };
+        handleCloseAddressModal();
+    })
+};
 
-  const handleOpenConfirmationModal = (ad: MAddress) => {
-    setIsConfirmationModalOpen(true);
-    setAddressToDelete(ad);
-  };
+const handleConfirmDelete = (ad: MAddress) => {
+    Swal.fire({
+        icon: 'warning',
+        title: `Delete Address`,
+        text: `Are you sure you want to delete this address?`,
+        confirmButtonText: `Delete Address`,
+        showCancelButton: true,
+        reverseButtons: true,
+        confirmButtonColor: '#E73636'
+    })
+        .then((result) => {
+            if(result.isConfirmed && ad) {
+                Swal.fire({
+                    title: 'Removing...',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                })
+
+                deleteAddress(ad)
+                    .then((res) => {
+                        if(res) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: `The address was removed`,
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                                showCancelButton: false,
+                                confirmButtonColor: '#E73636'
+                            })
+                        } else Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+                    })
+            }
+        })
+}
 
   return (
     <div>
@@ -99,7 +121,7 @@ const Address = () => {
                   <td>
                     <button
                       className='btn btn-circle btn-secondary btn-sm'
-                      onClick={() => handleOpenConfirmationModal(a)}
+                      onClick={() => handleConfirmDelete(a)}
                     >
                       <img className='p-1 h-7' src={TrashSimple} />
                     </button>
@@ -121,13 +143,6 @@ const Address = () => {
         isOpen={isAddressModalOpen}
         onClose={handleCloseAddressModal}
         onConfirm={handleConfirmCreate}
-      />
-      <ConfirmationModal
-        mainText='Are you sure you want to delete this address?'
-        buttonText='Delete address'
-        onConfirm={handleConfirmDelete}
-        onClose={() => setIsConfirmationModalOpen(false)}
-        isOpen={isConfirmationModalOpen}
       />
     </div>
   );

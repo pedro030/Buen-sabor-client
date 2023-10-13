@@ -47,11 +47,12 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
 
         return fetch(`${this.apiURL}/${this.endpoint}/save`, requestOptions)
             .then(res => {
-                if(!res.ok) throw new Error(`Error en save: ${res}`);
-                return res.json()
+                if(res.ok) return true;
+                return false;
             })
             .catch(err => {
                 console.log(err)
+                return false;
             })
 
     }
@@ -67,12 +68,12 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
         }
         return fetch(`${this.apiURL}/${this.endpoint}/update/${obj.id}`, requestOptions)
             .then(res => {
-                if (res.ok) return true
+                if (res.ok) return true;
                 else return false;
             })
             .catch(err => {
                 console.log('Edit error: ', err)
-                return false
+                return false;
             })
     }
     Delete(id: number, token: string): Promise<boolean> {
@@ -84,12 +85,12 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
         }
         return fetch(`${this.apiURL}/${this.endpoint}/delete/${id}`, requestOptions)
         .then(res => {
-            if(res.ok) return true
+            if(res.ok) return true;
             else return false;
         })
         .catch(err => {
             console.log('Error al eliminar: ', err)
-            return false
+            return false;
         })
     }
 

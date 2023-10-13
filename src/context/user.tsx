@@ -125,16 +125,16 @@ export function UserProvider({children}: IContextProviderProps){
     const newAddress = (ad: MAddress) => {
         ad.user = userInfo
         return adrService.Create(ad, tokenUser).then(data => {
-            getAddresses()
-            return data
+            getAddresses();
+            return data;
         })
     }
 
     const deleteAddress = (ad: MAddress) => {
         return adrService.Delete(ad.id, tokenUser)
             .then(data => {
-                getAddresses()
-                return data
+                getAddresses();
+                return data;
             })
     }
 
