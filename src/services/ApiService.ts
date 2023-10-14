@@ -1,11 +1,14 @@
+// Type
 import { IApiService } from "../models/IApiService";
 
-export class ApiService<T extends {id:number}> implements IApiService<T>{
+// ApiService genérico
+export class ApiService<T extends { id: number }> implements IApiService<T>{
+    // Endpoint en base al tipo de Service
     endpoint: string = "";
-    // TODO: Definir variables de entorno e implementar url de la api
+    // Api URL
     apiURL: string = import.meta.env.VITE_REACT_APP_API_URL;
 
-    GetAll(token:string): Promise<T[]> {
+    GetAll(token: string): Promise<T[]> {
         const requestOptions: RequestInit = {
             headers: {
                 'Authorization': `Bearer ${token.trim()}`
@@ -19,6 +22,7 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
                 console.log(err)
             })
     }
+
     GetById(id: number, token: string): Promise<T> {
         const requestOptions: RequestInit = {
             headers: {
@@ -34,6 +38,7 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
                 console.log(err)
             })
     }
+
     Create(obj: T, token: string): Promise<boolean> {
         const newObj = obj;
         const requestOptions: RequestInit = {
@@ -56,6 +61,7 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
             })
 
     }
+
     Update(obj: T, token: string): Promise<boolean> {
         const updatedObj = obj;
         const requestOptions: RequestInit = {
@@ -76,6 +82,7 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
                 return false;
             })
     }
+
     Delete(id: number, token: string): Promise<boolean> {
         const requestOptions: RequestInit = {
             method: "DELETE",
@@ -93,5 +100,4 @@ export class ApiService<T extends {id:number}> implements IApiService<T>{
             return false;
         })
     }
-
 }

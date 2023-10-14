@@ -1,3 +1,4 @@
+import { IUserAction } from "../../models/IUserAction";
 import { SIGN_IN } from "../types";
 
 const initialState = {
@@ -5,7 +6,7 @@ const initialState = {
     password: '',
 }
 
-export default function userSessionReducer(state = initialState, action: any){
+export default function userSessionReducer(state = initialState, action: IUserAction){
     switch (action.type) {
         case SIGN_IN:
             return{

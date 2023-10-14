@@ -1,3 +1,4 @@
+// Genera el token del Usuario logueado para poder realizar las llamadas al backend
 function generateToken(){
     return fetch(`${import.meta.env.VITE_REACT_APP_MANAGEMENT_URL}/oauth/token`,{
         method: 'POST',
@@ -15,10 +16,11 @@ function generateToken(){
         return data.json()})
     .then(data => data.access_token)
     .catch(err => {
-        console.log("error al generar token", err)
+        console.log("Error al generar token", err)
     })
 }
 
+// Cambia la contraseña del usuario
 export async function updatePassword(userId: string, newPassword: string): Promise<boolean>{
     const token = await generateToken();
     const url = `${import.meta.env.VITE_REACT_APP_MANAGEMENT_URL}/api/v2/users/${userId}`
