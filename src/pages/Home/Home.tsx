@@ -17,8 +17,13 @@ import { UserContext } from "../../context/user";
 import { IUserContext } from "../../models/IUserContext";
 
 const Home = () => {
+  // User Context
   const { userInfo }: IUserContext = useContext(UserContext);
-  const {  isAuthenticated } = useAuth0();
+
+  // Auth0
+  const { isAuthenticated } = useAuth0();
+
+  // Boolean State: User Info is Ready?
   const [userInfoReady, setUserInfoReady] = useState<boolean>(false);
 
   // Cada vez que cambia de estado userInfo verifica que exista un mail del user.

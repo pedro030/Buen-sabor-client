@@ -6,6 +6,7 @@ import img_location from '../../../assets/location.svg'
 import img_clock from '../../../assets/clock2.svg'
 
 const Carousel = () => {
+    // Navigation
     const navigate: NavigateFunction = useNavigate();
 
     // Si se clickea en Order Food, se realiza un scroll hacia el Menú
@@ -18,8 +19,8 @@ const Carousel = () => {
 
     return (
         <section>
+            { /* CAROUSEL */ }
             <div className="hero h-[85vh] bg-[url('src/assets/carousel_img_primary.png')]">
-
                 <div className="bg-opacity-70 hero-overlay"></div>
                 <div className="text-center hero-content text-neutral-content">
                     <div className="max-w-md">
@@ -32,11 +33,9 @@ const Carousel = () => {
                         </div>
                     </div>
                 </div>
-                
             </div>
-
+            { /* RESTAURANT INFO */ }
             <div id='menuSeccion' className='grid w-full grid-cols-2 mt-5 mb-3'>
-
                 <div className='flex flex-row items-center justify-center'>
                     <img className='h-12 pr-4 max-md:h-10 max-sm:h-8' src={img_location} />
                     <div>
@@ -51,9 +50,7 @@ const Carousel = () => {
                         <p className='max-md:text-sm max-sm:text-xs'>Mon To Fri 9:00AM - 9:00PM</p>
                     </div>
                 </div>
-
             </div>
-
         </section>
     )
 }

@@ -5,7 +5,6 @@ import { Route, Routes } from "react-router-dom";
 import { AuthenticationGuard } from "../components/auth0/AuthenticationGuard";
 
 // Components
-import Login from "../pages/Login/Login"
 import Home from "../pages/Home/Home";
 import About from "../pages/About/AboutComponent";
 import MenuPage from "../pages/Menu/Menu";
@@ -18,7 +17,6 @@ function AppRouter() {
   return (
     <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/help" element={<Help />} />
         <Route path="/about" element={<About />} />
         <Route path="/menu" element={<MenuPage />} />
