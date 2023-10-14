@@ -15,12 +15,14 @@ import { FiltersProvider } from './context/filters';
 import { UserContext } from './context/user';
 import { LocationsProvider } from './context/locations';
 
-
 const  App = () => {
-
+  // Auth0
   const { isLoading, user, logout } = useAuth0();
+
+  // User Context
   const { getUserInfo, tokenUser } = useContext(UserContext);
 
+  // Si se está logueando aparece un Loader
   if (isLoading) {
     return (
       <div className="page-layout">
@@ -29,10 +31,12 @@ const  App = () => {
     );
   }
 
+  // Si existe el user, token y email se obtiene la informacion del usuario a traves del mail
   useEffect(() => {
     if (user && tokenUser) {
       if (user.email) getUserInfo(user.email);
     }
+  // Se ejecuta cada vez que cambia el estado del Token
   }, [tokenUser])
 
   // Logout por Inactividad de 45 Minutos

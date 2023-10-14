@@ -1,7 +1,14 @@
+// React
+import { FC, ComponentType  } from 'react'
+
+// Auth0
 import { withAuthenticationRequired } from "@auth0/auth0-react";
+
+// Component
 import PageLoader from "../../pages/page_loader/PageLoader";
 
-export const AuthenticationGuard = (props: any) => {
+export const AuthenticationGuard: FC<{component: ComponentType}> = (props) => {
+    // Utiliza withAuthenticationRequired para proteger el componente y mostrar el cargador
     const Component = withAuthenticationRequired(props.component, {
         onRedirecting: () => (
             <div className="page-layout">
