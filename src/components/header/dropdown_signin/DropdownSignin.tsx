@@ -1,18 +1,25 @@
 // React Router
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 //Auth0
 import { useAuth0 } from '@auth0/auth0-react';
 
 const DropdownSignin = () => {
+    // Redirect URL
     const redirectUri = import.meta.env.VITE_REACT_APP_AUTH0_CALLBACK_URL;
-    const { user, loginWithRedirect, logout, isAuthenticated} = useAuth0();
-    const navigate = useNavigate();
 
+    // Auth0
+    const { user, loginWithRedirect, logout, isAuthenticated} = useAuth0();
+    
+    // Navigation
+    const navigate: NavigateFunction = useNavigate();
+
+    // Login
     const handleLogin = async () => {
         await loginWithRedirect();
     };
 
+    // Register / Sign Up
     const handleSignUp = async () => {
         await loginWithRedirect({
             authorizationParams: {
@@ -21,6 +28,7 @@ const DropdownSignin = () => {
         });
     };
 
+    // Log Out
     const handleLogout = () => {
         logout({
             logoutParams: {
@@ -29,6 +37,7 @@ const DropdownSignin = () => {
         });
     };
 
+    // Switch Button if is logged
     const switchButton = () => {
         if (!isAuthenticated) {
             return <button className='w-full rounded-full btn btn-primary max-md:w-32'>Sign In</button>
@@ -49,11 +58,8 @@ const DropdownSignin = () => {
     return (
         <>
             <div className="w-full dropdown dropdown-end">
-
                 {switchButton()}
-
                 <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 border">
-
                     {!isAuthenticated && (
                         <>
                             <li className='cursor-pointer dropdown-item' onClick={handleLogin}>Log In</li>

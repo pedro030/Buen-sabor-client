@@ -1,14 +1,7 @@
-import './Footer.scss';
-import facebook from "../../assets/facebook-logo.png";
-import insta from "../../assets/instagam-logo.png";
-import whatsapp from "../../assets/whatsapp-logo.png";
-import twitter from "../../assets/twitter-logo.png";
-import logo from "../../assets/logoBuenSabor.png";
+// React Router
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
-
-
     return (
         <>
             <footer className="p-10 footer bg-base-200 text-base-content">
@@ -26,7 +19,6 @@ const Footer = () => {
                 <p>Copyright © 2023 - All right reserved by Buen Sabor Rte</p>
             </footer>
         </>
-
     )
 }
 

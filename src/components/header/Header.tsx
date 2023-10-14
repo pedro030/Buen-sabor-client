@@ -7,6 +7,12 @@ import { NavLink, NavigateFunction, useNavigate } from 'react-router-dom'
 // React Responsive
 import { useMediaQuery } from 'react-responsive';
 
+// Auth0
+import { useAuth0 } from '@auth0/auth0-react';
+
+// Sweet Alert 2
+import Swal from 'sweetalert2';
+
 // Socket
 import SockJS from 'sockjs-client'
 import { over, Client } from 'stompjs';
@@ -32,8 +38,10 @@ import notepad from '../../assets/notepad.svg'
 import searcher from '../../assets/searcher.svg'
 import cartImg from '../../assets/cart.svg'
 
-
 const Header: FC = () => {
+    // Auth0
+    const { loginWithRedirect } = useAuth0();
+
     // User Information
     const { userInfo }: IUserContext = useContext(UserContext);
 
@@ -54,9 +62,6 @@ const Header: FC = () => {
         { id: 4, title: 'About', path: '/about' },
     ]);
 
-    //esto tal vez se pueda borrar
-    const [activeLink, setActiveLink] = useState('');
-
     // Navigate
     const navigate: NavigateFunction = useNavigate();
 
@@ -72,7 +77,7 @@ const Header: FC = () => {
     };
 
     const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-        setFilters((prevState: any) => ({
+        setFilters((prevState) => ({
             ...prevState,
             search: e.target.value
         }))
@@ -123,9 +128,6 @@ const Header: FC = () => {
     }
 
     useEffect(() => {
-        const currentPath = window.location.pathname;
-        setActiveLink(currentPath);
-
         // Si existe el mail del user se conecta al Socket
         //if(userInfo.mail.length > 0) connectSocket();
 
@@ -135,16 +137,34 @@ const Header: FC = () => {
             stompClient.connected ? stompClient?.disconnect(() => { }) : '';
         };
     }, []);
+
+    // The User is Logged to Continue Shopping?
+    const handleLogin = () => {
+        if(userInfo.id === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Login',
+                text: 'To continue shopping you need to login',
+                showCancelButton: true,
+                reverseButtons: true,
+                confirmButtonText: 'Login',
+                confirmButtonColor: '#E73636'
+            })
+                .then((result) => {
+                    if(result.isConfirmed) {
+                        loginWithRedirect();
+                    }
+                })
+        } else navigate('/order-detail');
+    }
     
     return (
         <>
             <nav className="sticky top-0 z-10 grid grid-rows-[48px_32px] max-lg:grid-rows-1 bg-base-100 navbar shadow ">
                 <div className=' grid grid-cols-[250px_1fr_70px_70px_70px_130px] max-lg:gap-1 max-lg:grid-cols-[1fr_70px_70px_70px_128px]  '>
                     <a className="text-xl normal-case cursor-pointer"><h1 className=' font-bold text-red-600 min-w-[28px] ml-10 max-lg:mx-1' onClick={() => navigate('/')}>Buen Sabor</h1></a>
-                    { (isTable) &&
-
-                        // SEARCH
-                        <>
+                    { /* SEARCH */ }
+                    { (isTable) && <>
                             <div className='flex justify-center '>
                                 <img src={searcher} height="25" />
                             </div>
@@ -153,6 +173,7 @@ const Header: FC = () => {
                                 <div tabIndex={0} className='flex justify-center cursor-pointer '>
                                     <img src={notepad} height="25" />
                                 </div>
+                                { /* PENDING ORDERS */ }
                                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 ">
                                     <div className="overflow-y-auto">
                                         <table className="table ">
@@ -175,17 +196,13 @@ const Header: FC = () => {
                                 </ul>
                             </div>
                         </>
-
-
                     }
-
-                    {(isMobile) &&
-                        // SEARCH
-                        <>
+                    { /* SEARCH */ }
+                    {(isMobile) && <>
                             <div className='flex justify-center '>
                                 <img src={searcher} height="25" />
                             </div>
-
+                            { /* PENDING ORDERS */ }
                             <div className="dropdown dropdown-end">
                                 <div tabIndex={0} className='flex justify-center cursor-pointer '>
                                     <img src={notepad} height="25" />
@@ -213,16 +230,10 @@ const Header: FC = () => {
                             </div>
                         </>
                     }
-
-
-
-                    {(!isTable) &&
-                        <>
-                            {/* //Search */}
+                    { /* SEARCH */ }
+                    {(!isTable) && <>
                             <input type="search" placeholder="Search Food" className="w-full rounded-full h-11 input input-bordered" onChange={handleChangeSearch} value={filters.search} onKeyDown={scrollToSection} />
-
                             <div></div>
-
                             {/* PENDING ORDERS */}
                             <div className="dropdown dropdown-end">
                                 <div tabIndex={0} className='flex justify-center cursor-pointer '>
@@ -279,8 +290,7 @@ const Header: FC = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            {cart[0].quantity === 0 ? <button className='w-full mt-1 rounded-full btn btn-primary btn-sm btn-disabled '>Continue</button> : <button className='w-full mt-1 rounded-full btn btn-primary btn-sm ' onClick={() => navigate('/order-detail')}>Continue</button>}
-
+                            {cart[0].quantity === 0 ? <button className='w-full mt-1 rounded-full btn btn-primary btn-sm btn-disabled '>Continue</button> : <button className='w-full mt-1 rounded-full btn btn-primary btn-sm ' onClick={handleLogin}>Continue</button>}
                         </ul>
                     </div>
                     { /* DROPDOWN: LOG IN / LOG OUT */}
