@@ -1,23 +1,36 @@
-import React, { useContext } from "react";
-import "./UserProfile.scss";
+// React
+import { useContext } from "react";
+
+// React Router
 import { NavLink, Route, Routes } from "react-router-dom";
-import UserDetails from "./Components/user_details/UserDetails";
+
+// Auth0
 import { useAuth0 } from "@auth0/auth0-react";
+
+//Context
+import { UserContext } from "../../context/user";
+
+// Components
+import UserDetails from "./Components/user_details/UserDetails";
 import Address from "./Components/addresses/Address";
 import Change_password from "./Components/change_password/Change_password";
 import History_Order from "./Components/history_order/History_Order";
-import { UserContext } from "../../context/user";
 import Header from "../../components/header/Header";
+
+// Assets
 import { FaBars } from 'react-icons/fa';
 
 const UserProfile = () => {
+  // User from Auth0
   const { user } = useAuth0();
-
+  // User Contex - User info from DB
   const { userInfo } = useContext(UserContext);
 
   return (
     <>
+      {/* HEADER */}
       <Header />
+      { /* SIDE NAVBAR */}
       <div className='grid grid-cols-[260px_1fr] max-lg:grid-cols-1 '>
       <details className='mt-3 ml-3 lg:hidden dropdown'>
             <summary className='m-1 btn btn-circle btn-secondary'><FaBars className="w-5 h-5"/></summary>
@@ -76,7 +89,6 @@ const UserProfile = () => {
             </ul>
           </details>
         <ul className='w-56 m-4 menu bg-secondary rounded-box max-lg:hidden'>
-          
           <div className='max-lg:hidden'>
             <div className='flex justify-center avatar'>
               <div className='w-24 rounded-full'>
@@ -124,13 +136,14 @@ const UserProfile = () => {
                     to='orders'
                     className={({ isActive }) => (isActive ? "active" : "")}
                   >
-                    Order history
+                    Order History
                   </NavLink>
                 </li>
               </ul>
             </li>
           </div>
         </ul>
+        { /* MY PROFILE ROUTES */}
         <div className='px-4 pt-1 mt-4'>
           <Routes>
             <Route path='/' element={<UserDetails />} /> */

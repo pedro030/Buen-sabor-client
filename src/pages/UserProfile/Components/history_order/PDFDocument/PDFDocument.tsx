@@ -1,10 +1,13 @@
-import { Document, Page, Image, View, Text, StyleSheet } from '@react-pdf/renderer';
-import { useContext } from 'react';
-import { UserContext } from '../../../../../context/user';
+// React PDF
+import { Document, Page, View, Text, StyleSheet } from '@react-pdf/renderer';
 
+// Type
+import { IPDFBill } from '../../../../../models/IPDFBill';
+import { MOrderProducts } from '../../../../../models/MOrder';
 
-function PDFDocument({ obj }: any) {
+function PDFDocument({ obj }: IPDFBill) {
 
+    // Bill PDF Styles
     const styles = StyleSheet.create({
         page: { margin: '30px' },
         navbar: { height: '80px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
@@ -15,10 +18,8 @@ function PDFDocument({ obj }: any) {
         section: { marginRight: '60px', display: 'flex', flexDirection: 'row', justifyContent: "space-between", marginVertical: "40px" },
     });
 
-    const { userInfo } = useContext(UserContext);
-
     return (
-        <Document title={`Order #${obj.id}`}>
+        <Document title={`Order #${obj?.id}`}>
             <Page size="A4" style={styles.page}>
                 <View>
                     {/*HEADER*/}
@@ -40,16 +41,16 @@ function PDFDocument({ obj }: any) {
                     {/*DATA CLIENT & RESTAURANT*/}
                     <View style={styles.section}>
                         <View>
-                            <Text>ORDER BILL #{obj.id}</Text>
+                            <Text>ORDER BILL #{obj?.id}</Text>
                         </View>
                         <View style={{ marginRight: '60px', display: 'flex', flexDirection: 'column', verticalAlign: 'super', fontSize: '12px', }}>
                             <Text style={{ fontWeight: 'bold', fontSize: "14px", }}>BILLED TO</Text>
-                            <Text>Client: {userInfo.firstName} {userInfo.lastName}</Text>
-                            <Text>Address: {obj.address}</Text>
-                            <Text>Mail: {userInfo.mail}</Text>
+                            <Text>Client: {obj?.user.firstName} {obj?.user.lastName}</Text>
+                            <Text>Address: {obj?.address}</Text>
+                            <Text>Mail: {obj?.user.mail}</Text>
                             <Text>Cel: {''}</Text>
-                            <Text>Date: {obj.date}</Text>
-                            <Text>Due Date: {obj.paymode.paymode == 'MercadoPago' ? 'ONLINE PAYMENTH' : ''}</Text>
+                            <Text>Date: {obj?.creationDate.split(" ")[0]}</Text>
+                            <Text>Due Date: {obj?.paymode.paymode == 'MercadoPago' ? 'ONLINE PAYMENTH' : ''}</Text>
                         </View>
                     </View>
 
@@ -63,7 +64,7 @@ function PDFDocument({ obj }: any) {
                             <View><Text>SUBTOTAL</Text></View>
                         </View>
                         {/*TABLE BODY*/}
-                        {obj.products.map((p: any, index: number) => {
+                        {obj?.products.map((p: MOrderProducts, index: number) => {
                             return <View key={index} style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginRight: "60px", fontSize: "10px", borderBottom: "1px", marginBottom: "4px", paddingBottom: "2px", }}>
                                 <View><Text>{p.product.name}</Text></View>
                                 <View><Text>{p.cant}</Text></View>
@@ -76,13 +77,12 @@ function PDFDocument({ obj }: any) {
                             <View>
                                 <Text>Informacion Pago</Text>
                             </View>
-
                             <View style={{ display: "flex", flexDirection: "column", }}>
-                                <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text style={{ marginRight: "4px" }}>PRODUCTS COST:</Text><Text>${obj.withdrawalMode == 'Delivery' ? obj.totalPrice - 400 : obj.totalPrice - 100}</Text></View>
-                                <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text style={{ marginRight: "4px" }}>SERVICE FEE.:</Text><Text>$100  </Text></View>
-                                {obj.withdrawalMode == 'Delivery' ? <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text style={{ marginRight: "4px" }}>SHIPPING COST:</Text><Text>$300  </Text></View> : ''}
+                                <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text style={{ marginRight: "4px" }}>PRODUCTS COST:</Text><Text>${obj?.withdrawalMode == 'Delivery' ? obj?.totalPrice - 400 : obj?.withdrawalMode == 'Take Away' ? obj?.totalPrice - 100 : ''}</Text></View>
+                                <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text style={{ marginRight: "4px" }}>SERVICE FEE.:</Text><Text>$100</Text></View>
+                                {obj?.withdrawalMode == 'Delivery' ? <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text style={{ marginRight: "4px" }}>SHIPPING COST:</Text><Text>$300</Text></View> : ''}
                                 <View style={{ borderBottom: "1px", marginTop: "2px" }}></View>
-                                <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text >TOTAL:</Text><Text>${obj.totalPrice}</Text></View>
+                                <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text >TOTAL:</Text><Text>${obj?.totalPrice}</Text></View>
                             </View>
                         </View>
                     </View>

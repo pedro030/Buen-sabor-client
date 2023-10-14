@@ -1,19 +1,33 @@
+// React
+import { useContext } from "react";
+
+// Auth
 import { useAuth0 } from "@auth0/auth0-react";
+
+// Formik
 import { Field, Form, Formik } from "formik";
-import "./UserDetails.scss";
-import React, { useContext } from "react";
+
+// Yup
 import * as Yup from "yup";
+
+// Context
 import { UserContext } from "../../../../context/user";
+
+// Types
 import { MUser } from "../../../../models/MUser";
 
 const UserDetails = () => {
+  // User from Auth0
   const { user } = useAuth0();
 
+  // User Contex - User info from DB & editUserInfo function
   const { userInfo, editUserInfo } = useContext(UserContext);
 
+  // Regex para validar números de teléfono
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
+  // Validacion del formulario
   const validationSchema = Yup.object({
     firstName: Yup.string().required("Name is required").max(55),
     email: Yup.string().email(),
@@ -25,26 +39,31 @@ const UserDetails = () => {
     ),
   });
 
-  const onSubmitChanges = (state: any) => {
+  // Guardar cambios
+  const onSubmitChanges = (state: MUser) => {
     const updatedObj: MUser = {
       ...userInfo,
       firstName: state.firstName,
       lastName: state.lastName,
-      telephone: state.phone_number,
+      telephone: state.telephone,
     };
     editUserInfo(updatedObj);
   };
+  
   return (
     <div className=''>
       <h2 className='mb-5 text-center stat-title'>Account Info</h2>
       <Formik
-        initialValues={{
-          firstName: userInfo?.firstName,
-          email: userInfo?.mail,
-          lastName: userInfo?.lastName,
-          birthdate: user?.birthdate,
-          phone_number: userInfo?.telephone,
-          gender: user?.gender,
+        initialValues={ userInfo ? userInfo : {
+          id: 0,
+          firstName: "",
+          mail: "",
+          lastName: "",
+          birthdate: "",
+          telephone: 0,
+          gender: "",
+          blacklist: "",
+          orders: []
         }}
         onSubmit={onSubmitChanges}
         validationSchema={validationSchema}
@@ -72,12 +91,12 @@ const UserDetails = () => {
               />
             </div>
             <div>
-              <label className='label' htmlFor='email'>
+              <label className='label' htmlFor='mail'>
                 <span className='label-text'>Email</span>
               </label>
               <Field
                 disabled
-                name='email'
+                name='mail'
                 type='email'
                 className='w-96 max-lg:w-72 input input-bordered input-primary'
               />
@@ -96,7 +115,7 @@ const UserDetails = () => {
             </div>
             <div>
               <label className='label' htmlFor='phone_number'>
-                <span className='label-text'>Number Cell Phone</span>
+                <span className='label-text'>Phone Number</span>
               </label>
               <Field
                 type='text'
@@ -106,7 +125,7 @@ const UserDetails = () => {
             </div>
             <div>
               <label className='label' htmlFor='gender'>
-                <span className='label-text'>Gender </span>
+                <span className='label-text'>Gender</span>
               </label>
               <Field
                 name='gender'

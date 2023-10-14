@@ -1,14 +1,28 @@
-import * as Yup from 'yup';
-import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
-import { updatePassword } from '../../../../services/Auth0Service';
-import { useAuth0 } from '@auth0/auth0-react';
+// React
 import { useEffect, useState } from 'react';
 
+// Auth0
+import { useAuth0 } from '@auth0/auth0-react';
+
+// Services
+import { updatePassword } from '../../../../services/Auth0Service';
+
+// Formik
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
+
+// Yup
+import * as Yup from 'yup';
+import Swal from 'sweetalert2';
+
 const Change_password = () => {
+    // User from Auth0
     const { user } = useAuth0();
+
+    // State que indica si el user puede cambiar de contraseña o no (si se registró con Auth0 o no)
     const [canChange, setCanChange] = useState<boolean>(false);
+
+    // Validation
     const validationSchema = Yup.object({
-        // oldPassword: Yup.string().required('Old password is required'),
         newPassword: Yup.string()
             .required('New password is required')
             .min(8, 'Your password is too short.')
@@ -19,31 +33,44 @@ const Change_password = () => {
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('newPassword')], 'Passwords must match')
     })
+
     useEffect(() => {
         if (user?.sub) {
             setCanChange(user.sub?.split('|')[0] === "auth0");
         }
     }, [])
 
-    const handleSubmit = (state: any, action: FormikHelpers<any>) => {
+    // Handle Save New Password
+    const handleSubmit = (state: { newPassword: string, confirmPassword: string }, action: FormikHelpers<any>) => {
+        Swal.fire({
+            title: 'Loading...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCancelButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
         updatePassword(user?.sub || "", state.newPassword)
             .then(data => {
                 if (data) {
-                    alert("Password update success")
+                    Swal.fire({ title: 'Password Updated', icon: 'success', confirmButtonColor: '#E73636' })
                     action.resetForm();
                 } else {
-                    alert("An error ocurr updating password, please try later");
+                    Swal.fire({ title: 'There was an error, please try again later', icon: 'error', confirmButtonColor: '#E73636' })
                     action.resetForm();
                 }
             })
     }
+    
     return (
         <>
             <h2 className='mb-5 text-center stat-title'>Change password</h2>
             <div className="flex justify-center">
                 <Formik
                     initialValues={{
-                        // oldPassword:"",
                         newPassword: "",
                         confirmPassword: ""
                     }}

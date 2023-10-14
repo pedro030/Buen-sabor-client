@@ -1,23 +1,40 @@
-import TrashSimple from "../../../../assets/TrashSimple.svg";
-import MapPin from "../../../../assets/MapPin.svg";
+// React
 import { useContext, useState } from "react";
-import AddressModal from "./AddressModal/AddressModal";
+
+// Context
 import { UserContext } from "../../../../context/user";
-import { MAddress } from "../../../../models/MAddress";
+
+// Sweet Alert 2
 import Swal from "sweetalert2";
 
+// Type
+import { MAddress } from "../../../../models/MAddress";
+
+// Component
+import AddressModal from "./AddressModal/AddressModal";
+
+// Assets
+import TrashSimple from "../../../../assets/TrashSimple.svg";
+import MapPin from "../../../../assets/MapPin.svg";
+
 const Address = () => {
+  // State: Addres Modal Opened or Closed
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+
+  // User Context - Address state & functions
   const { addresses, newAddress, deleteAddress } = useContext(UserContext);
 
+  // Open Modal
   const handleOpenAddressModal = () => {
     setIsAddressModalOpen(true);
   };
 
+  // Close Modal
   const handleCloseAddressModal = () => {
     setIsAddressModalOpen(false);
   };
 
+  // Handler: Create Address with Alerts
   const handleConfirmCreate = (ad: MAddress) => {
     Swal.fire({
         title: 'Adding...',
@@ -48,6 +65,7 @@ const Address = () => {
     })
 };
 
+// Handler: Delete Address with Alerts
 const handleConfirmDelete = (ad: MAddress) => {
     Swal.fire({
         icon: 'warning',
@@ -91,7 +109,7 @@ const handleConfirmDelete = (ad: MAddress) => {
   return (
     <div>
       <h2 className='mb-5 text-center stat-title'>Address</h2>
-
+      { /* ADD ADDRESS BUTTON */ }
       <div className='flex my-3 place-content-center'>
         <button
           onClick={() => handleOpenAddressModal()}
@@ -101,6 +119,7 @@ const handleConfirmDelete = (ad: MAddress) => {
           Add address
         </button>
       </div>
+      { /* ADDRESSES LIST */ }
       <div className='overflow-x-auto'>
         <table className='table mb-10 table-xs'>
           <thead>
@@ -139,6 +158,7 @@ const handleConfirmDelete = (ad: MAddress) => {
           </tfoot>
         </table>
       </div>
+      { /* ADDRESS MODAL */ }
       <AddressModal
         isOpen={isAddressModalOpen}
         onClose={handleCloseAddressModal}
