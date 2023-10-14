@@ -19,12 +19,15 @@ export const LocationsContext = createContext<ILocationsContext>({
 });
 
 export function LocationsProvider({ children }: IContextProviderProps) {
+    // User Token
     const { tokenUser } : IUserContext = useContext(UserContext);
 
+    // Location Service
     const locService = new LocationService();
+    // State: Locations
     const [locations, setLocations] = useState<MLocation[]>([])
 
-    // addresses
+    // Get Locations
     const getLocations = () => {
         if(tokenUser){
             locService.GetAll(tokenUser)
@@ -33,9 +36,11 @@ export function LocationsProvider({ children }: IContextProviderProps) {
                 })
         }
     }
+
+    // Al cargar el Contexto y obtener el token se hace un GetAll de las Locations
     useEffect(()=>{
         getLocations()
-    },[tokenUser])
+    }, [tokenUser])
 
     return (
         <LocationsContext.Provider value={{

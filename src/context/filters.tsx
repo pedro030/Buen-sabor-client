@@ -25,6 +25,7 @@ export function FiltersProvider({ children }: IContextProviderProps) {
         search: ""
     })
 
+    // Filter Products
     const filterProducts = (products: MProduct[]) => {
         return products.filter((p: MProduct) => {
             return (

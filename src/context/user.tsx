@@ -15,9 +15,8 @@ import { MOrder } from '../models/MOrder';
 import { MAddress } from '../models/MAddress';
 import { IContextProviderProps } from '../models/IContextProviderProps';
 
-// External
+// Sweet Alert
 import swal from 'sweetalert';
-
 
 export const UserContext = createContext<IUserContext>({
     userInfo:{
@@ -32,19 +31,24 @@ export const UserContext = createContext<IUserContext>({
     getUserInfo(mail: string) {},
     addresses: [],
     getAddresses: () => {},
-    newAddress: () => { return new Promise<boolean>(()=>true) }, 
+    newAddress: () => { return new Promise<boolean>(() => true) }, 
     deleteAddress: () => { return new Promise<boolean>(() => true) },
     editUserInfo() {},
     tokenUser: "",
     orders: [],
     setOrders: () => {},
-    getOrders: () => { return new Promise<MOrder[]>(()=>[]) }
+    getOrders: () => { return new Promise<MOrder[]>(() => []) }
 });
 
 export function UserProvider({children}: IContextProviderProps){
+    // Services
     const adrService = new AdressService();
     const userService = new UserService();
+
+    // Auth0
     const {getAccessTokenSilently} = useAuth0();
+
+    // User States: Token, Addresses, Orders, UserInfo
     const [tokenUser, setTokenUser] = useState("")
     const [addresses, setAdresses] = useState<MAddress[]>([])
     const [orders, setOrders] = useState<MOrder[]>([])
@@ -58,15 +62,14 @@ export function UserProvider({children}: IContextProviderProps){
         orders: []
     })
 
-    //user info
+    // Get User Info
     const getUserInfo = (mail: string) => {
-        // cambiar por llamada a getUserByEmail
         userService.getUserByMail(mail, tokenUser)
         .then(sessionUser => {
             if(sessionUser) {
                 setUserInfo(sessionUser);
-                if(sessionUser.blacklist !== "Enabled")swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true});
-                if(sessionUser.addresses)setAdresses(sessionUser.addresses);
+                if(sessionUser.blacklist !== "Enabled") swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true});
+                if(sessionUser.addresses) setAdresses(sessionUser.addresses);
                 if(sessionUser.orders) setOrders(sessionUser.orders)
             }else{
                 signUpUser(mail)
@@ -74,7 +77,8 @@ export function UserProvider({children}: IContextProviderProps){
         })
     }
 
-    const signUpUser = (mail:string) => {
+    // Register User
+    const signUpUser = (mail: string) => {
         const newUser: MUser = {
             id: 0,
             mail: mail,
@@ -94,28 +98,31 @@ export function UserProvider({children}: IContextProviderProps){
         })
     }
 
+    // Edit User Info
     const editUserInfo = (u: MUser) => {
         userService.Update(u, tokenUser)
         .then(data => {
             if(data){getUserInfo(u.mail)}
         })
     }
+
+    // Al cargar el context obtener el token del mismo
     useEffect(()=>{
         getAccessTokenSilently({
             authorizationParams: {
                 audience: import.meta.env.VITE_REACT_APP_AUDIENCE,
             },
-        }).then(token => {
+        })
+        .then(token => {
             setTokenUser(token);
         })
         .catch(err => {
             console.log(err)
         })
-    },[getAccessTokenSilently])
+    }, [getAccessTokenSilently])
 
-    // addresses
+    // Get User Addresses
     const getAddresses = () => {
-        // TODO cambiar llamada a getUserAddresses
         adrService.GetAll(tokenUser)
         .then(data => {
             const userAddresses = data.filter(a => a.user?.id == userInfo?.id)
@@ -123,6 +130,7 @@ export function UserProvider({children}: IContextProviderProps){
         })
     }
 
+    // Add Address to User Addresses
     const newAddress = (ad: MAddress) => {
         ad.user = userInfo
         return adrService.Create(ad, tokenUser).then(data => {
@@ -131,6 +139,7 @@ export function UserProvider({children}: IContextProviderProps){
         })
     }
 
+    // Delete Address
     const deleteAddress = (ad: MAddress) => {
         return adrService.Delete(ad.id, tokenUser)
             .then(data => {
@@ -139,6 +148,7 @@ export function UserProvider({children}: IContextProviderProps){
             })
     }
 
+    // Get All User Addresses
     const getOrders = (): Promise<MOrder[]> => {
         return userService.getOrdersByUser(userInfo.id, tokenUser)
         .then((res) => {
