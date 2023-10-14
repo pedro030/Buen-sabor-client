@@ -2,20 +2,34 @@
 import { useContext, useEffect, useRef, FC, MouseEvent } from "react";
 import ReactModal from "react-modal";
 
+// Auth0
+import { useAuth0 } from "@auth0/auth0-react";
+
 // React Router
 import { useNavigate } from "react-router-dom";
 
+// Sweet Alert 2
+import Swal from "sweetalert2";
+
 // Context
 import { CartContext } from "../../../context/cart";
+import { UserContext } from "../../../context/user";
 
 // Types
 import { ICartContext, MCart } from "../../../models/ICartContext";
 import { EditCartModalProps } from "../../../models/IEditCartModalProps";
+import { IUserContext } from "../../../models/IUserContext";
 
 // Assets
 import TrashSimple from "../../../assets/TrashSimple.svg";
 
 const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
+  // Auth0
+  const { loginWithRedirect } = useAuth0();
+
+  // User Context
+  const { userInfo }: IUserContext = useContext(UserContext);
+
   // Cart
   const { cart, clearCart, addToCart, removeFromCart }: ICartContext =
     useContext(CartContext);
@@ -48,6 +62,26 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
     return num;
   };
 
+  // The User is Logged to Continue Shopping?
+  const handleLogin = () => {
+    if(userInfo.id === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Login',
+            text: 'To continue shopping you need to login',
+            showCancelButton: true,
+            reverseButtons: true,
+            confirmButtonText: 'Login',
+            confirmButtonColor: '#E73636'
+        })
+            .then((result) => {
+                if(result.isConfirmed) {
+                    loginWithRedirect();
+                }
+            })
+    } else navigate('/order-detail');
+  }
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -59,6 +93,7 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
           ref={modalRef}
           className='w-full p-8 mt-20 overflow-hidden bg-white rounded-3xl modal-box'
         >
+          { /* CLOSE EDIT CART MODAL BUTTON */}
           <button
             onClick={onClose}
             className='absolute btn btn-sm btn-circle btn-ghost right-2 top-2'
@@ -69,6 +104,7 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
           <h2 className='text-xl font-bold text-center text-primary'>
             Edit Cart
           </h2>
+          { /* LIST OF PRODUCTS IN CART */}
           <div className='flex flex-wrap gap-8 overflow-y-auto h-80 scrollbar'>
             <table className='table table-xs'>
               <thead>
@@ -99,6 +135,7 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
                         <td className='max-sm:text-xs'>{item.product.price}</td>
                         <td>
                           <div className="flex">
+                            { /* -1 QTY PRODUCT BUTTON */ }
                             <button
                               className='btn btn-primary btn-xs btn-outline'
                               onClick={() => addToCart(item.product, false)}
@@ -112,6 +149,7 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
                               value={item.quantity}
                               disabled
                             />
+                            { /* +1 QTY PRODUCT BUTTON */ }
                             <button
                               className='btn btn-primary btn-xs btn-outline'
                               onClick={() => addToCart(item.product)}
@@ -120,6 +158,7 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
                             </button>
                           </div>
                         </td>
+                        { /* SUBTOTAL */ }
                         <td className='max-sm:text-xs'>
                           ${calcTotal(item.quantity * item.product.price)}
                         </td>
@@ -138,9 +177,11 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
               </tbody>
             </table>
           </div>
+          { /* TOTAL */ }
           <h1 className='my-1 text-right'>
             Total <span className='font-bold'>${total}</span>
           </h1>
+          { /* EMPTY CART OR CONTINUE SHOPPING BUTTONS */ }
           <div className='flex flex-row justify-between'>
             <button className='w-40 btn btn-primary' onClick={clearCart}>
               Empty Cart
@@ -149,7 +190,7 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
               className={`btn btn-primary w-40 ${
                 cart[0].quantity === 0 && `btn-disabled`
               }`}
-              onClick={() => navigate("/order-detail")}
+              onClick={handleLogin}
             >
               Continue
             </button>

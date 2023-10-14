@@ -27,6 +27,8 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
 
   // Quantity
   const [qty, setQty] = useState(1);
+
+  // Add to Cart
   const { addToCart }: ICartContext = useContext(CartContext);
 
   // Se resetea el qty a 1 cada vez que se agrega al carrito
@@ -53,17 +55,14 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
     <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">
       <div className="rounded modal modal-open">
         <div ref={modalRef} className='w-[80vw] h-[85vh] flex max-lg:flex-col relative rounded-3xl bg-base-100 z-10 mt-[6rem] overflow-auto'>
-
-          {/* Back Arrow */}
+          {/* BACK TO MENU */}
           <div className="absolute flex items-center text-sm text-white top-5 left-5 hover:cursor-pointer">
             <img src={arrowLeftSvg} alt="" />
             <a className='ml-1' onClick={onClose}><p>back to menu</p></a>
           </div>
-
-          {/* Image */}
+          {/* FOOD IMAGE */}
           <img src={product.image? product.image : productImage} alt="product image" className="object-cover w-2/4 max-lg:w-full max-lg:h-80 rounded-s-3xl" />
-
-          {/* Description */}
+          {/* FOOD DESCRIPTION */}
           <div className="flex flex-col items-center p-10">
             <div className="product-description">
               <button className='mb-1 rounded-full btn btn-primary btn-xs'>HOTSALE</button>
@@ -77,6 +76,7 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                 <h4>Description:</h4>
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio aliquam quo quos officia voluptatem. Nobis enim, est recusandae ipsa deleniti corrupti veritatis, illo ipsam ad sint tenetur dolore, deserunt in?</p>
                 <h4>Ingredients:</h4>
+                { /* INGREDIENT LIST */ }
                 <ul>
                   { product.ingredients.map( (ingredient: MProductIngredient, index: number) => {
                     return <li key={index}> - { ingredient.ingredient.name }</li>
@@ -85,12 +85,9 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
               </div>
             </div>
           </div>
-          {
-            (!isTable) &&
-            <>
-              {/* Bottom navbar */}
+          {(!isTable) && <>
+              {/* BOTTOM NAVBAR */}
               <div className="grid grid-cols-3 gap-3 p-4 button-section">
-
                 <div className="flex">
                   <img src={pizzaSvg} alt="category icon" className='block mr-4' />
                   <div className='flex flex-col justify-center gap-1 text-left'>
@@ -112,14 +109,13 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
               </div>
             </>
           }
-          { // Bottom navbar of table
-            (isTable) &&
-            <>
+          {/* BOTTOM NAVBAR OF TABLE */}
+          { 
+            (isTable) && <>
               <div className="grid grid-cols-3 max-lg:grid-cols-[1fr_auto_1fr] max-sm:grid-rows-2 max-sm:grid-cols-1 gap-3 p-4 border max-lg:gap-2">
-
                 {(isMobile) &&
                   <div className='grid grid-cols-2 '>
-                    {/* Left Text */}
+                    {/* LEFT TEXT */}
                     <div className="flex items-center justify-center order-first">
                       <img src={pizzaSvg} alt="category icon" className='block h-10 mr-4 max-[828px]:h-8' />
                       <div className='flex flex-col justify-center gap-1 text-left max-lg:text-sm max-[828px]:text-xs'>
@@ -127,7 +123,7 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                         <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>category</span>
                       </div>
                     </div>
-                    {/* Quantity */}
+                    {/* QUANTITY */}
                     <div className="flex items-center justify-center order-last">
                       <div className=" qty-input">
                         <label className='max-lg:text-xs' htmlFor="">Qty: </label>
@@ -138,10 +134,8 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                     </div>
                   </div>
                 }
-                {
-                  (!isMobile) &&
-                  <>
-                    {/* Left Text */}
+                {(!isMobile) && <>
+                    {/* LEFT TEXT */}
                     <div className="flex items-center justify-center">
                       <img src={pizzaSvg} alt="category icon" className='block h-10 mr-4 max-[828px]:h-8' />
                       <div className='flex flex-col justify-center gap-1 text-left max-lg:text-sm max-[828px]:text-xs'>
@@ -149,7 +143,7 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                         <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>category</span>
                       </div>
                     </div>
-                    {/* Quality */}
+                    {/* QUANTITY */}
                     <div className="flex items-center justify-center">
                       <div className=" qty-input">
                         <label className='max-lg:text-xs' htmlFor="">Qty: </label>
@@ -160,7 +154,7 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                     </div>
                   </>
                 }
-                {/* Btn */}
+                {/* ADD TO CART BUTTON */}
                 <button className='mx-1 btn btn-primary max-sm:w-full' onClick={() => { addToCart(product, true, qty); onClose(); }}>Add to Cart</button>
               </div>
             </>
