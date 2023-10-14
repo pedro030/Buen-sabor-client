@@ -5,7 +5,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 
 // Interfaces
-import { IAuth0ProviderWithNavigate } from "../../interfaces/IAuth0ProviderWithNavigate";
+import { IAuth0ProviderWithNavigate } from "../../models/IAuth0ProviderWithNavigate";
 
 const Auth0ProviderWithNavigate = (props: IAuth0ProviderWithNavigate) => {
   // Navigation
