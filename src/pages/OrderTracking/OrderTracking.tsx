@@ -1,9 +1,6 @@
 // React
 import { useContext, useEffect, useState } from "react";
 
-// Auth0
-import { useAuth0 } from "@auth0/auth0-react";
-
 // React Router
 import {
   Link,
@@ -15,6 +12,9 @@ import {
 // Websocket
 import { over, Client } from "stompjs";
 import SockJS from "sockjs-client";
+
+// Sweet Alert 2
+import Swal from "sweetalert2";
 
 // Services
 import { OrdersService } from "../../services/OrdersService";
@@ -34,7 +34,6 @@ import questionSVG from "../../assets/question.svg";
 import pizzaSvg from "../../assets/pizza.svg";
 import cashSVG from "../../assets/cash.svg";
 import { BiArrowBack } from "react-icons/bi";
-import Swal from "sweetalert2";
 
 const OrderTracking = () => {
   // Api URL
@@ -57,7 +56,6 @@ const OrderTracking = () => {
   const external_reference = urlParams.get("external_reference");
 
   // User Info: Auth0 & UserContext
-  const { user } = useAuth0();
   const { tokenUser, userInfo, orders, setOrders }: IUserContext =
     useContext(UserContext);
 
@@ -203,7 +201,7 @@ const OrderTracking = () => {
     }
   };
 
-  const onError = (err: any) => {
+  const onError = (err: Error) => {
     console.log(err);
   };
 
@@ -218,6 +216,7 @@ const OrderTracking = () => {
     } ${amOrPm}`;
   };
 
+  // Si la orden está lista la muestra, sino mantiene el loader o redirecciona al Cliente al Home
   useEffect(() => {
     if (id && !isReady && isOrdersReady) {
       const ord: MOrder | undefined = orders.find((o: MOrder) => o.id === +id);
@@ -240,6 +239,7 @@ const OrderTracking = () => {
     }
   }, [orders])
 
+  // Loader
   if (!isReady) {
     return (
       <div className='page-layout'>
@@ -248,6 +248,7 @@ const OrderTracking = () => {
     );
   }
 
+  // Pago Aprobado de Mercado Pago
   if (status == "approved") {
     fetch(`${urlApi}/orders/changeStatus/${external_reference}`, {
       method: "PUT",
@@ -264,6 +265,7 @@ const OrderTracking = () => {
 
   return (
     <>
+      { /* HEADER REDIRECT HOME */ }
       <header className='flex items-center justify-between h-16 border flex-rows'>
         <a
           className='flex flex-row items-center gap-2 pl-5 cursor-pointer'
@@ -281,6 +283,7 @@ const OrderTracking = () => {
         </a>
         <div></div>
       </header>
+      { /* STEPS */}
       <div className='grid grid-rows-[120px_80px_1fr] gap-5 p-10 h-[100%]'>
         <div className='flex justify-center mb-5'>
           <ul className='z-0 overflow-hidden steps'>

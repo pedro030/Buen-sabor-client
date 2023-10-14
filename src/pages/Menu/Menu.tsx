@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react'
+// React
+import { useEffect } from 'react'
+
+// Components
 import Header from '../../components/header/Header'
 import Carousel from '../Home/carousel/Carousel'
 import Menu from '../../components/menu/Menu'
-import Footer from '../../components/footer/Footer'
-
-
-
 
 const MenuPage = () => {
-
+    // Scroll to Menú
     function scrollToSection() {
         const seccionDestino = document.getElementById('menuSeccion');
         if (seccionDestino) {

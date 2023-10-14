@@ -1,9 +1,9 @@
 // React
 import { useContext, useEffect, useState } from 'react'
-import { BiArrowBack, BiCycling } from 'react-icons/bi'
+import { BiArrowBack } from 'react-icons/bi'
 
 // React Router
-import { NavigateFunction, useNavigate, useParams } from 'react-router-dom'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
 
 // Mercado Pago
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
@@ -25,17 +25,14 @@ import { MOrder } from '../../models/MOrder'
 // Sweet Alert
 import Swal from 'sweetalert2'
 
-// Assets
-import pizzaSvg from '../../assets/pizza.svg'
-
 const OrderDetail = () => {
     // Api URL
     const urlApi = import.meta.env.VITE_REACT_APP_API_URL
 
-    // Cart
+    // Cart Context
     const { cart, clearCart }: ICartContext = useContext(CartContext);
 
-    // User
+    // User Context
     const { tokenUser, setOrders, userInfo }: IUserContext = useContext(UserContext);
 
     // State: Order ID para Mercado Pago
@@ -147,7 +144,7 @@ const OrderDetail = () => {
             })
     }
 
-    // Sweet Alert. Order creada y redireccion a OrderTracking
+    // Sweet Alert. Order creada y redireccion a OrderTracking.
     const orderCreated = (id: number) => {
         Swal.fire({
             icon: "success",
@@ -291,6 +288,7 @@ const OrderDetail = () => {
         }
     }
 
+    // Si el user no está logueado se redirecciona al Home
     useEffect(() => {
         if(userInfo.id != 0) {
             validateStock();

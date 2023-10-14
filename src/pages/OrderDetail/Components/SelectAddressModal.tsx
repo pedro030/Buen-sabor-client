@@ -1,32 +1,43 @@
+// React
+import { useContext, useEffect, useState, FC } from "react";
 import ReactModal from "react-modal";
-import { useContext, useEffect, useState } from "react";
+
+// Context
 import { UserContext } from "../../../context/user";
-import { MAddress } from "../../../models/MAddress";
-import MapPin from '../../../assets/MapPin.svg';
-import AddressModal from "../../UserProfile/Components/addresses/AddressModal/AddressModal";
+
+// Sweet Alert 2
 import Swal from "sweetalert2";
 
+// Component
+import AddressModal from "../../UserProfile/Components/addresses/AddressModal/AddressModal";
 
-interface SelectAddressModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onConfirm: (ad: MAddress) => void;
-    addressSelected?: MAddress
-}
+// Type
+import { MAddress } from "../../../models/MAddress";
+import { ISelectAddressModalProps } from "../../../models/ISelectAddressModalProps";
+import { IUserContext } from "../../../models/IUserContext";
 
-const SelectAddressModal: React.FC<SelectAddressModalProps> = ({ isOpen, onClose, onConfirm, addressSelected}) => {
-    const { addresses, getAddresses, newAddress } = useContext(UserContext);
-    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+// Assets
+import MapPin from '../../../assets/MapPin.svg';
 
+const SelectAddressModal: FC<ISelectAddressModalProps> = ({ isOpen, onClose, onConfirm, addressSelected}) => {
+    // User Context - Addresses State and Functions
+    const { addresses, getAddresses, newAddress }: IUserContext = useContext(UserContext);
+
+    // Address Modal Open/Close State
+    const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
+
+    // Al cargar el componente se cargan todas las direcciones del usuario
     useEffect(() => {
         getAddresses()
     }, [])
 
+    // Handler: Select Address
     const handleSelectAddress = (ad: MAddress) =>{
         onConfirm(ad),
         onClose()
     }
 
+    // Handler: Create Address with Sweet Alerts
     const handleCreateAddress= (ad: MAddress) => {
         Swal.fire({
             title: 'Adding...',
