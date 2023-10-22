@@ -14,6 +14,7 @@ import { CartProvider } from './context/cart';
 import { FiltersProvider } from './context/filters';
 import { UserContext } from './context/user';
 import { LocationsProvider } from './context/locations';
+import { checkOpeningHours } from './utils/utils';
 
 const  App = () => {
   // Auth0
@@ -62,6 +63,9 @@ const  App = () => {
 
     // Inicializa el temporizador de inactividad
     resetInactivityTimeout();
+
+    // Valida el horario del comercio
+    checkOpeningHours();
 
     return () => {
       // Limpia los controladores de eventos al desmontar el componente

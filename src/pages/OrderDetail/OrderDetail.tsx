@@ -25,6 +25,9 @@ import { MOrder } from '../../models/MOrder'
 // Sweet Alert
 import Swal from 'sweetalert2'
 
+// Utils
+import { checkOpeningHours } from '../../utils/utils'
+
 const OrderDetail = () => {
     // Api URL
     const urlApi = import.meta.env.VITE_REACT_APP_API_URL
@@ -88,6 +91,7 @@ const OrderDetail = () => {
             text: "For more information contact the administrator",
             confirmButtonColor: '#E73636'
         })
+        if(!checkOpeningHours()) return
 
         Swal.fire({
             title: "Did you pay the order to the Casher?",
