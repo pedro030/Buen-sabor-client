@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 // Formik
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 
 // Yup
 import * as Yup from "yup";
@@ -27,16 +27,19 @@ const UserDetails = () => {
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
+  // Regex para validar nombres y apellido
+  const nameRegExp = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s']+$/u
   // Validacion del formulario
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("Name is required").max(55),
+    firstName: Yup.string().required("Name is required")
+    .matches(nameRegExp, 'Numbers are not allowed').max(55),
     email: Yup.string().email(),
-    lastName: Yup.string().required("Lastname is required").max(55),
-    birthdate: Yup.date(),
-    phone_number: Yup.string().matches(
+    lastName: Yup.string().required("Lastname is required")
+    .matches(nameRegExp, 'Numbers are not allowed').max(55),
+    telephone: Yup.string().matches(
       phoneRegExp,
       "Phone number is not valid"
-    ),
+    ).max(14, "Phone number is too long"),
   });
 
   // Guardar cambios
@@ -59,9 +62,7 @@ const UserDetails = () => {
           firstName: "",
           mail: "",
           lastName: "",
-          birthdate: "",
           telephone: 0,
-          gender: "",
           blacklist: "",
           orders: []
         }}
@@ -79,6 +80,8 @@ const UserDetails = () => {
                 type='text'
                 className='w-96 max-lg:w-72 input input-bordered input-primary'
               />
+              <br />
+              <ErrorMessage name="firstName">{msg => <span className="text-error">{msg}</span>}</ErrorMessage>
             </div>
             <div>
               <label className='label' htmlFor='lastName'>
@@ -89,6 +92,22 @@ const UserDetails = () => {
                 name='lastName'
                 className='w-96 max-lg:w-72 input input-bordered input-primary'
               />
+              <br />
+              <ErrorMessage name="lastName">{msg => <span className="text-error">{msg}</span>}</ErrorMessage>
+            </div>
+          </div>
+          <div className='flex flex-col items-center justify-center'>
+            <div>
+              <label className='label' htmlFor='telephone'>
+                <span className='label-text'>Phone Number</span>
+              </label>
+              <Field
+                type='text'
+                name='telephone'
+                className='w-96 max-lg:w-72 input input-bordered input-primary'
+              />
+              <br />
+              <ErrorMessage name="telephone">{msg => <span className="text-error">{msg}</span>}</ErrorMessage>
             </div>
             <div>
               <label className='label' htmlFor='mail'>
@@ -98,38 +117,6 @@ const UserDetails = () => {
                 disabled
                 name='mail'
                 type='email'
-                className='w-96 max-lg:w-72 input input-bordered input-primary'
-              />
-            </div>
-          </div>
-          <div className='flex flex-col items-center justify-center'>
-            <div>
-              <label className='label' htmlFor='birthdate'>
-                <span className='label-text'>Birthdate</span>
-              </label>
-              <Field
-                name='birthdate'
-                type='date'
-                className='w-96 max-lg:w-72 input input-bordered input-primary'
-              />
-            </div>
-            <div>
-              <label className='label' htmlFor='phone_number'>
-                <span className='label-text'>Phone Number</span>
-              </label>
-              <Field
-                type='text'
-                name='phone_number'
-                className='w-96 max-lg:w-72 input input-bordered input-primary'
-              />
-            </div>
-            <div>
-              <label className='label' htmlFor='gender'>
-                <span className='label-text'>Gender</span>
-              </label>
-              <Field
-                name='gender'
-                type='text'
                 className='w-96 max-lg:w-72 input input-bordered input-primary'
               />
             </div>

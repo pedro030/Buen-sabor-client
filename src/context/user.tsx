@@ -123,10 +123,9 @@ export function UserProvider({children}: IContextProviderProps){
 
     // Get User Addresses
     const getAddresses = () => {
-        adrService.GetAll(tokenUser)
-        .then(data => {
-            const userAddresses = data.filter(a => a.user?.id == userInfo?.id)
-            setAdresses(userAddresses);
+        userService.getUserByMail(userInfo.mail, tokenUser)
+        .then(sessionUser => {
+            if(sessionUser.addresses) setAdresses(sessionUser.addresses);
         })
     }
 

@@ -25,7 +25,8 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose, onConfirm 
         number: Yup.number()
         .required("Number is required")
         .lessThan(100000, "Number out of range")
-        .moreThan(0, "Number out of range")
+        .moreThan(0, "Number out of range"),
+        location: Yup.string().required("Location is required")
     })
 
     const handleSubmit = (state: any) =>{
@@ -83,6 +84,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose, onConfirm 
                                         ))
                                     }
                                 </Field>
+                                <ErrorMessage name="location">{msg => <span className="text-sm text-primary error-message">{msg}</span>}</ErrorMessage>
                                 <button type="submit" className='my-2 rounded-full btn btn-primary'><img className='h-6' src={MapPin} />Save address</button>
                             </div>
                         </Form>
