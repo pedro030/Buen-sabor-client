@@ -38,6 +38,9 @@ import notepad from '../../assets/notepad.svg'
 import searcher from '../../assets/searcher.svg'
 import cartImg from '../../assets/cart.svg'
 
+// Styles
+import "./Header.scss" 
+
 const Header: FC = () => {
     // Auth0
     const { loginWithRedirect } = useAuth0();

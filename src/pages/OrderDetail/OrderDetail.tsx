@@ -12,6 +12,9 @@ import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 import { CartContext } from '../../context/cart'
 import { UserContext } from '../../context/user'
 
+// Utils
+import { checkOpeningHours } from '../../utils/utils'
+
 // Components
 import EditCartModal from '../../components/menu/EditCartModal/EditCartModal'
 import SelectAddressModal from './Components/SelectAddressModal'
@@ -24,9 +27,6 @@ import { MOrder } from '../../models/MOrder'
 
 // Sweet Alert
 import Swal from 'sweetalert2'
-
-// Utils
-import { checkOpeningHours } from '../../utils/utils'
 
 const OrderDetail = () => {
     // Api URL
@@ -83,17 +83,29 @@ const OrderDetail = () => {
         return actualItem.product.cookingTime > prevItem.product.cookingTime ? actualItem : prevItem;
     });
 
-    // Sweet Alert. Si se confirma el pago en efectivo se crea la orden.
-    const confirmCashPaymenth = () => {
-        if (userInfo.blacklist != "Enabled") return Swal.fire({
+    // Sweet Alert. User Enabled o en Blacklist
+    const enabledUser = () => {
+        Swal.fire({
             icon: 'error',
             title: "This user is not enabled to place orders",
             text: "For more information contact the administrator",
-            confirmButtonColor: '#E73636'
+            confirmButtonColor: '#E73636',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
         })
-        if(!checkOpeningHours()) return
+            .then((result) => {
+                if(result.isConfirmed) {
+                    navigate('/');
+                }
+            })
+    }
 
-        Swal.fire({
+    // Sweet Alert. Si se confirma el pago en efectivo se crea la orden.
+    const confirmCashPaymenth = async () => {
+        if (userInfo.blacklist != "Enabled") return enabledUser();
+        if(!checkOpeningHours()) return;
+        const stock = await validateStock();
+        stock && Swal.fire({
             title: "Did you pay the order to the Casher?",
             text: "If you check yes and have not paid, your order will be canceled anyway",
             icon: "warning",
@@ -222,12 +234,7 @@ const OrderDetail = () => {
 
     // Pago con Mercado Pago
     const PayWithMP = async () => {
-        if (userInfo.blacklist != "Enabled") return Swal.fire({
-            icon: 'error',
-            title: "This user is not enabled to place orders",
-            text: "For more information contact the administrator",
-            confirmButtonColor: '#E73636'
-        })
+        if (userInfo.blacklist != "Enabled") return enabledUser();
         // Primero valida si hay stock.
         const stock = await validateStock();
 
@@ -396,7 +403,7 @@ const OrderDetail = () => {
                                     <div >
                                         <h1 className='mb-5'>Available Methods: </h1>
                                         <div className='flex flex-col join'>
-                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" defaultChecked={isMP ? true : false} onClick={() => setIsMP(true)} />
+                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" checked={isMP ? true : false} onClick={() => setIsMP(true)} />
                                             <input className={isDelivery ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" onClick={() => setIsMP(false)} />
                                         </div>
                                     </div>

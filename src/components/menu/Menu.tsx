@@ -32,6 +32,9 @@ import { IUserContext } from '../../models/IUserContext'
 // Assets
 import clean from '../../assets/clean.svg'
 
+// Styles
+import "./Menu.scss"
+
 const Menu = () => {
     // Auth0
     const { loginWithRedirect } = useAuth0();
@@ -221,7 +224,7 @@ const Menu = () => {
                                         {/* FILTER by CATEGORY */}
                                         <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                         <div>
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} defaultChecked={filters.category == "all" ? true : false} />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
                                             <label className='label-text'>Todos</label><br />
                                             {categories.map((c: MCategory, i) => {
                                                 return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
@@ -257,7 +260,7 @@ const Menu = () => {
                                 {/* FILTER by CATEGORY */}
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} defaultChecked={filters.category == "all" ? true : false} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
                                     <label className='label-text'>Todos</label><br />
                                     {categories.map((c: MCategory, i) => {
                                         return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />

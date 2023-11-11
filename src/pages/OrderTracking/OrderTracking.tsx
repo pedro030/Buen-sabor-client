@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 
 // Websocket
-import { over, Client } from "stompjs";
+import { over, Client, Frame } from "stompjs";
 import SockJS from "sockjs-client";
 
 // Sweet Alert 2
@@ -117,7 +117,7 @@ const OrderTracking = () => {
   );
 
   const connectSocket = (idOrder: number) => {
-    stompClient.connect({}, () => onConnected(idOrder), onError);
+    stompClient.connect({}, () => onConnected(idOrder), (error) => onError(error));
   };
 
   const onConnected = async (idOrder: number) => {
@@ -201,7 +201,7 @@ const OrderTracking = () => {
     }
   };
 
-  const onError = (err: Error) => {
+  const onError = (err: string | Frame) => {
     console.log(err);
   };
 
@@ -262,6 +262,11 @@ const OrderTracking = () => {
       }),
     });
   }
+
+  const totalProductsPrice = order.products.reduce((total: number, item: MOrderProducts) => {
+    const itemPrice = item.product.price * item.cant;
+    return total + itemPrice;
+}, 0);
 
   return (
     <>
@@ -410,24 +415,22 @@ const OrderTracking = () => {
                       <hr />
                       <div className='flex justify-between w-full'>
                         <p className='my-3 text-sm'>Products cost</p>
-                        <p className='my-3 text-sm'>
-                          $
-                          {order.withdrawalMode == "Delivery"
-                            ? order.totalPrice - 400
-                            : order.totalPrice - 100}
-                        </p>
+                        <p className='my-3 text-sm'>${totalProductsPrice}</p>
                       </div>
                       <div className='flex justify-between'>
-                        <p className='my-3 text-sm'>Service fee</p>
+                        <p className='my-3 text-sm'>Service Fee</p>
                         <p className='my-3 text-sm'>$100</p>
                       </div>
                       {order.withdrawalMode == "Delivery" ? (
                         <div className='flex justify-between'>
-                          <p className='my-3 text-sm'>Shipping cost</p>
+                          <p className='my-3 text-sm'>Shipping Cost</p>
                           <p className='my-3 text-sm'>$300</p>
                         </div>
                       ) : (
-                        ""
+                        <div className='flex justify-between'>
+                          <p className='my-3 text-sm'>Discount 10%</p>
+                          <p className='my-3 text-sm'>-${(totalProductsPrice + 100) - ((totalProductsPrice + 100) * 0.9)}</p>
+                        </div>
                       )}
                       <div className='flex justify-between'>
                         <p className='my-3 text-sm font-bold'>Total</p>

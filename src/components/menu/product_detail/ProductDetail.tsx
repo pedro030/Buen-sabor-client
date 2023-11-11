@@ -11,6 +11,7 @@ import { CartContext } from '../../../context/cart'
 // Types
 import { IProductDetailModalProps } from '../../../models/IProductDetailModalProps'
 import { ICartContext } from '../../../models/ICartContext';
+import { MCategory } from '../../../models/MCategory';
 
 // Assets
 import productImage from '../../../assets/salad.jpg'
@@ -19,6 +20,9 @@ import fireSvg from '../../../assets/fire.svg'
 import clockSvg from '../../../assets/clock.svg'
 import arrowLeftSvg from "../../../assets/arrow-left.svg";
 import { MProductIngredient } from '../../../models/MIngredient';
+
+// Styles
+import "./ProductDetail.scss"
 
 const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose }) => {
   // Responsive
@@ -41,7 +45,7 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
 
   // Si se clickea fuera del modal, el mismo se cierra
   const handleClickOutside = (e: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(e.target as Node)) onClose();
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {setQty(1); onClose();}
   }
 
   useEffect(() => {
@@ -51,12 +55,20 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
     }
   }, []);
 
+  // Se determina recursivamente si la Parent Category final es "Bebidas"
+  const findParentCategory = (category: MCategory | null): MCategory | null => {
+    if(!category) return null;
+    if(category.name === "Bebidas") return category;
+
+    return findParentCategory(category.parentCategory)
+}
+
   return (
     <ReactModal isOpen={isOpen} onRequestClose={onClose} className="modal-delete">
       <div className="rounded modal modal-open">
         <div ref={modalRef} className='w-[80vw] h-[85vh] flex max-lg:flex-col relative rounded-3xl bg-base-100 z-10 mt-[6rem] overflow-auto'>
           {/* BACK TO MENU */}
-          <div className="absolute flex items-center text-sm text-white top-5 left-5 hover:cursor-pointer">
+          <div className="absolute flex items-center text-sm text-black top-5 left-5 hover:cursor-pointer">
             <img src={arrowLeftSvg} alt="" />
             <a className='ml-1' onClick={onClose}><p>back to menu</p></a>
           </div>
@@ -70,18 +82,18 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
               <div className="description-items">
                 <span> { product.subcategory.name } </span>
                 <span className='max-sm:text-sm'><img src={fireSvg} alt="category-icon" className='h-4 max-sm:h-3' />Calorias</span>
-                <span className='max-sm:text-sm'><img src={clockSvg} alt="category-icon" className='h-4 max-sm:h-3' />{ product.cookingTime }m</span>
+                {!findParentCategory(product.subcategory) && <span className='max-sm:text-sm'><img src={clockSvg} alt="category-icon" className='h-4 max-sm:h-3' />{ product.cookingTime }m</span> }
               </div>
               <div className="description-text">
-                <h4>Description:</h4>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio aliquam quo quos officia voluptatem. Nobis enim, est recusandae ipsa deleniti corrupti veritatis, illo ipsam ad sint tenetur dolore, deserunt in?</p>
-                <h4>Ingredients:</h4>
+                {/*<h4>Description:</h4>
+                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio aliquam quo quos officia voluptatem. Nobis enim, est recusandae ipsa deleniti corrupti veritatis, illo ipsam ad sint tenetur dolore, deserunt in?</p>*/}
                 { /* INGREDIENT LIST */ }
+                {!findParentCategory(product.subcategory) && <><h4>Ingredients:</h4>
                 <ul>
                   { product.ingredients.map( (ingredient: MProductIngredient, index: number) => {
                     return <li key={index}> - { ingredient.ingredient.name }</li>
                   }) }
-                </ul>
+                </ul></>}
               </div>
             </div>
           </div>
@@ -92,15 +104,15 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                   <img src={pizzaSvg} alt="category icon" className='block mr-4' />
                   <div className='flex flex-col justify-center gap-1 text-left'>
                     <p>{product.name}</p>
-                    <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>category</span>
+                    <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>{product.subcategory.name}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-center">
                   <div className=" qty-input">
                     <label htmlFor="">Qty: </label>
-                    <button className='btn btn-primary btn-outline btn-xs' onClick={() => { qty > 1 ? setQty(qty - 1) : '' }}>-</button>
-                    <input className='w-10 p-2 mx-2 input input-bordered input-neutral input-sm' type="number" min={1} value={qty} disabled />
+                    <button className='btn btn-primary btn-outline btn-xs' onClick={() => { qty > 1 && setQty(qty - 1)}}>-</button>
+                    <input className='w-12 p-2 mx-2 input input-bordered input-neutral input-sm' type="number" min={1} value={qty} disabled/>
                     <button className='btn btn-primary btn-outline btn-xs' onClick={() => setQty(qty + 1)}>+</button>
                   </div>
                 </div>
@@ -120,15 +132,15 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                       <img src={pizzaSvg} alt="category icon" className='block h-10 mr-4 max-[828px]:h-8' />
                       <div className='flex flex-col justify-center gap-1 text-left max-lg:text-sm max-[828px]:text-xs'>
                         <p>{product.name}</p>
-                        <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>category</span>
+                        <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>{product.subcategory.name}</span>
                       </div>
                     </div>
                     {/* QUANTITY */}
                     <div className="flex items-center justify-center order-last">
                       <div className=" qty-input">
                         <label className='max-lg:text-xs' htmlFor="">Qty: </label>
-                        <button className='btn btn-primary btn-outline btn-xs max-lg:w-2' onClick={() => { qty > 1 ? setQty(qty - 1) : '' }}>-</button>
-                        <input className='w-10 p-2 mx-2 input input-bordered input-neutral input-sm' type="number" min={1} value={qty} disabled />
+                        <button className='btn btn-primary btn-outline btn-xs max-lg:w-2' onClick={() => { qty > 1 && setQty(qty - 1)}}>-</button>
+                        <input className='w-12 p-2 mx-2 input input-bordered input-neutral input-sm' type="number" min={1} value={qty} disabled/>
                         <button className='btn btn-primary btn-outline btn-xs max-lg:w-2' onClick={() => setQty(qty + 1)}>+</button>
                       </div>
                     </div>
@@ -140,15 +152,15 @@ const ProductDetail: FC<IProductDetailModalProps> = ({ product, isOpen, onClose 
                       <img src={pizzaSvg} alt="category icon" className='block h-10 mr-4 max-[828px]:h-8' />
                       <div className='flex flex-col justify-center gap-1 text-left max-lg:text-sm max-[828px]:text-xs'>
                         <p>{product.name}</p>
-                        <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>category</span>
+                        <span className='text-xs font-medium tracking-widest uppercase text-[#E73636]'>{product.subcategory.name}</span>
                       </div>
                     </div>
                     {/* QUANTITY */}
                     <div className="flex items-center justify-center">
                       <div className=" qty-input">
                         <label className='max-lg:text-xs' htmlFor="">Qty: </label>
-                        <button className='btn btn-primary btn-outline btn-xs max-lg:w-2' onClick={() => { qty > 1 ? setQty(qty - 1) : '' }}>-</button>
-                        <input className='w-10 p-2 mx-2 input input-bordered input-neutral input-sm' type="number" min={1} value={qty} disabled />
+                        <button className='btn btn-primary btn-outline btn-xs max-lg:w-2' onClick={() => { qty > 1 && setQty(qty - 1)}}>-</button>
+                        <input className='w-12 p-2 mx-2 input input-bordered input-neutral input-sm' type="number" min={1} value={qty} disabled/>
                         <button className='btn btn-primary btn-outline btn-xs max-lg:w-2' onClick={() => setQty(qty + 1)}>+</button>
                       </div>
                     </div>
