@@ -28,8 +28,9 @@ export const checkOpeningHours = () => {
     if (horaActual < horaApertura || horaActual >= horaCierre) {
         // Muestra una alerta con el mensaje personalizado
         Swal.fire({
+            icon: "warning",
             title: "The business is currently closed",
-            text: "opening hours: " +
+            text: "Opening Hours: " +
                 (horaApertura < 10 ? "0" : "") + horaApertura + ":00 to " +
                 (horaCierre < 10 ? "0" : "") + horaCierre + ":00",
             confirmButtonColor: '#E73636'
