@@ -224,10 +224,10 @@ const Menu = () => {
                                         {/* FILTER by CATEGORY */}
                                         <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                         <div>
-                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
+                                            <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} readOnly/>
                                             <label className='label-text'>Todos</label><br />
                                             {categories.map((c: MCategory, i) => {
-                                                return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
+                                                return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory}/>
                                                     <label className='label-text'>{c.name}</label><br /></span>
                                             })}
                                         </div>
@@ -260,7 +260,7 @@ const Menu = () => {
                                 {/* FILTER by CATEGORY */}
                                 <h4 className='pb-2 text-sm font-bold'>Category</h4>
                                 <div>
-                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} />
+                                    <input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value="all" onChange={handleChangeCategory} checked={filters.category == "all" ? true : false} readOnly/>
                                     <label className='label-text'>Todos</label><br />
                                     {categories.map((c: MCategory, i) => {
                                         return <span key={i}><input type="radio" name="category" className="w-4 h-4 mr-1 rounded checkbox checkbox-primary" value={c.name} onChange={handleChangeCategory} />
@@ -317,7 +317,7 @@ const Menu = () => {
                                 (products.length > 0) && <div className="mt-5 join ">
                                     <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage - 1) : ''}>«</button>
                                     {pages.map((page: number, index: number) => {
-                                        return <input key={index.toString()} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={(index + 1).toString()} onClick={() => setCurrentPage(page)} defaultChecked={currentPage === page} />
+                                        return <input key={index.toString()} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={(index + 1).toString()} onClick={() => setCurrentPage(page)} checked={currentPage === page} readOnly/>
                                     })
                                     }
                                     <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length / productsPerPage) ? setCurrentPage(currentPage + 1) : ''}>»</button>
