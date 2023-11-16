@@ -201,7 +201,7 @@ const OrderDetail = () => {
             }))
         };
 
-        fetch(`${urlApi}/orders/save`, {
+        return fetch(`${urlApi}/orders/save`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ const OrderDetail = () => {
                 }
                 return response.json()
             })
-            .then(async (data: (MOrder)) => {
+            .then(async (data: (MOrder)) => {            
                 updateOrders(data);
                 if (data.paymode.paymode === "Cash") orderCreated(data.id)
                 else setValue(data.id)
@@ -241,8 +241,12 @@ const OrderDetail = () => {
         // Si hay stock se crea la orden para obtener el 'id' para crear la preferencia.
         if (stock) {
             await createOrder()
-            // Se crea la preferencia.
-            await fetch(`${urlApi}/mp/create-preference/${value}`, {
+        }
+    }
+    // Creacion de la preferencia despues de actulizado el value
+    useEffect(()=>{
+        if(value != 0){
+            fetch(`${urlApi}/mp/create-preference/${value}`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${(tokenUser).trim()}`
@@ -252,7 +256,7 @@ const OrderDetail = () => {
                 .then(data => { window.location.href = (data.initPoint) })
                 .catch(err => { Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' }) })
         }
-    }
+    },[value])
 
     if (status == 'null') {
         fetch(`${urlApi}/orders/delete/${external_reference}`, {
@@ -403,7 +407,7 @@ const OrderDetail = () => {
                                     <div >
                                         <h1 className='mb-5'>Available Methods: </h1>
                                         <div className='flex flex-col join'>
-                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" checked={isMP ? true : false} onClick={() => setIsMP(true)} />
+                                            <input className="w-full rounded-none join-item btn" type="radio" name="payment" aria-label="Mercado Pago" defaultChecked={isMP ? true : false} onClick={() => setIsMP(true)} />
                                             <input className={isDelivery ? "w-full my-4 rounded-none join-item btn btn-disabled" : "w-full my-4 rounded-none join-item btn"} type="radio" name="payment" aria-label="Cash" onClick={() => setIsMP(false)} />
                                         </div>
                                     </div>

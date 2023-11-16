@@ -249,19 +249,21 @@ const OrderTracking = () => {
   }
 
   // Pago Aprobado de Mercado Pago
-  if (status == "approved") {
-    fetch(`${urlApi}/orders/changeStatus/${external_reference}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${tokenUser}`,
-      },
-      body: JSON.stringify({
-        id: 2,
-        statusType: "In_Preparation",
-      }),
-    });
-  }
+  useEffect(()=>{
+    if (status == "approved") {
+      fetch(`${urlApi}/orders/changeStatus/${external_reference}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenUser}`,
+        },
+        body: JSON.stringify({
+          id: 2,
+          statusType: "In_Preparation",
+        }),
+      });
+    }
+  },[status])
 
   const totalProductsPrice = order.products.reduce((total: number, item: MOrderProducts) => {
     const itemPrice = item.product.price * item.cant;
