@@ -211,18 +211,36 @@ const OrderTracking = () => {
     const amOrPm = deliveryTime.getHours() >= 12 ? "PM" : "AM";
     return `${deliveryTime.getHours() - 3}:${
       deliveryTime.getMinutes() < 10
-        ? "0" + deliveryTime.getMinutes()
-        : deliveryTime.getMinutes()
+      ? "0" + deliveryTime.getMinutes()
+      : deliveryTime.getMinutes()
     } ${amOrPm}`;
   };
-
+  // Pago Aprobado de Mercado Pago
+  useEffect(()=>{
+    console.log("Entré")
+    if (status == "approved") {
+      console.log("Entré al if")
+      fetch(`${urlApi}/orders/changeStatus/${external_reference}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenUser}`,
+        },
+        body: JSON.stringify({
+          id: 2,
+          statusType: "In_Preparation",
+        }),
+      });
+    }
+  },[status])
+  
   // Si la orden está lista la muestra, sino mantiene el loader o redirecciona al Cliente al Home
   useEffect(() => {
-    if (id && !isReady && isOrdersReady) {
+        if (id && !isReady && isOrdersReady) {
       const ord: MOrder | undefined = orders.find((o: MOrder) => o.id === +id);
-
+      
       if (ord) {
-        setOrder(ord);
+                setOrder(ord);
         connectSocket(+id);
         setIsReady(true);
       } else navigate(-1);
@@ -248,22 +266,6 @@ const OrderTracking = () => {
     );
   }
 
-  // Pago Aprobado de Mercado Pago
-  useEffect(()=>{
-    if (status == "approved") {
-      fetch(`${urlApi}/orders/changeStatus/${external_reference}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${tokenUser}`,
-        },
-        body: JSON.stringify({
-          id: 2,
-          statusType: "In_Preparation",
-        }),
-      });
-    }
-  },[status])
 
   const totalProductsPrice = order.products.reduce((total: number, item: MOrderProducts) => {
     const itemPrice = item.product.price * item.cant;
