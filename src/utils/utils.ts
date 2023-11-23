@@ -13,7 +13,7 @@ export const checkOpeningHours = () => {
     // Verifica si es lunes a viernes o sábado/domingo y establece el rango horario correspondiente
     if (dateActualArgentina.getDay() >= 1 && dateActualArgentina.getDay() <= 5) {
         // Lunes a viernes de 20:00 a 12:00
-        horaApertura = 20;
+        horaApertura = 16;
         horaCierre = 24; // Representa la medianoche
     } else {
         // Sábado y domingo de 11:00 a 15:00

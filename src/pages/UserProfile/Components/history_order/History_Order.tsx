@@ -98,7 +98,7 @@ const History_Order = () => {
                                                 </div>
                                                 <div className='p-0 collapse-content'>
                                                     {o.products.map((p: MOrderProducts) => {
-                                                        return <p>{p.cant}x {p.product.name}</p>
+                                                        return <p key={p.id}>{p.cant}x {p.product.name}</p>
                                                     })}
                                                 </div>
                                             </div>

@@ -1,11 +1,18 @@
 // React PDF
 import { Document, Page, View, Text, StyleSheet } from '@react-pdf/renderer';
 
+// Context
+import { useContext } from 'react';
+import { UserContext } from '../../../../../context/user';
+
 // Type
 import { IPDFBill } from '../../../../../models/IPDFBill';
 import { MOrderProducts } from '../../../../../models/MOrder';
 
 function PDFDocument({ obj }: IPDFBill) {
+
+    // User Info
+    const { userInfo } = useContext(UserContext)
 
     // Bill PDF Styles
     const styles = StyleSheet.create({
@@ -45,9 +52,9 @@ function PDFDocument({ obj }: IPDFBill) {
                         </View>
                         <View style={{ marginRight: '60px', display: 'flex', flexDirection: 'column', verticalAlign: 'super', fontSize: '12px', }}>
                             <Text style={{ fontWeight: 'bold', fontSize: "14px", }}>BILLED TO</Text>
-                            <Text>Client: {obj?.user.firstName} {obj?.user.lastName}</Text>
+                            <Text>Client: {userInfo.firstName} {userInfo.lastName}</Text>
                             <Text>Address: {obj?.address}</Text>
-                            <Text>Mail: {obj?.user.mail}</Text>
+                            <Text>Mail: {userInfo.mail}</Text>
                             <Text>Cel: {''}</Text>
                             <Text>Date: {obj?.creationDate.split(" ")[0]}</Text>
                             <Text>Due Date: {obj?.paymode.paymode == 'MercadoPago' ? 'ONLINE PAYMENTH' : ''}</Text>
