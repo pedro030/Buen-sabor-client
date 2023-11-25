@@ -17,6 +17,7 @@ import { IContextProviderProps } from '../models/IContextProviderProps';
 
 // Sweet Alert
 import swal from 'sweetalert';
+import Swal2 from 'sweetalert2';
 
 export const UserContext = createContext<IUserContext>({
     userInfo: {
@@ -100,10 +101,31 @@ export function UserProvider({ children }: IContextProviderProps) {
 
     // Edit User Info
     const editUserInfo = (u: MUser) => {
+        Swal2.fire({
+            title: 'Updating...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCancelButton: false,
+            didOpen: () => {
+                Swal2.showLoading();
+            },
+        })
         userService.Update(u, tokenUser)
             .then(data => {
-                if (data) { getUserInfo(u.mail) }
+                if (data) { 
+                    getUserInfo(u.mail)
+                    Swal2.fire({
+                        icon: 'success',
+                        title: `The update was successful`,
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        confirmButtonColor: '#E73636'
+                    })
+                }
             })
+            .catch(() => { Swal2.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })})
     }
 
     // Al cargar el context obtener el token del mismo
