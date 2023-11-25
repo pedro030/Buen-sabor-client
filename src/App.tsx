@@ -35,7 +35,7 @@ const  App = () => {
   // Si existe el user, token y email se obtiene la informacion del usuario a traves del mail
   useEffect(() => {
     if (user && tokenUser) {
-      if (user.email) getUserInfo(user.email);
+      if (user.email) getUserInfo(user.email, user);
     }
   // Se ejecuta cada vez que cambia el estado del Token
   }, [tokenUser])

@@ -217,9 +217,7 @@ const OrderTracking = () => {
   };
   // Pago Aprobado de Mercado Pago
   useEffect(()=>{
-    console.log("Entré")
     if (status == "approved") {
-      console.log("Entré al if")
       fetch(`${urlApi}/orders/changeStatus/${external_reference}`, {
         method: "PUT",
         headers: {

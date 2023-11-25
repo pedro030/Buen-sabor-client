@@ -41,7 +41,7 @@ const UserProfile = () => {
                 </div>
               </div>
               <h3 className='text-center text-gray-600 menu-title'>
-                {userInfo?.firstName + " " + userInfo?.lastName || "User"}
+                {(userInfo?.firstName ?? "") + " " + (userInfo?.lastName ?? "")}
               </h3>
               <li>
                 <h2 className='menu-title'>Account</h2>

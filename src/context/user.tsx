@@ -2,7 +2,7 @@
 import { createContext, useEffect, useState } from 'react';
 
 // Auth0
-import { useAuth0 } from '@auth0/auth0-react';
+import { User, useAuth0 } from '@auth0/auth0-react';
 
 // Services
 import { UserService } from '../services/UserService';
@@ -19,7 +19,7 @@ import { IContextProviderProps } from '../models/IContextProviderProps';
 import swal from 'sweetalert';
 
 export const UserContext = createContext<IUserContext>({
-    userInfo:{
+    userInfo: {
         id: 0,
         mail: "",
         firstName: "",
@@ -28,25 +28,25 @@ export const UserContext = createContext<IUserContext>({
         telephone: 0,
         orders: [],
     },
-    getUserInfo(mail: string) {},
+    getUserInfo(mail:string,user: User) { },
     addresses: [],
-    getAddresses: () => {},
-    newAddress: () => { return new Promise<boolean>(() => true) }, 
+    getAddresses: () => { },
+    newAddress: () => { return new Promise<boolean>(() => true) },
     deleteAddress: () => { return new Promise<boolean>(() => true) },
-    editUserInfo() {},
+    editUserInfo() { },
     tokenUser: "",
     orders: [],
-    setOrders: () => {},
+    setOrders: () => { },
     getOrders: () => { return new Promise<MOrder[]>(() => []) }
 });
 
-export function UserProvider({children}: IContextProviderProps){
+export function UserProvider({ children }: IContextProviderProps) {
     // Services
     const adrService = new AdressService();
     const userService = new UserService();
 
     // Auth0
-    const {getAccessTokenSilently} = useAuth0();
+    const { getAccessTokenSilently } = useAuth0();
 
     // User States: Token, Addresses, Orders, UserInfo
     const [tokenUser, setTokenUser] = useState("")
@@ -63,70 +63,70 @@ export function UserProvider({children}: IContextProviderProps){
     })
 
     // Get User Info
-    const getUserInfo = (mail: string) => {
+    const getUserInfo = (mail:string,user: User|undefined = undefined) => {
         userService.getUserByMail(mail, tokenUser)
-        .then(sessionUser => {
-            if(sessionUser) {
-                setUserInfo(sessionUser);
-                if(sessionUser.blacklist !== "Enabled") swal("This user is not enabled to place orders\nFor more information contact the administrator", {dangerMode: true});
-                if(sessionUser.addresses) setAdresses(sessionUser.addresses);
-                if(sessionUser.orders) setOrders(sessionUser.orders)
-            }else{
-                signUpUser(mail)
-            }
-        })
+            .then(sessionUser => {
+                if (sessionUser) {
+                    setUserInfo(sessionUser);
+                    if (sessionUser.blacklist !== "Enabled") swal("This user is not enabled to place orders\nFor more information contact the administrator", { dangerMode: true });
+                    if (sessionUser.addresses) setAdresses(sessionUser.addresses);
+                    if (sessionUser.orders) setOrders(sessionUser.orders)
+                } else {
+                    signUpUser(mail, user?.given_name ?? "", user?.family_name ?? "")
+                }
+            })
     }
 
     // Register User
-    const signUpUser = (mail: string) => {
+    const signUpUser = (mail: string, firstName = "", lastName = "") => {
         const newUser: MUser = {
             id: 0,
             mail: mail,
-            firstName: "",
-            lastName: "",
+            firstName: firstName,
+            lastName: lastName,
             password: "",
             telephone: 0,
             blacklist: "Enabled",
-            rol: {id: 6, rol:"Client"},
-            addresses:[],
-            orders:[]
+            rol: { id: 6, rol: "Client" },
+            addresses: [],
+            orders: []
         }
         userService.Create(newUser, tokenUser)
-        .then(() => {
-            userService.getUserByMail(mail,tokenUser)
-            .then(user => setUserInfo(user))
-        })
+            .then(() => {
+                userService.getUserByMail(mail, tokenUser)
+                    .then(user => setUserInfo(user))
+            })
     }
 
     // Edit User Info
     const editUserInfo = (u: MUser) => {
         userService.Update(u, tokenUser)
-        .then(data => {
-            if(data){getUserInfo(u.mail)}
-        })
+            .then(data => {
+                if (data) { getUserInfo(u.mail) }
+            })
     }
 
     // Al cargar el context obtener el token del mismo
-    useEffect(()=>{
+    useEffect(() => {
         getAccessTokenSilently({
             authorizationParams: {
                 audience: import.meta.env.VITE_REACT_APP_AUDIENCE,
             },
         })
-        .then(token => {
-            setTokenUser(token);
-        })
-        .catch(err => {
-            console.log(err)
-        })
+            .then(token => {
+                setTokenUser(token);
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }, [getAccessTokenSilently])
 
     // Get User Addresses
     const getAddresses = () => {
         userService.getUserByMail(userInfo.mail, tokenUser)
-        .then(sessionUser => {
-            if(sessionUser.addresses) setAdresses(sessionUser.addresses);
-        })
+            .then(sessionUser => {
+                if (sessionUser.addresses) setAdresses(sessionUser.addresses);
+            })
     }
 
     // Add Address to User Addresses
@@ -150,12 +150,12 @@ export function UserProvider({children}: IContextProviderProps){
     // Get All User Addresses
     const getOrders = (): Promise<MOrder[]> => {
         return userService.getOrdersByUser(userInfo.id, tokenUser)
-        .then((res) => {
-            return res;
-        })
+            .then((res) => {
+                return res;
+            })
     }
 
-    return(
+    return (
         <UserContext.Provider value={{
             userInfo,
             getUserInfo,
