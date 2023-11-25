@@ -28,7 +28,17 @@ export function CartProvider({ children } : IContextProviderProps) {
     // Cart State. LocalStorage Cart or Set Empty Cart
     const [cart, setCart] = useState<MCart[]>(() => {
         const storedCart = window.localStorage.getItem('cart');
-        return storedCart ? JSON.parse(storedCart) : clearCart();
+        return storedCart ? JSON.parse(storedCart) : [{ product: {
+            id: 0,
+            name: "",
+            active: false,
+            price: 0,
+            cookingTime: 0,
+            image: "",
+            subcategory: { id: 0, name: "", parentCategory: null},
+            cost: 0,
+            ingredients: [{ id: 0, ingredient: { id: 0, name: "", cost: 0, stock: 0, stockMin: 0, measure: { id: 0, measure: ""}}, cant: 0}],
+        }, quantity: 0}];
     });
 
     // Cada vez que cambia el estado de Cart se setea en el LocalStorage
