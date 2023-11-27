@@ -35,19 +35,19 @@ const Carousel = () => {
                 </div>
             </div>
             { /* RESTAURANT INFO */ }
-            <div id='menuSeccion' className='grid w-full grid-cols-2 mt-5 mb-3'>
-                <div className='flex flex-row items-center justify-center'>
+            <div id='menuSeccion' className='flex flex-col justify-around w-full gap-5 mt-5 px-2 mb-3 min-[450px]:flex-row'>
+                <div className='flex flex-row items-center'>
                     <img className='h-12 pr-4 max-md:h-10 max-sm:h-8' src={img_location} />
                     <div>
-                        <h2 className='max-md:text-sm max-sm:text-xs'>Locate us</h2>
-                        <p className='max-md:text-sm max-sm:text-xs'>Coronel Rodríguez 273, Mendoza</p>
+                        <h2 className='text-xs md:text-sm'>Locate us</h2>
+                        <p className='text-xs md:text-sm'>Coronel Rodríguez 273, Mendoza</p>
                     </div>
                 </div>
-                <div className='flex flex-row items-center justify-center'>
+                <div className='flex flex-row items-center'>
                     <img className='h-12 pr-4 max-md:h-10 max-sm:h-8' src={img_clock}  />
                     <div>
-                        <h2 className='max-md:text-sm max-sm:text-xs'>Open hours</h2>
-                        <p className='max-md:text-sm max-sm:text-xs'>Mon To Fri 9:00AM - 9:00PM</p>
+                        <h2 className='text-xs md:text-sm'>Open hours</h2>
+                        <p className='text-xs md:text-sm'>Mon To Fri 16:00PM - 24:00PM</p>
                     </div>
                 </div>
             </div>

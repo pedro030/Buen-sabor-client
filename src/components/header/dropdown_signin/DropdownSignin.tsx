@@ -40,7 +40,7 @@ const DropdownSignin = () => {
     // Switch Button if is logged
     const switchButton = () => {
         if (!isAuthenticated) {
-            return <button className='w-full rounded-full btn btn-primary max-md:w-32'>Sign In</button>
+            return <button className='w-full rounded-full btn-sm btn btn-primary md:h-10 md:w-28'>Sign In</button>
         } else {
             return (
                 <div className='pt-2 hero'>
