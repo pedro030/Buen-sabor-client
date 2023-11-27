@@ -322,7 +322,7 @@ const OrderDetail = () => {
             { /* STEPS */}
             <div className='m-5 '>
                 <div className='flex justify-center mb-5 '>
-                    <ul className="z-0 overflow-hidden steps">
+                    <ul className="z-0 steps">
                         <li className="step step-primary max-md:text-sm">Choice Product</li>
                         <li className="step step-primary max-md:text-sm ">Create Order</li>
                         <li className="step step-primary max-md:text-sm ">Follow Up</li>

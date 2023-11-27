@@ -91,7 +91,7 @@ const EditCartModal: FC<EditCartModalProps> = ({ isOpen, onClose }) => {
       <div className=' modal modal-open'>
         <div
           ref={modalRef}
-          className='w-full p-8 mt-20 overflow-hidden bg-white rounded-3xl modal-box'
+          className='w-full p-8 mt-40 overflow-hidden bg-white lg:mt-20 rounded-3xl modal-box'
         >
           { /* CLOSE EDIT CART MODAL BUTTON */}
           <button
