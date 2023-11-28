@@ -34,6 +34,8 @@ const History_Order = () => {
     // State: True si las ordenes han sido traidas y seteadas
     const [isReady, setIsReady] = useState<boolean>(false);
 
+    const { userInfo } = useContext(UserContext)
+
     // Ver PDF
     const viewPDF = (b: MOrder) => {
         setBill(b);
@@ -48,7 +50,7 @@ const History_Order = () => {
         })
         .then(() => setIsReady(true));
     }, [])
-
+    
     // Loader
     if (!isReady) {
         return (
@@ -63,6 +65,7 @@ const History_Order = () => {
             { /* PDF BILL MODAL */}
             <PDFBillModal
                 obj={bill}
+                usr={userInfo}
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
             />
@@ -107,7 +110,7 @@ const History_Order = () => {
                                             { /* DOWNLOAD BILL PDF BUTTON */}
                                             {<><button onClick={() => viewPDF(o)} className=""><AiOutlineEye className='w-6 h-6 ' /></button>
                                                 <PDFDownloadLink
-                                                    document={<PDFDocument obj={o} />}
+                                                    document={<PDFDocument obj={o} usr={userInfo}/>}
                                                     fileName={`Buen Sabor - Order Bill #${o.id}`}
                                                 >
                                                     {({ blob, url, loading, error }) =>

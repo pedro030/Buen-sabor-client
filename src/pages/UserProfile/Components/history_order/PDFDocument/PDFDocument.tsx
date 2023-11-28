@@ -1,18 +1,11 @@
 // React PDF
 import { Document, Page, View, Text, StyleSheet } from '@react-pdf/renderer';
 
-// Context
-import { useContext } from 'react';
-import { UserContext } from '../../../../../context/user';
-
 // Type
-import { IPDFBill } from '../../../../../models/IPDFBill';
-import { MOrderProducts } from '../../../../../models/MOrder';
+import { MOrder, MOrderProducts } from '../../../../../models/MOrder';
+import { MUser } from '../../../../../models/MUser';
 
-function PDFDocument({ obj }: IPDFBill) {
-
-    // User Info
-    const { userInfo } = useContext(UserContext)
+function PDFDocument({ obj, usr }:{obj?:MOrder, usr:MUser}) {
 
     // Bill PDF Styles
     const styles = StyleSheet.create({
@@ -52,10 +45,10 @@ function PDFDocument({ obj }: IPDFBill) {
                         </View>
                         <View style={{ marginRight: '60px', display: 'flex', flexDirection: 'column', verticalAlign: 'super', fontSize: '12px', }}>
                             <Text style={{ fontWeight: 'bold', fontSize: "14px", }}>BILLED TO</Text>
-                            <Text>Client: {userInfo.firstName} {userInfo.lastName}</Text>
+                            <Text>Client: {usr.firstName ?? ''} {usr.lastName ?? ''}</Text>
                             <Text>Address: {obj?.address}</Text>
-                            <Text>Mail: {userInfo.mail}</Text>
-                            <Text>Cel: {''}</Text>
+                            <Text>Mail: {usr.mail}</Text>
+                            <Text>Cel: {usr.telephone ?? ''}</Text>
                             <Text>Date: {obj?.creationDate.split(" ")[0]}</Text>
                             <Text>Due Date: {obj?.paymode.paymode == 'MercadoPago' ? 'ONLINE PAYMENTH' : ''}</Text>
                         </View>
@@ -82,7 +75,7 @@ function PDFDocument({ obj }: IPDFBill) {
                         {/*TOTAL*/}
                         <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginRight: "60px", fontSize: "14px", marginTop: "60px", }}>
                             <View>
-                                <Text>Informacion Pago</Text>
+                                <Text>Pay Information</Text>
                             </View>
                             <View style={{ display: "flex", flexDirection: "column", }}>
                                 <View style={{ display: "flex", flexDirection: "row", fontSize: "12px", justifyContent: "space-between", marginTop: "2px" }}><Text style={{ marginRight: "4px" }}>PRODUCTS COST:</Text><Text>${obj?.withdrawalMode == 'Delivery' ? obj?.totalPrice - 400 : obj?.withdrawalMode == 'Take Away' ? obj?.totalPrice - 100 : ''}</Text></View>

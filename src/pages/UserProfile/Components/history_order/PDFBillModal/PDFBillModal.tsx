@@ -9,7 +9,7 @@ import PDFDocument from '../PDFDocument/PDFDocument';
 // Type
 import { IPDFBillModalProps } from '../../../../../models/IPDFBillModalProps';
 
-const PDFBillModal: FC<IPDFBillModalProps> = ({ obj, isOpen, onClose }) => {
+const PDFBillModal: FC<IPDFBillModalProps> = ({ obj,usr, isOpen, onClose }) => {
     // Si no está abierto el modal no se muestra
     if (!isOpen) return null;
 
@@ -35,7 +35,7 @@ const PDFBillModal: FC<IPDFBillModalProps> = ({ obj, isOpen, onClose }) => {
             <div className="rounded modal modal-open">
                 <div ref={modalRef} className='w-[80vw] h-[80vh] flex max-lg:flex-col relative rounded-3xl bg-base-100 z-10 mt-[6rem] overflow-auto'>
                     <PDFViewer style={{ width: "100%", height: "100%" }}>
-                        <PDFDocument obj={obj} />
+                        <PDFDocument obj={obj} usr={usr} />
                     </PDFViewer>
                 </div>
             </div>
