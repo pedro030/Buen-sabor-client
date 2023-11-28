@@ -187,7 +187,7 @@ const Menu = () => {
 
   const handleChangeSorting = (e: ChangeEvent<HTMLSelectElement>) => {
     const sortOp = +e.target.value;
-    console.log(sortOp);
+    // console.log(sortOp);
     setCurrentSorting(sortOp);
     sortProducts(products, sortOp);
   };

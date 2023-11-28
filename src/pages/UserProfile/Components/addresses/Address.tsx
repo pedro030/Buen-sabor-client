@@ -48,7 +48,7 @@ const Address = () => {
     })
     newAddress(ad)
     .then((res) => {
-      console.log(res);
+      // console.log(res);
         if(res) {
             Swal.fire({
                 icon: 'success',
