@@ -2,6 +2,7 @@ import { useState } from "react";
 import notepad from "../../../assets/notepad.svg";
 import cartImg from "../../../assets/cart.svg";
 import EditCartModal from "../../menu/EditCartModal/EditCartModal";
+import PendingOrdersModal from "./PendingOrdersModal";
 
 export const MenuHeader = () => {
    // Cart Modal State
@@ -14,6 +15,18 @@ export const MenuHeader = () => {
 
   const handleCloseEditCartModal = () => {
     setIsEditCartModalOpen(false);
+  };
+
+  // Pending Orders Modal State
+  const [isPendingOrdersModalOpen, setIsPendingOrdersModalOpen] =
+  useState<boolean>(false);
+
+  const handleOpenPendingOrdersModal = () => {
+    setIsPendingOrdersModalOpen(true);
+  };
+
+  const handleClosePendingOrdersModal = () => {
+    setIsPendingOrdersModalOpen(false);
   };
 
   return (
@@ -39,7 +52,8 @@ export const MenuHeader = () => {
           <a>
             <div
               tabIndex={0}
-              className="flex items-center justify-center gap-2 cursor-pointer "
+              className="flex items-center justify-center gap-2 cursor-pointer"
+              onClick={() => handleOpenPendingOrdersModal()}
             >
               <img src={notepad} height="25" /> Pending orders
             </div>
@@ -61,6 +75,10 @@ export const MenuHeader = () => {
       <EditCartModal
         isOpen={isEditCartModalOpen}
         onClose={handleCloseEditCartModal}
+      />
+      <PendingOrdersModal
+        isOpen={isPendingOrdersModalOpen}
+        onClose={handleClosePendingOrdersModal}
       />
     </div>
   );
