@@ -6,6 +6,7 @@ import {
   useState,
   ChangeEvent,
   KeyboardEvent,
+  useRef
 } from "react";
 
 // React Router
@@ -107,24 +108,28 @@ const Header: FC = () => {
 
   // WebSocket
   const [pendingOrders, setPendingOrders] = useState<MOrder[]>([]);
-  const [stompClient, setStompClient] = useState<Client>(
-    over(new SockJS("https://buen-sabor-backend-production.up.railway.app/ws"))
-  );
+  const stompClientRef = useRef<Client | undefined>(undefined);
+
+  useEffect(() => {
+    stompClientRef.current = over(
+      new SockJS("https://buen-sabor-backend-production.up.railway.app/ws")
+    );
+  }, [isTable]);
 
   // Conexion al Socket
   const connectSocket = () => {
-    stompClient.connect({}, onConnected, onError);
+    stompClientRef.current?.connect({}, onConnected, onError);
   };
 
   // Que hacer cuando se conecta al socket
   const onConnected = async () => {
     try {
       // Se subscribe al tópico
-      await stompClient.subscribe(
+      await stompClientRef.current?.subscribe(
         `/user/${userInfo.mail}/private`,
         onMessageReceived
       );
-      await stompClient.send(
+      await stompClientRef.current?.send(
         `/app/private-message`,
         {},
         JSON.stringify(userInfo.id)
@@ -140,7 +145,7 @@ const Header: FC = () => {
     setPendingOrders(payloadData);
 
     // Si no hay ordenes pendientes se desconecta del Socket
-    if (payloadData.length === 0) stompClient?.disconnect(() => {});
+    if (payloadData.length === 0) stompClientRef.current?.disconnect(() => {});
   };
 
   // Por si hay un error en la conexion al Socket
@@ -150,14 +155,14 @@ const Header: FC = () => {
 
   useEffect(() => {
     // Si existe el mail del user se conecta al Socket
-    //if(userInfo.mail.length > 0) connectSocket();
+    if(userInfo.mail.length > 0 && !isTable) connectSocket();
 
     // Al desmontar el componente
     return () => {
       // Si la conexión está establecida se desconecta del Socket
-      stompClient.connected ? stompClient?.disconnect(() => {}) : "";
+      stompClientRef.current?.connected ? stompClientRef.current?.disconnect(() => {}) : "";
     };
-  }, []);
+  }, [isTable]);
 
   // The User is Logged to Continue Shopping?
   const handleLogin = () => {
